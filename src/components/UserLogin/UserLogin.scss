@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kelly+Slab&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+.send-otp-page-main-wrapper{
+    .left{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .right{
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        h2{
+            font-family: Montserrat;
+            font-size: 24.31px;
+            font-weight: 600;
+            line-height: 65.89px;
+            text-align: center;
+            letter-spacing: -1.6471432447433472px;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: black;
+        }
+        input{
+            border: 0.81px solid #00000066;
+            width: 340px;
+            height: 40px;
+            padding-left: 10px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: Poppins;
+            font-size: 16.23px;
+            font-weight: 500;
+            line-height: 13.08px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+
+        }
+        input::placeholder{
+            font-family: Poppins;
+            font-size: 16.23px;
+            font-weight: 500;
+            line-height: 13.08px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #00000087;
+        }
+        input:focus{
+            outline: none;
+        }
+        button{
+            background-color: #6BCCE5;
+            color: black;
+           width: 340px;
+            display: block;
+            margin: 0 auto;
+            height: 50px;
+            font-family: Poppins;
+            font-size: 19.47px;
+            font-weight: 700;
+            line-height: 13.08px;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            border: none;
+            border-radius: 8px;
+        }
+        .error{
+            color: red;
+            text-align: center;
+            font-family: Poppins;
+            font-size: 12px;
+        }
+        .register-link{
+            text-align: center;
+            padding-top: 1rem;
+            font-family: Poppins;
+
+        }
+    }
+    @media(max-width:991px){
+        .left{
+           display: none !important;
+        }
+    }
+}
