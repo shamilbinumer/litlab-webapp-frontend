@@ -1,6 +1,6 @@
 import { FaArrowLeft } from 'react-icons/fa'
-import SideNave from '../SideNav/SideNave'
-import UserProfile from '../UserProfile/UserProfile'
+import SideNave from '../common/SideNav/SideNave'
+import UserProfile from '../common/UserProfile/UserProfile'
 import './PaperDetailPage.scss'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
@@ -111,10 +111,18 @@ const PaperDetailPage = () => {
                         {
                               activeCategory=='Video Class'&&(
                                 <>
-                                    <div className="vedio-clas-card">
+                                   <Link to='/lectures'> 
+                                   <div className="vedio-clas-card">
                                        <img src="/Images/lecture.png" alt="" /> 
                                        <span>Lectures</span>
                                     </div>
+                                    </Link>
+                                   <Link>
+                                   <div className="vedio-clas-card">
+                                       <img src="/Images/slides.png" alt="" /> 
+                                       <span>Slides</span>
+                                    </div>
+                                   </Link>
                                 </>
                               )
                         }

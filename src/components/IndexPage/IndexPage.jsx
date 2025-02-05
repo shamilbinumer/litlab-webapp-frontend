@@ -1,10 +1,10 @@
 import { IoSearchOutline } from 'react-icons/io5'
-import SideNave from '../SideNav/SideNave'
+import SideNave from '../common/SideNav/SideNave'
 import './IndexPage.scss'
 import { useState } from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { FaFileInvoiceDollar } from 'react-icons/fa'
-import UserProfile from '../UserProfile/UserProfile'
+import UserProfile from '../common/UserProfile/UserProfile'
 import { Link } from 'react-router-dom'
 
 const IndexPage = () => {

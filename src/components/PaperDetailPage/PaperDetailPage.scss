@@ -141,12 +141,17 @@
                     display: flex;
                     align-items: center;
                     gap: 1rem;
+                    margin-bottom: 1rem;
                     span{
                         font-family: Montserrat;
                         font-size: 22.27px;
                         font-weight: 600;
                         line-height: 27.15px;
                     }
+                }
+                .vedio-clas-card:hover{
+                    border: 1.32px solid #FBD63C;
+                    cursor: pointer;
                 }
             }
         }
