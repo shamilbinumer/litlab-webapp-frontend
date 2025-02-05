@@ -1,9 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kelly+Slab&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 .IndexPageMainWrapper{
     .home-main{
         display: flex;
     }
-    .home-left{
+    .home-left {
         width: 14%;
+        position: fixed; /* Make the left side sticky */
+        top: 0; /* Stick to the top */
+        left: 0; /* Stick to the left */
+        height: 100vh; /* Full height of the viewport */
+        overflow-y: auto; /* Enable scrolling if content overflows */
+        z-index: 1000; /* Ensure it stays above other content */
+      }
+    .home-right{
+        padding: 2rem;
+        position: relative;
+        width: 86%;
+        margin-left: 14%;
+       
+        .welcome-heading{
+            font-family: Roboto;
+            font-size: 31.41px;
+            font-weight: 400;
+            line-height: 33.3px;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            span{
+                color: #6BCCE5;
+                font-weight: 600;
+            }
+        }
+        .main-heading{
+            font-family: Montserrat;
+            font-size: 39.87px;
+            font-weight: 700;
+            line-height: 45.9px;
+            letter-spacing: -0.03em;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
 
+        }
+        .search-bar{
+            width: 786px;
+            height: 50px;
+            border-radius: 16px;
+            border: 2px solid #00000061;
+            margin: auto;
+            margin-top: 2rem;
+            display: flex;
+            padding-left: 10px;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            .search-icon{
+                font-size: 19px;
+            }
+            input{
+                height: 47px;
+                border: none;
+                width: 750px;
+                font-family: Inter;
+                font-size: 16.2px;
+                font-weight: 400;
+                line-height: 19.61px;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+            }
+            input::placeholder{
+                font-family: Inter;
+                font-size: 16.2px;
+                font-weight: 400;
+                line-height: 19.61px;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+            }
+            input:focus{
+                outline: none;
+            }
+            
+        }
+        .paper-types-wrapper{
+            width: 750px !important;
+            margin: auto !important;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            
+        .paper-type{
+            width: 190px;
+            height: 53px;
+            background-color: #EBEBEB;
+            color: #00000066;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            border: 1.17px solid #00000014;
+            border-radius: 27px;
+            box-shadow: 0px 2.34px 0px 0px #00000040;
+            cursor: pointer;
+            transition: .3s;
+            
+            span{
+                font-family: Montserrat;
+                font-size: 19.86px;
+                font-weight: 500;
+                line-height: 37.48px;
+                letter-spacing: -0.9369914531707764px;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+            }
+            .icon-wrapper{
+                width: 37px;
+                height: 37px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+            }
+        }
+        .paper-type:hover{
+            background-color: #6BCCE5 !important;
+            color: white;
+        }
+        .active-paper-type{
+            background-color: #6BCCE5 !important;
+            color: white !important;
+            }
+    }
+    .paper-cards-section{
+        padding-top: 2rem;
+        .cards-main{
+            .paper-card{
+                width: 100%;
+                background-color: #6BCCE5;
+                position: relative;
+                border-radius: 10px;
+                padding: 2rem;
+                margin-bottom: 1.5rem;
+                .heart-icon{
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    color: white;
+                    font-size: 30px;
+                }
+                .paper-image{
+                    position: absolute;
+                    right: 10px;
+                    bottom: 10px;
+                }
+                .lesson-container{
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    .lesson-icon{
+                        height: 40px;
+                        width: 40px;
+                        border-radius: 50%;
+                        background-color: white;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        .icon{
+                            color: #6BCCE5;
+                            font-size: 20px;
+                        }
+                    }
+                    span{
+                        font-family: Montserrat;
+                        font-size: 12.06px;
+                        font-weight: 700;
+                        line-height: 19.58px;
+                        text-underline-position: from-font;
+                        text-decoration-skip-ink: none;
+                        color: white;
+                    }
+                }
+                .paper-title{
+                    font-family: Montserrat;
+                    font-size: 25px;
+                    font-weight: 700;
+                    line-height: 28.09px;
+                    color: white;
+                    padding-top: 1rem;
+                }
+                .paper-description{
+                    font-family: Montserrat;
+                    font-size: 13.8px;
+                    font-weight: 600;
+                    line-height: 18px;
+                    color: white;
+                }
+                button{
+                    font-family: Montserrat;
+                    font-size: 14.13px;
+                    font-weight: 600;
+                    line-height: 23.67px;
+                    color: black;
+                    background-color: #FBD63C;
+                    border-radius: 4px;
+                    padding: 5px 1rem;
+                    border: 1px solid #FBD63C;
+                }
+            }
+        }
+    }
     }
 }

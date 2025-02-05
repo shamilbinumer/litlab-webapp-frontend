@@ -4,6 +4,8 @@
         height: 100vh;
         background-color: #6BCCE5;
         padding: 1.5rem;
+        position: sticky;
+        top: 0;
         .nav-logo{
             img{
                 display: block;
@@ -32,6 +34,9 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+            }
+            .active{
+                border: 2px solid #438ea1;
             }
         }
     }
