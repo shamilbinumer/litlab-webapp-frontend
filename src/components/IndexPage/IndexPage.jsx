@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { FaFileInvoiceDollar } from 'react-icons/fa'
 import UserProfile from '../UserProfile/UserProfile'
+import { Link } from 'react-router-dom'
 
 const IndexPage = () => {
     const [activePaperType,setActivePaperType]=useState('major')
@@ -49,7 +50,8 @@ const IndexPage = () => {
                             <>
                             <div className="cards-main row">
                                 <div className="col-lg-4">
-                                    <div className="paper-card">
+                                  <Link to='/paper-details/123'>
+                                  <div className="paper-card">
                                         <IoIosHeartEmpty className='heart-icon' />
                                         <img src="/Images/Group 1000004522.png" alt="" className='paper-image' />
                                         <div className="lesson-container">
@@ -61,7 +63,7 @@ const IndexPage = () => {
                                         <h1 className="paper-title">Budget Analysis</h1>
                                         <p className="paper-description">Budget Analysis examines income, expenses, and goals for efficient resource allocation.</p>
                                         <button>Learn Now</button>
-                                    </div>
+                                    </div></Link>
                                 </div>
                                 <div className="col-lg-4">
                                     <div className="paper-card">
