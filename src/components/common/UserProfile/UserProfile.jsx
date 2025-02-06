@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './UserProfile.scss';
 import baseUrl from '../../../baseUrl';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -30,16 +31,18 @@ const UserProfile = () => {
     fetchUserProfile();
   }, []);
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <div></div>;
 
   return (
     <div className='userProfileMainWrapper'>
-      <div className="user-container">
-        <div className="user-profile">
-          <img src={user.image || "/Images/9385289.png"} alt="profile" />
+      <Link to='/my-profile'>
+        <div className="user-container">
+          <div className="user-profile">
+            <img src={user?.image || "/Images/9385289.png"} alt="profile" />
+          </div>
+          <p>{user?.name}</p>
         </div>
-        <p>{user.name}</p>
-      </div>
+      </Link>
     </div>
   );
 };

@@ -28,4 +28,17 @@
 
         }
     }
+    @media(max-width:768px){
+        .user-container{
+            width: 35px;
+            position: static !important;
+            .user-profile{
+                width: 35px;
+                height: 35px;
+            }
+            p{
+                display: none !important;
+            }
+        }
+    }
 }

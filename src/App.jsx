@@ -5,6 +5,7 @@ import IndexPage from "./components/IndexPage/IndexPage"
 import WelcomPage from "./components/WelcomPage/WelcomPage"
 import PaperDetailPage from "./components/PaperDetailPage/PaperDetailPage"
 import Lectures from "./components/Lectures/Lectures"
+import MyProfile from "./components/MyProfile/MyProfile"
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/welcome" Component={WelcomPage} />
           <Route path="/paper-details/:paperId" Component={PaperDetailPage} />
           <Route path="/lectures" Component={Lectures} />
+          <Route path="/my-profile" Component={MyProfile} />
         </Routes>
       </BrowserRouter>
     </>

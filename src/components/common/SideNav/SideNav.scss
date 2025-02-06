@@ -1,32 +1,41 @@
-.SideNavMainWrapper{
-    .sideNav{
+.SideNavMainWrapper {
+    .sideNav {
         width: 100%;
         height: 100vh;
         background-color: #6BCCE5;
         padding: 1.5rem;
-        position: sticky;
-        top: 0;
-        .nav-logo{
-            img{
+        position: relative; // Ensures absolute positioning works
+
+        .phone-user-profile {
+            display: none; // Hide by default on larger screens
+        }
+
+        .nav-logo {
+            img {
                 display: block;
                 margin: 0 auto;
             }
         }
-        .second-icon{
+
+        .second-icon {
             padding-top: 1rem;
-            img{
+            padding-bottom: 0.5rem;
+
+            img {
                 display: block;
                 margin: 0 auto;
             }
         }
-        .nav-items{
+
+        .nav-items {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding-top: 1rem;
             gap: 1rem;
-            .nav-item{
+
+            .nav-item {
                 width: 53px;
                 height: 53px;
                 background-color: white;
@@ -35,8 +44,45 @@
                 justify-content: center;
                 align-items: center;
             }
-            .active{
+
+            .active {
                 border: 2px solid #438ea1;
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        .sideNav {
+            display: flex;
+            flex-direction: column; // Ensures items align in a column
+            justify-content: space-between; // Pushes the profile section to the bottom
+            align-items: center;
+            padding: 10px !important;
+
+            .nav-logo img {
+                width: 30px !important;
+            }
+
+            .nav-items {
+                flex-grow: 1; // Pushes profile section down
+            }
+
+            .nav-item {
+                width: 43px !important;
+                height: 43px !important;
+            }
+
+            .phone-user-profile {
+                display: block !important;
+                width: 100%; 
+                position: absolute;
+                bottom: 0px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: fit-content;
+                text-align: center;
+                padding: 10px;
+                border-radius: 10px;
             }
         }
     }

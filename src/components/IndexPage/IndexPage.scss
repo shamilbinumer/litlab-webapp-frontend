@@ -56,6 +56,7 @@
             overflow: hidden;
             .search-icon{
                 font-size: 19px;
+                margin-top: -6px;
             }
             input{
                 height: 47px;
@@ -135,31 +136,45 @@
     }
     .paper-cards-section{
         padding-top: 2rem;
+        .no-result{
+            text-align: center;
+            padding-top: 2rem;
+            font-family: Montserrat;
+
+        }
         .cards-main{
-            .paper-card{
+            .paper-card {
                 width: 100%;
                 background-color: #6BCCE5;
                 position: relative;
                 border-radius: 10px;
                 padding: 2rem;
-                margin-bottom: 1.5rem;
-                .heart-icon{
+                margin-bottom: 1.5rem !important;
+                height: 100%;
+                display: flex;
+                flex-direction: column; 
+                
+                .heart-icon {
                     position: absolute;
                     right: 10px;
                     top: 10px;
                     color: white;
                     font-size: 30px;
                 }
-                .paper-image{
+                
+                .paper-image {
                     position: absolute;
                     right: 10px;
                     bottom: 10px;
                 }
-                .lesson-container{
+                
+                .lesson-container {
                     display: flex;
                     gap: 10px;
                     align-items: center;
-                    .lesson-icon{
+                    margin-bottom: 0.5rem;
+                    
+                    .lesson-icon {
                         height: 40px;
                         width: 40px;
                         border-radius: 50%;
@@ -167,12 +182,14 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        .icon{
+                        
+                        .icon {
                             color: #6BCCE5;
                             font-size: 20px;
                         }
                     }
-                    span{
+                    
+                    span {
                         font-family: Montserrat;
                         font-size: 12.06px;
                         font-weight: 700;
@@ -182,22 +199,27 @@
                         color: white;
                     }
                 }
-                .paper-title{
+                
+                .paper-title {
                     font-family: Montserrat;
                     font-size: 25px;
                     font-weight: 700;
                     line-height: 28.09px;
                     color: white;
                     padding-top: 1rem;
+                    margin-bottom: 0.5rem;
                 }
-                .paper-description{
+                
+                .paper-description {
                     font-family: Montserrat;
                     font-size: 13.8px;
                     font-weight: 600;
                     line-height: 18px;
                     color: white;
+                    flex-grow: 1; // Allow description to take up available space
                 }
-                button{
+                
+                button {
                     font-family: Montserrat;
                     font-size: 14.13px;
                     font-weight: 600;
@@ -207,9 +229,56 @@
                     border-radius: 4px;
                     padding: 5px 1rem;
                     border: 1px solid #FBD63C;
+                    margin-top: auto; // Push button to bottom
+                    align-self: flex-start; // Align button to start of container
                 }
             }
         }
     }
+    }
+    @media(max-width:991px){
+        .home-right{
+            .welcome-heading{
+                font-size: 15.41px !important;
+            }
+           
+            .desktop-user-profile{
+                display: none !important;
+            }
+            padding: 10px !important;
+            .main-heading{
+                font-size: 20.87px !important;
+                line-height: 25px !important;
+            }
+            .search-bar{
+                width: 100% !important;
+                height: 40px !important;
+                border-radius: 10px !important;
+                input::placeholder{
+                    font-size: 12.2px !important;
+                }
+               
+            }
+            .paper-types-wrapper{
+                width: 90% !important;
+                flex-wrap: wrap !important;
+                
+            .paper-type{
+                width: 100% !important;
+                height: 43px !important;
+                border-radius: 17px !important;
+            }
+         
+        }
+        .cards-main{
+            display: flex;
+            flex-direction: column;
+            // gap: 10px;
+        }
+        .paper-card {
+            margin-bottom: 1rem !important;
+        }
+        }
+       
     }
 }
