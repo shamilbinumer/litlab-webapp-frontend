@@ -6,6 +6,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: sticky;
+            top: 2rem;
             h2 {
                 font-family: Montserrat;
                 font-size: 26.63px;
@@ -18,7 +20,7 @@
             }
         }
         .right-side {
-            height: 100vh;
+            padding: 2rem;
             display: flex;
             justify-content: center;
             align-items: center;

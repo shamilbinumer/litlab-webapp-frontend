@@ -21,7 +21,6 @@ const SideNave = () => {
                     <div className={`nav-item ${activePath=='/'?'active':''}`}><img src="/Images/Group 1000004529.png" alt="" /></div>
                     <div className={`nav-item`}><img src="/Images/Group 1000004528.png" alt="" /></div>
                     <div className={`nav-item`}><img src="/Images/Vector (1).png" alt="" /></div>
-                    <div className={`nav-item`}><img src="/Images/Group 1000004496.png" alt="" /></div>
                     <div className={`nav-item`}><img src="/Images/Group 1000004528 (1).png" alt="" /></div>
                 </div>
             </div>

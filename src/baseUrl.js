@@ -1,2 +1,2 @@
-const baseUrl = "url"
+const baseUrl = "http://localhost:8000"
 export default baseUrl
