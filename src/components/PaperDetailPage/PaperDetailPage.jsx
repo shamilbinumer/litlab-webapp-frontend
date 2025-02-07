@@ -11,6 +11,7 @@ const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
     const [selectedOption, setSelectedOption] = useState(null);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const options = [
         { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
@@ -18,6 +19,64 @@ const PaperDetailPage = () => {
         { id: 'C', text: "Demand remains unchanged" },
         { id: 'D', text: "The good becomes a Giffen good" }
     ];
+
+    const questions = [
+        {
+          id: 1,
+          question: "What happens when a good's price decreases, according to the substitution effect?",
+          options: [
+            { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
+            { id: 'B', text: "Consumers save more of their income" },
+            { id: 'C', text: "Demand remains unchanged" },
+            { id: 'D', text: "The good becomes a Giffen good" }
+          ],
+          correctAnswer: 'A' // Optional: For future use (e.g., validation)
+        },
+        {
+          id: 2,
+          question: "What is the primary purpose of a budget?",
+          options: [
+            { id: 'A', text: "To track income and expenses" },
+            { id: 'B', text: "To increase debt" },
+            { id: 'C', text: "To reduce savings" },
+            { id: 'D', text: "To avoid financial planning" }
+          ],
+          correctAnswer: 'A'
+        },
+        {
+          id: 3,
+          question: "Which of the following is a fixed expense?",
+          options: [
+            { id: 'A', text: "Groceries" },
+            { id: 'B', text: "Rent" },
+            { id: 'C', text: "Entertainment" },
+            { id: 'D', text: "Clothing" }
+          ],
+          correctAnswer: 'B'
+        },
+        {
+            id: 4,
+            question: "What is the primary purpose of a budget?",
+            options: [
+              { id: 'A', text: "To track income and expenses" },
+              { id: 'B', text: "To increase debt" },
+              { id: 'C', text: "To reduce savings" },
+              { id: 'D', text: "To avoid financial planning" }
+            ],
+            correctAnswer: 'A'
+          },
+        // Add more questions as needed
+      ];
+   
+    
+      // Function to handle "Next" button click
+      const handleNextQuestion = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setSelectedOption(null); // Reset selected option for the next question
+        }
+      };
+      const currentQuestion = questions[currentQuestionIndex];
 
     return (
         <div className="PaperDetailPageMainWrapper">
@@ -112,51 +171,42 @@ const PaperDetailPage = () => {
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                        <div>
-                                            <div className="quiz-container">
-                                                {/* <div className="header">
-                                                    <FaArrowLeft className="back-arrow" />
-                                                    <h1>Weekly Challenge</h1>
-                                                </div> */}
-                                                {/* <h2 className="title">Budget Analysis</h2> */}
-                                                <div className="quiz-content">
-                                                    <div className="quiz-header">
-                                                        <span>1/50</span>
-                                                        <span>00:00:00</span>
-                                                    </div>
-                                                    <div className="question">
-                                                        <h3>
-                                                            <span>Qs 1 : </span>
-                                                            <p>What happens when a good's price decreases, according to the substitution effect?
-                                                            </p>                                                        </h3>
-                                                        <div className="options">
-                                                            {options.map((option) => (
-                                                                <div
-                                                                    key={option.id}
-                                                                    onClick={() => setSelectedOption(option.id)}
-                                                                    className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                                                >
-                                                                    <span className="option-letter">{option.id}</span>
-                                                                    <span>{option.text}</span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                    <div className="buttons">
-                                                        <button  className="ignore">Ignore</button>
-                                                        <Link to='/quiz-analysis' className="next">Next</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                       <div className="quiz-container">
+                                       <div className="quiz-content">
+                                         <div className="quiz-header">
+                                           <span>{currentQuestionIndex + 1}/{questions.length}</span>
+                                           <span>00:00:00</span>
+                                         </div>
+                                         <div className="question">
+                                           <h3>
+                                             <span>Qs {currentQuestion.id} : </span>
+                                             <p>{currentQuestion.question}</p>
+                                           </h3>
+                                           <div className="options">
+                                             {currentQuestion.options.map((option) => (
+                                               <div
+                                                 key={option.id}
+                                                 onClick={() => setSelectedOption(option.id)}
+                                                 className={`option ${selectedOption === option.id ? 'selected' : ''}`}
+                                               >
+                                                 <span className="option-letter">{option.id}</span>
+                                                 <span>{option.text}</span>
+                                               </div>
+                                             ))}
+                                           </div>
+                                         </div>
+                                         <div className="buttons">
+                                           <button className="ignore">Ignore</button>
+                                           {currentQuestionIndex < questions.length - 1 ? (
+                                             <button className="next" onClick={handleNextQuestion}>Next</button>
+                                           ) : (
+                                             <Link to='/quiz-analysis' className="next">Finish</Link>
+                                           )}
+                                         </div>
+                                       </div>
+                                     </div>
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        <div> <div>
                                         <div className="quiz-container">
-                                            {/* <div className="header">
-                                                <FaArrowLeft className="back-arrow" />
-                                                <h1>Weekly Challenge</h1>
-                                            </div> */}
-                                            {/* <h2 className="title">Budget Analysis</h2> */}
                                             <div className="quiz-content">
                                                 <div className="quiz-header">
                                                     <span>1/50</span>
@@ -165,8 +215,8 @@ const PaperDetailPage = () => {
                                                 <div className="question">
                                                     <h3>
                                                         <span>Qs 1 : </span>
-                                                        <p>What happens when a good's price decreases, according to the substitution effect?
-                                                        </p>                                                        </h3>
+                                                        <p>What happens when a good's price decreases, according to the substitution effect?</p>
+                                                    </h3>
                                                     <div className="options">
                                                         {options.map((option) => (
                                                             <div
@@ -186,15 +236,8 @@ const PaperDetailPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div></div>
                                     ) : activeSubCategory === 'Assessment Test' ? (
-                                        <div><div>
                                         <div className="quiz-container">
-                                            {/* <div className="header">
-                                                <FaArrowLeft className="back-arrow" />
-                                                <h1>Weekly Challenge</h1>
-                                            </div> */}
-                                            {/* <h2 className="title">Budget Analysis</h2> */}
                                             <div className="quiz-content">
                                                 <div className="quiz-header">
                                                     <span>1/50</span>
@@ -203,8 +246,8 @@ const PaperDetailPage = () => {
                                                 <div className="question">
                                                     <h3>
                                                         <span>Qs 1 : </span>
-                                                        <p>What happens when a good's price decreases, according to the substitution effect?
-                                                        </p>                                                        </h3>
+                                                        <p>What happens when a good's price decreases, according to the substitution effect?</p>
+                                                    </h3>
                                                     <div className="options">
                                                         {options.map((option) => (
                                                             <div
@@ -224,7 +267,6 @@ const PaperDetailPage = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div></div>
                                     ) : (
                                         <div>Select a Mock Test type</div>
                                     )}
@@ -256,15 +298,24 @@ const PaperDetailPage = () => {
                             <div className="content-details">
                                 {activeCategory === 'Study Notes' && (
                                     <>
-                                        <div className="study-note-card" onClick={() => setActiveSubCategory('Study Notes')}>
+                                        <div 
+                                            className={`study-note-card ${activeSubCategory === 'Study Notes' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Study Notes')}
+                                        >
                                             <img src="/Images/study note.png" alt="" />
                                             <span>Study Notes</span>
                                         </div>
-                                        <div className="study-note-card" onClick={() => setActiveSubCategory('Model Question Paper')}>
+                                        <div 
+                                            className={`study-note-card ${activeSubCategory === 'Model Question Paper' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Model Question Paper')}
+                                        >
                                             <img src="/Images/model qstn.png" alt="" />
                                             <span>Model Question Paper</span>
                                         </div>
-                                        <div className="study-note-card" onClick={() => setActiveSubCategory('Sample Question Paper')}>
+                                        <div 
+                                            className={`study-note-card ${activeSubCategory === 'Sample Question Paper' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Sample Question Paper')}
+                                        >
                                             <img src="/Images/sample qstn.png" alt="" />
                                             <span>Sample Question Paper</span>
                                         </div>
@@ -272,11 +323,17 @@ const PaperDetailPage = () => {
                                 )}
                                 {activeCategory === 'Video Class' && (
                                     <>
-                                        <div className="vedio-clas-card" onClick={() => setActiveSubCategory('Lectures')}>
+                                        <div 
+                                            className={`vedio-clas-card ${activeSubCategory === 'Lectures' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Lectures')}
+                                        >
                                             <img src="/Images/lecture.png" alt="" />
                                             <span>Lectures</span>
                                         </div>
-                                        <div className="vedio-clas-card" onClick={() => setActiveSubCategory('Slides')}>
+                                        <div 
+                                            className={`vedio-clas-card ${activeSubCategory === 'Slides' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Slides')}
+                                        >
                                             <img src="/Images/slides.png" alt="" />
                                             <span>Slides</span>
                                         </div>
@@ -284,15 +341,24 @@ const PaperDetailPage = () => {
                                 )}
                                 {activeCategory === 'Mock Test' && (
                                     <>
-                                        <div className="weekly-Challange" onClick={() => setActiveSubCategory('Weekly Challenge')}>
+                                        <div 
+                                            className={`weekly-Challange ${activeSubCategory === 'Weekly Challenge' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Weekly Challenge')}
+                                        >
                                             <img src="/Images/weeklychallange.png" alt="" />
                                             <span>Weekly Challenge</span>
                                         </div>
-                                        <div className="weekly-Challange" onClick={() => setActiveSubCategory('Special Exam')}>
+                                        <div 
+                                            className={`weekly-Challange ${activeSubCategory === 'Special Exam' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Special Exam')}
+                                        >
                                             <img src="/Images/special exam.png" alt="" />
                                             <span>Special Exam</span>
                                         </div>
-                                        <div className="weekly-Challange" onClick={() => setActiveSubCategory('Assessment Test')}>
+                                        <div 
+                                            className={`weekly-Challange ${activeSubCategory === 'Assessment Test' ? 'active' : ''}`}
+                                            onClick={() => setActiveSubCategory('Assessment Test')}
+                                        >
                                             <img src="/Images/assistmenttest.png" alt="" />
                                             <span>Assessment Test</span>
                                         </div>

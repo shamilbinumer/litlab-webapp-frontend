@@ -131,7 +131,28 @@
                 .content-details {
                     padding-top: 2rem;
 
+
+                    .study-note-card,
+                    .vedio-clas-card,
+                    .weekly-Challange {
+                        flex: 1;
+                        min-width: 200px;
+                        padding: 15px;
+                        background: #fff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        border: 2px solid transparent;
+
+                        &.active {
+                            border-color: #6BCCE5;
+                        }
+                    }
+
                     .study-note-card {
+
+
                         display: flex;
                         gap: 1rem;
                         padding: 1rem;
@@ -145,6 +166,10 @@
                         line-height: 19px;
                         margin-bottom: 1rem;
                         cursor: pointer;
+
+                        &.activeWeek {
+                            border: 3px solid red !important;
+                        }
                     }
 
                     .study-note-card:hover {
@@ -334,7 +359,8 @@
                     gap: 1rem;
                     padding-bottom: 2rem;
 
-                    button,a {
+                    button,
+                    a {
                         width: 39%;
                         height: 54px;
                         border-radius: 4px;
@@ -587,8 +613,11 @@
                             }
                         }
                     }
+
                 }
+
             }
         }
     }
+
 }
