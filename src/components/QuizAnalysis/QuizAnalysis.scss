@@ -1,0 +1,200 @@
+.quiz-analytics {
+    --primary-color: #0dcaf0;
+    --error-color: #ff6384;
+    --gray-color: #6b7280;
+    --success-color: #22c55e;
+
+    .quiz-analyticsMain-Wrapper {
+        display: flex;
+    }
+
+    .left-side {
+        width: 14%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .right-side {
+        padding: 1rem;
+        position: relative;
+        width: 86%;
+        margin-left: 14%;
+
+
+        margin-bottom: 2rem;
+
+        .chart-container {
+            // background-color: yellow;
+            width: 70%;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+
+            .donut-chart-container {
+                display: flex;
+                justify-content: start;
+                margin-bottom: 1.5rem;
+                width: 50%;
+                // background-color: var(--error-color);
+
+                .donut-chart {
+                    position: relative;
+                    width: 230px;
+                    height: 230px;
+
+                    svg {
+                        transform: rotate(-90deg);
+
+                        circle {
+                            &.background-circle {
+                                fill: none;
+                                stroke: #5F5F5FA6;
+                                stroke-width: 16;
+                            }
+
+                            &.progress-circle {
+                                fill: none;
+                                stroke: #6BCCE5;
+                                stroke-width: 16;
+                                //   stroke-linecap: round;
+                            }
+                        }
+                    }
+
+                    .percentage {
+                        position: absolute;
+                        inset: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.875rem;
+                        font-weight: 700;
+                    }
+                }
+            }
+
+            .stats-grid {
+                // display: grid;
+                // grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 1.5rem;
+
+                .stat-item {
+                    text-align: center;
+                    width: 298.22px;
+                    display: flex;
+                    border-radius: 100px;
+
+                    .number {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        background-color: #6BCCE5;
+                        color: white;
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 200px;
+                        font-family: Montserrat;
+                        font-size: 19.76px;
+                        font-weight: 600;
+                        letter-spacing: -1.8253347873687744px;
+                        text-align: center;
+                        margin-bottom: 0 !important;
+
+                    }
+
+                    .label {
+                        // padding: 0.25rem 0.75rem;
+                        // border-radius: 9999px;
+
+                        &.correct {
+                            color: #6BCCE5;
+                            padding-left: 1rem;
+                            // width: 87%;
+                            display: flex;
+                            font-family: Inter;
+                            font-size: 12.85px;
+                            font-weight: 700;
+                            line-height: 30.32px;
+                            letter-spacing: 0.6170145273208618px;
+                            text-align: center;
+                            text-underline-position: from-font;
+                            text-decoration-skip-ink: none;
+
+                            align-items: center;
+                            justify-content: start;
+
+                        }
+
+                        &.wrong {
+                            background-color: #fee2e2;
+                            color: #991b1b;
+                        }
+
+                        &.unanswered {
+                            background-color: #f3f4f6;
+                            color: #374151;
+                        }
+                    }
+
+                }
+
+                #stat-item1 {
+                    background-color: #6BCCE563;
+
+                }
+            }
+
+        }
+
+
+
+        .analytics {
+            .stat-cards {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+
+                .stat-card {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 1rem;
+                    background-color: white;
+                    border-radius: 0.5rem;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+                    .icon-wrapper {
+                        padding: 0.5rem;
+                        border-radius: 9999px;
+                        background-color: #dbeafe;
+
+                        svg {
+                            width: 1.5rem;
+                            height: 1.5rem;
+                            color: #2563eb;
+                        }
+                    }
+
+                    .value {
+                        margin-top: 0.5rem;
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                    }
+
+                    .label {
+                        color: #6b7280;
+                    }
+                }
+            }
+        }
+    }
+}
