@@ -11,19 +11,24 @@
             z-index: 1000;
         }
         .my-profile-right{
-            padding: 2rem;
             position: relative;
+            overflow-x: hidden;
             width: 86%;
             margin-left: 14%;
+            .right-main{
+                height: 100vh;
+                display: flex;
+                align-items: center;
+            }
             .profile-contanet-left{
                 border-right: 2px solid #0000007A;
                 padding: 2rem;
                 .profile-card{
                     border: 2px solid #00000072;
                     width: 480px;
-                    height: 480px;
                     border-radius: 34px;
                     margin: auto;
+                    box-shadow: 0px 1.33px 1.33px 0px #00000040;
                     padding: 2rem;
                     .dp{
                         width: 134px;
@@ -65,7 +70,95 @@
 
                         }
                     }
+                    .detsils-container{
+                        width: fit-content;
+                        margin: auto;
+                        .details{
+                            display: flex;
+                            // justify-content: center;
+                            gap: 10px;
+                            align-items: center;
+                            // padding-bottom: rem;
+                            .icon{
+                                font-size: 25px;
+                                margin-top: -10px;
+                            }
+                            .details-text{
+                                font-family: Montserrat;
+                                font-size: 16.47px;
+                                font-weight: 500;
+                                line-height: 43.37px;
+                                letter-spacing: -0.024031199514865875px;
+                                text-underline-position: from-font;
+                                text-decoration-skip-ink: none;
+
+                            }
+                        }
+                    }
                 }
+            }
+            .profile-contanet-right{
+                padding: 2rem;
+                .four-card-main {
+                    width: 430px;
+                    height: 400px;
+                    margin: auto;
+                  }
+                  
+                  .four-card {
+                    width: 100%;
+                    height: 180px;
+                    box-shadow: 0px 1.23px 1.23px 0px #00000040;
+                    border: 0.31px solid #0000009E;
+                    border-radius: 7px;
+                    background: #fff;
+                    display: flex;
+                    align-items: center;
+                    font-family: Inter;
+                    font-size: 17.27px;
+                    font-weight: 600;
+                    line-height: 20.9px;
+                    text-align: left;
+                    text-underline-position: from-font;
+                    text-decoration-skip-ink: none;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: transform 0.2s ease;
+                  }
+                  
+                  .four-card:hover {
+                    transform: translateY(-2px);
+                  }
+                  
+                  .card-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                  }
+                  
+                  .icon-wrapper {
+                    background-color: #7DD3FC;
+                    border-radius: 50%;
+                    width: 64px;
+                    height: 64px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 16px;
+                  }
+                  
+                  .card-icon {
+                    color: white;
+                    font-size: 28px;
+                  }
+                  
+                  .card-title {
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: #333;
+                    margin: 0;
+                  }
             }
         }
     }
