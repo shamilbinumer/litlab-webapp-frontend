@@ -51,12 +51,14 @@
                 border-right: 2px solid black;
 
                 .module-card {
-                    margin-bottom: 10px;
+                    margin-bottom: 25px;
+                    border: 0.8px solid #000000;
                     width: 100%;
-                    background-color: red;
+                    background-color: #6BCCE5;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+
                     padding: 1.5rem;
                     border-radius: 9px;
 
@@ -97,6 +99,77 @@
                         }
                     }
                 }
+
+                #submoduleCard {
+                    height: 122px;
+                    top: 153px;
+                    left: 212px;
+                    border-radius: 5.89px;
+                    padding-top: 2rem;
+
+                    .module-title {
+
+                        font-family: Montserrat;
+                        font-weight: 700;
+                        padding-bottom: 5px;
+                        font-size: 19.82px;
+                        line-height: 24.16px;
+                        letter-spacing: 0%;
+
+                    }
+
+                    p {
+                        font-family: Inter;
+                        font-weight: 500;
+                        width: 70%;
+                        font-size: 21.15px ;
+                        line-height: 22.7px;
+                        letter-spacing: 0%;
+                    }
+
+                }
+
+                #submoduleCardAssistment {
+                    height: 122px;
+                    top: 153px;
+                    left: 212px;
+                    border-radius: 5.89px;
+                    padding-top: 2rem;
+
+                    .module-title {
+
+                        font-family: Inter;
+                        font-weight: 600;
+                        font-size: 31.8px;
+                        line-height: 38.49px;
+                        letter-spacing: 0%;
+
+
+                    }
+
+                    p {
+                        font-family: Inter;
+                        font-weight: 500;
+                        width: 70%;
+                        font-size: 21.15px !important;
+                        line-height: 22.7px;
+                        letter-spacing: 0%;
+                    }
+
+                }
+
+                #submodulecard:hover {
+
+                    color: white !important;
+                }
+
+            }
+
+
+            .module-card:hover {
+                background: #263238;
+                color: white;
+
             }
 
             .content-right {
@@ -167,7 +240,7 @@
                         margin-bottom: 1rem;
                         cursor: pointer;
 
-                    
+
                     }
 
                     .study-note-card:hover {
@@ -402,220 +475,521 @@
                 }
             }
         }
-    }
 
-    .main-content {
-        margin-top: 2rem;
-    
-        .main-content-left {
-            padding: 1rem;
-    
-            .search-bar {
-                width: 100%;
-                height: 50px;
-                border-radius: 16px;
-                border: 2px solid #00000061;
-                margin: auto;
-                display: flex;
-                padding-left: 10px;
-                align-items: center;
-                gap: 10px;
-                overflow: hidden;
-    
-                .search-icon {
-                    font-size: 19px;
-                }
-    
-                input {
-                    height: 47px;
-                    border: none;
-                    width: 750px;
-                    font-family: Inter;
-                    font-size: 16.2px;
-                    font-weight: 400;
-                    line-height: 19.61px;
-                    text-underline-position: from-font;
-                    text-decoration-skip-ink: none;
-                }
-    
-                input::placeholder {
-                    font-family: Inter;
-                    font-size: 16.2px;
-                    font-weight: 400;
-                    line-height: 19.61px;
-                    text-underline-position: from-font;
-                    text-decoration-skip-ink: none;
-                }
-    
-                input:focus {
-                    outline: none;
-                }
-    
-            }
-    
-            .vedio-card {
-                margin-top: 2rem;
-                width: 100%;
-                overflow: hidden;
-                border-radius: 11px;
-                border: 1px solid #00000091;
-                position: sticky;
-                top: 1rem;
-    
-                .vedio-container {
+        .main-content {
+            margin-top: 2rem;
+
+            .main-content-left {
+                padding: 1rem;
+
+                .search-bar {
                     width: 100%;
-                    height: 500px;
-                    position: relative;
-    
-                    .main-img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
+                    height: 50px;
+                    border-radius: 16px;
+                    border: 2px solid #00000061;
+                    margin: auto;
+                    display: flex;
+                    padding-left: 10px;
+                    align-items: center;
+                    gap: 10px;
+                    overflow: hidden;
+
+                    .search-icon {
+                        font-size: 19px;
                     }
-    
-                    .play-image {
-                        position: absolute;
-                        left: 50%;
-                        top: 50%;
-                        transform: translate(-50%, -50%);
+
+                    input {
+                        height: 47px;
+                        border: none;
+                        width: 750px;
+                        font-family: Inter;
+                        font-size: 16.2px;
+                        font-weight: 400;
+                        line-height: 19.61px;
+                        text-underline-position: from-font;
+                        text-decoration-skip-ink: none;
                     }
-    
-                    .vedio-details {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        display: flex;
-                        justify-content: space-between;
-                        border-radius: 11px;
-                        background-color: white;
-                        width: 100%;
-                        padding: 1rem;
-    
-                        h1 {
-                            font-family: Montserrat;
-                            margin-top: 0 !important;
-                            padding-top: 0 !important;
-                            font-size: 25.95px;
-                            font-weight: 700;
-                            text-align: left;
-                            letter-spacing: -0.9268941283226013px;
-                        }
-    
-                        p {
-                            width: 70%;
-                            margin-bottom: 0 !important;
-                            font-family: Montserrat;
-                            font-size: 13.81px;
-                            font-weight: 500;
-                            line-height: 15.78px;
-                            text-align: left;
-                        }
-    
-                        .fav-icon {
-                            font-size: 30px;
-                        }
+
+                    input::placeholder {
+                        font-family: Inter;
+                        font-size: 16.2px;
+                        font-weight: 400;
+                        line-height: 19.61px;
+                        text-underline-position: from-font;
+                        text-decoration-skip-ink: none;
                     }
+
+                    input:focus {
+                        outline: none;
+                    }
+
                 }
-            }
-        }
-    
-    }
-    
-    
-    .videoMainWrapper {
-        .video-content-wrapper {
-            .main-content-right {
-    
-                .vedio-list-wrapper {
-                    padding-top: 2.4rem;
-    
-                    .vedio-item {
-                        margin-bottom: 1rem;
-    
-                        .vedio-item-left {
-                            .thumbnile {
-                                width: 70% !important;
-                                height: 102px;
-                                margin: auto !important;
-                                // background-color: red;
-                                border-radius: 10px;
-                                overflow: hidden;
-                                position: relative;
-    
-                                .thumbnile-image {
-                                    width: 100%;
-                                    height: 100%;
-                                    object-fit: cover;
-                                }
-    
-                                .play-icon {
-                                    position: absolute;
-                                    right: 10px;
-                                    top: 10px;
-                                    color: white;
-                                    font-size: 37px;
-                                }
-                            }
+
+                .vedio-card {
+                    margin-top: 2rem;
+                    width: 100%;
+                    overflow: hidden;
+                    border-radius: 11px;
+                    border: 1px solid #00000091;
+                    position: sticky;
+                    top: 1rem;
+
+                    .vedio-container {
+                        width: 100%;
+                        height: 500px;
+                        position: relative;
+
+                        .main-img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
                         }
-    
-                        .vedio-item-right {
+
+                        .play-image {
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+
+                        .vedio-details {
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            display: flex;
+                            justify-content: space-between;
+                            border-radius: 11px;
+                            background-color: white;
+                            width: 100%;
+                            padding: 1rem;
+
                             h1 {
                                 font-family: Montserrat;
-                                font-size: 19.18px;
-                                font-weight: 700;
-                                line-height: 19.73px;
-                                letter-spacing: -0.02em;
-                                text-align: left;
-                                padding-top: 0 !important;
                                 margin-top: 0 !important;
-                                margin-bottom: 0 !important;
-                            }
-    
-                            .teacer-name {
-                                font-family: Inter;
-                                font-size: 10.57px;
-                                font-weight: 500;
-                                line-height: 10.7px;
-                                padding-top: 5px;
-                            }
-    
-                            .vedio-description {
-                                font-family: Inter;
-                                font-size: 12.26px;
-                                font-weight: 600;
-                                line-height: 12.8px;
+                                padding-top: 0 !important;
+                                font-size: 25.95px;
+                                font-weight: 700;
                                 text-align: left;
-                                margin-top: 10px;
+                                letter-spacing: -0.9268941283226013px;
                             }
-    
-                            .button-icon {
-                                display: flex;
-                                gap: 1rem;
-                                align-items: center;
-    
-                                button {
-                                    background-color: #FBD63C;
-                                    padding: 5px 25px;
-                                    border: 1px solid #FBD63C;
-                                    font-family: Montserrat;
-                                    font-size: 12.51px;
-                                    font-weight: 600;
-                                    border-radius: 9px;
-                                }
-    
-                                .heart-icon {
-                                    font-size: 25px;
-                                }
+
+                            p {
+                                width: 70%;
+                                margin-bottom: 0 !important;
+                                font-family: Montserrat;
+                                font-size: 13.81px;
+                                font-weight: 500;
+                                line-height: 15.78px;
+                                text-align: left;
+                            }
+
+                            .fav-icon {
+                                font-size: 30px;
                             }
                         }
-    
                     }
-    
                 }
             }
+
         }
-    
+
+
+        .videoMainWrapper {
+            .video-content-wrapper {
+                .main-content-right {
+
+                    .vedio-list-wrapper {
+                        padding-top: 2.4rem;
+
+                        .vedio-item {
+                            margin-bottom: 1rem;
+
+                            .vedio-item-left {
+                                .thumbnile {
+                                    width: 70% !important;
+                                    height: 102px;
+                                    margin: auto !important;
+                                    // background-color: red;
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                    position: relative;
+
+                                    .thumbnile-image {
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                    }
+
+                                    .play-icon {
+                                        position: absolute;
+                                        right: 10px;
+                                        top: 10px;
+                                        color: white;
+                                        font-size: 37px;
+                                    }
+                                }
+                            }
+
+                            .vedio-item-right {
+                                h1 {
+                                    font-family: Montserrat;
+                                    font-size: 19.18px;
+                                    font-weight: 700;
+                                    line-height: 19.73px;
+                                    letter-spacing: -0.02em;
+                                    text-align: left;
+                                    padding-top: 0 !important;
+                                    margin-top: 0 !important;
+                                    margin-bottom: 0 !important;
+                                }
+
+                                .teacer-name {
+                                    font-family: Inter;
+                                    font-size: 10.57px;
+                                    font-weight: 500;
+                                    line-height: 10.7px;
+                                    padding-top: 5px;
+                                }
+
+                                .vedio-description {
+                                    font-family: Inter;
+                                    font-size: 12.26px;
+                                    font-weight: 600;
+                                    line-height: 12.8px;
+                                    text-align: left;
+                                    margin-top: 10px;
+                                }
+
+                                .button-icon {
+                                    display: flex;
+                                    gap: 1rem;
+                                    align-items: center;
+
+                                    button {
+                                        background-color: #FBD63C;
+                                        padding: 5px 25px;
+                                        border: 1px solid #FBD63C;
+                                        font-family: Montserrat;
+                                        font-size: 12.51px;
+                                        font-weight: 600;
+                                        border-radius: 9px;
+                                    }
+
+                                    .heart-icon {
+                                        font-size: 25px;
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+
+        }
+
+        .small-screen-banner {
+            display: none;
+
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 174px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
     }
 
-}
 
+    @media (max-width:575px) {
+        .paper-title {
+            font-size: 20px !important;
+            text-align: center !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .small-screen-banner {
+
+            display: block !important;
+        }
+
+        .content-right {
+            order: 1;
+
+            .box {
+                // background-color: red !important;
+                height: 30px !important;
+                border-radius: 20px !important;
+                width: 100% !important;
+                font-size: 11px !important;
+                font-weight: 500 !important;
+            }
+
+            .active {
+                background: #6BCCE5 !important;
+            }
+
+
+
+        }
+
+        .content-left {
+            order: 2;
+            border: none !important;
+            height: auto !important;
+            min-height: auto !important;
+
+        }
+
+        .module-title {
+            font-size: 12px !important;
+        }
+
+        .module-card p {
+            font-size: 10px !important;
+        }
+
+        .button-heart button {
+            padding: 3px 8px !important;
+            font-size: 10px !important;
+            font-weight: 500 !important;
+        }
+        #submoduleCard{
+            p{
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+                width: 80% !important;
+            }
+            .module-title {
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+            }
+         
+        }
+        .quiz-container{
+            padding: 10px !important;
+            .question h3{
+                // padding-left: 10px !important;
+                font-size: 11px !important;
+                span{
+                    width: 20% !important;
+                }
+            }
+            .option span{
+                font-size: 8px !important;
+            }
+            .option-letter{
+                width: 20px !important;
+                height: 20px !important;
+            }
+            .quiz-header{
+                justify-content: space-between !important;
+                gap: 0 !important;
+                padding-right: 10px !important;
+            }
+        }
+        .buttons button{
+            width: 425 !important;
+            height: 28px !important;
+            font-size: 11px !important;
+        }
+
+    }
+    @media (min-width:576px) and (max-width:768px) {
+        .paper-title {
+            font-size: 20px !important;
+            text-align: center !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .small-screen-banner {
+
+            display: block !important;
+        }
+
+        .content-right {
+            order: 1;
+
+            .box {
+                // background-color: red !important;
+                height: 40px !important;
+                border-radius: 20px !important;
+                width: 100% !important;
+                font-size: 15px !important;
+                font-weight: 500 !important;
+            }
+
+            .active {
+                background: #6BCCE5 !important;
+            }
+
+
+
+        }
+
+        .content-left {
+            order: 2;
+            border: none !important;
+            height: auto !important;
+            min-height: auto !important;
+
+        }
+
+        .module-title {
+            font-size: 12px !important;
+        }
+
+        .module-card p {
+            font-size: 10px !important;
+        }
+
+        .button-heart button {
+            padding: 3px 8px !important;
+            font-size: 10px !important;
+            font-weight: 500 !important;
+        }
+        #submoduleCard{
+            p{
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+                width: 80% !important;
+            }
+            .module-title {
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+            }
+         
+        }
+        .quiz-container{
+            padding: 10px !important;
+            .question h3{
+                // padding-left: 10px !important;
+                font-size: 11px !important;
+                span{
+                    width: 20% !important;
+                }
+            }
+            .option span{
+                font-size: 8px !important;
+            }
+            .option-letter{
+                width: 20px !important;
+                height: 20px !important;
+            }
+            .quiz-header{
+                justify-content: space-between !important;
+                gap: 0 !important;
+                padding-right: 10px !important;
+            }
+        }
+        .buttons button{
+            width: 425 !important;
+            height: 28px !important;
+            font-size: 11px !important;
+        }
+
+    }
+    @media (min-width:769px) and (max-width:1024px) {
+        .paper-title {
+            font-size: 25px !important;
+            text-align: center !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .small-screen-banner {
+
+            display: block !important;
+        }
+
+        .content-right {
+            order: 1;
+
+            .box {
+                // background-color: red !important;
+                height: 40px !important;
+                border-radius: 20px !important;
+                width: 100% !important;
+                font-size: 16px !important;
+                font-weight: 500 !important;
+            }
+
+            .active {
+                background: #6BCCE5 !important;
+            }
+
+
+
+        }
+
+        .content-left {
+            order: 2;
+            border: none !important;
+            height: auto !important;
+            min-height: auto !important;
+
+        }
+
+        .module-title {
+            font-size: 18px !important;
+        }
+
+        .module-card p {
+            font-size: 13px !important;
+        }
+
+        .button-heart button {
+            padding: 3px 8px !important;
+            font-size: 10px !important;
+            font-weight: 500 !important;
+        }
+        #submoduleCard{
+            p{
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+                width: 80% !important;
+            }
+            .module-title {
+                font-size: 15px !important;
+                padding-bottom: 0 !important;
+            }
+         
+        }
+        .quiz-container{
+            padding: 10px !important;
+            .question h3{
+                // padding-left: 10px !important;
+                font-size: 11px !important;
+                span{
+                    width: 20% !important;
+                }
+            }
+            .option span{
+                font-size: 8px !important;
+            }
+            .option-letter{
+                width: 20px !important;
+                height: 20px !important;
+            }
+            .quiz-header{
+                justify-content: space-between !important;
+                gap: 0 !important;
+                padding-right: 10px !important;
+            }
+        }
+        .buttons button{
+            width: 425 !important;
+            height: 28px !important;
+            font-size: 11px !important;
+        }
+
+    }
+
+
+
+}
