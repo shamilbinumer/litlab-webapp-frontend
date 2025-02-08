@@ -216,7 +216,7 @@ const IndexPage = () => {
                                 {filteredPapers.length > 0 ? (
                                     filteredPapers.map((paper) => (
                                         <div className="col-lg-4" key={paper.id}>
-                                            <Link to={`/paper-details/${paper.id}`}>
+                                            <Link to={`/paper-details/${paper.title}`}>
                                                 <div className="paper-card">
                                                     <IoIosHeartEmpty className="heart-icon" />
                                                     <img

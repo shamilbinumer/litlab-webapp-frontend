@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './QuizAnalysis.scss'
 import { Activity, AlertCircle, Clock } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
@@ -10,9 +10,9 @@ const QuizAnalysis = () => {
 
     // Sample data - replace with actual data from your application
     const analyticsData = {
-        correct: 3,
-        wrong: 2,
-        unanswered: 46,
+        correct: 90,
+        wrong: 5,
+        unanswered: 5,
         score: "9/50",
         timePerQuestion: "2s",
         totalTime: "16s"

@@ -7,8 +7,70 @@ import { MdOutlineEmail, MdOutlinePhoneAndroid } from 'react-icons/md';
 import { IoBookOutline } from "react-icons/io5";
 import { AiOutlineHeart } from "react-icons/ai";
 import { VscFiles } from "react-icons/vsc";
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import baseUrl from '../../baseUrl';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const MyProfile = () => {
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkUserAuthentication = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUser(response.data.user);
+
+                if (response.status !== 200) {
+                    throw new Error('Failed to fetch user data');
+                }
+            } catch (error) {
+                setError(error.message);
+                navigate('/login');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
+
+    if (isLoading) {
+        return (
+            <div className="loading-container">
+                <Box sx={{ width: '100%' }}>
+                    <LinearProgress />
+                </Box>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <p>Error loading profile: {error}</p>
+            </div>
+        );
+    }
+
     return (
         <div className='MyProfileMainWRapper'>
             <div className="my-profile-main">
@@ -19,7 +81,7 @@ const MyProfile = () => {
                             <div className="profile-card">
                                 <div className="dp">
                                     <div style={{ overflow: 'hidden', borderRadius: "50%" }}>
-                                        <img src="/Images/9385289.png" alt="" />
+                                        <img src={user?.image || '/Images/9385289.png'} alt="" />
                                     </div>
                                     <div className="camera-icon">
                                         <IoCameraOutline className='icon' />
@@ -32,15 +94,15 @@ const MyProfile = () => {
                                 <div className="detsils-container">
                                     <div className="details">
                                         <div><FiUser className='icon' /></div>
-                                        <div className='details-text'>Shamil KK</div>
+                                        <div className='details-text'>{user?.name}</div>
                                     </div>
                                     <div className="details">
                                         <div><MdOutlinePhoneAndroid className='icon' /></div>
-                                        <div className='details-text'>+91 9876543212</div>
+                                        <div className='details-text'>{user?.phone}</div>
                                     </div>
                                     <div className="details">
                                         <div><MdOutlineEmail className='icon' /></div>
-                                        <div className='details-text'>shamil@gmail.com</div>
+                                        <div className='details-text'>{user?.email}</div>
                                     </div>
                                 </div>
                             </div>
@@ -78,14 +140,17 @@ const MyProfile = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
-                                    <div className="four-card">
-                                        <div className="card-content">
-                                            <div className="icon-wrapper">
-                                                <VscFiles className="card-icon" />
+                                    <Link to='/my-mock-details'>
+
+                                        <div className="four-card">
+                                            <div className="card-content">
+                                                <div className="icon-wrapper">
+                                                    <VscFiles className="card-icon" />
+                                                </div>
+                                                <h3 className="card-title">Mock Test</h3>
                                             </div>
-                                            <h3 className="card-title">Mock Test</h3>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +158,7 @@ const MyProfile = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default MyProfile
+export default MyProfile;

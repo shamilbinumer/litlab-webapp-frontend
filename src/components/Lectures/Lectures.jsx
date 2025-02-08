@@ -8,12 +8,13 @@ import { LuEye, LuHeart } from 'react-icons/lu'
 const Lectures = () => {
   return (
     <div className='LecturesMainWrapper'>
-      <UserProfile />
       <div className="lecture-main">
         <div className="left-side">
           <SideNave />
         </div>
         <div className="right-side">
+          <UserProfile />
+          <div></div>
           <Link to='/'>
             <div className="back-btn-container">
               <FaArrowLeft className='back-btn' />
@@ -108,7 +109,7 @@ const Lectures = () => {
                         </div>
                       </div>
                     </div>
-                  
+
 
                   </div>
                 </div>

@@ -3,7 +3,7 @@ import { IoPlayCircleSharp } from 'react-icons/io5';
 import { LuHeart, LuEye } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import './PaperDetailPage.scss';
 
@@ -12,6 +12,9 @@ const PaperDetailPage = () => {
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
     const [selectedOption, setSelectedOption] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const {paperId}=useParams()
+    console.log(paperId);
+    
 
     const options = [
         { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
@@ -80,12 +83,12 @@ const PaperDetailPage = () => {
 
     return (
         <div className="PaperDetailPageMainWrapper">
-            <UserProfile />
             <div className="detail-page-main">
                 <div className="left-side">
                     <SideNave />
                 </div>
                 <div className="right-side">
+                    <div><UserProfile/></div>
                     <Link to="/">
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
