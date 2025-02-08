@@ -8,6 +8,7 @@ import Lectures from "./components/Lectures/Lectures"
 import MyProfile from "./components/MyProfile/MyProfile"
 import QuizAnalysis from "./components/QuizAnalysis/QuizAnalysis"
 import MyMockDetails from "./components/MyMockDetails/MyMockDetails"
+import MyCourses from "./components/MyCourses/MyCourses"
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/my-profile" Component={MyProfile} />
           <Route path="/quiz-analysis" Component={QuizAnalysis} />
           <Route path="/my-mock-details" Component={MyMockDetails} />
+          <Route path="/my-course-details" Component={MyCourses} />
         </Routes>
       </BrowserRouter>
     </>

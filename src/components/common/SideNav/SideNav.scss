@@ -58,7 +58,8 @@
             justify-content: space-between; // Pushes the profile section to the bottom
             align-items: center;
             padding: 10px !important;
-
+            overflow-y: hidden;
+            overflow-x: hidden;
             .nav-logo img {
                 width: 30px !important;
             }

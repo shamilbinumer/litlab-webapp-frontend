@@ -149,10 +149,11 @@
                 position: relative;
                 border-radius: 10px;
                 padding: 2rem;
-                margin-bottom: 1.5rem !important;
-                height: 100%;
+                margin-bottom: 24px !important; /* Increased from 1.5rem */
+                height: 250px;
                 display: flex;
                 flex-direction: column;
+                transition: .3s;
                 
                 .heart-icon {
                     position: absolute;
@@ -232,6 +233,9 @@
                     margin-top: auto; // Push button to bottom
                     align-self: flex-start; // Align button to start of container
                 }
+            }
+            .paper-card:hover{
+                background-color: #000000BA;
             }
         }
     }

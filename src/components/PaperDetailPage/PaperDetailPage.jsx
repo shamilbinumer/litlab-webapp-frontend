@@ -3,18 +3,25 @@ import { IoPlayCircleSharp } from 'react-icons/io5';
 import { LuHeart, LuEye } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
-import { Link, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { data, Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import './PaperDetailPage.scss';
+import baseUrl from '../../baseUrl';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import { format } from "date-fns";
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
     const [selectedOption, setSelectedOption] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const {paperId}=useParams()
-    console.log(paperId);
-    
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { paperId } = useParams()
+
+
 
     const options = [
         { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
@@ -25,61 +32,110 @@ const PaperDetailPage = () => {
 
     const questions = [
         {
-          id: 1,
-          question: "What happens when a good's price decreases, according to the substitution effect?",
-          options: [
-            { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
-            { id: 'B', text: "Consumers save more of their income" },
-            { id: 'C', text: "Demand remains unchanged" },
-            { id: 'D', text: "The good becomes a Giffen good" }
-          ],
-          correctAnswer: 'A' // Optional: For future use (e.g., validation)
+            id: 1,
+            question: "What happens when a good's price decreases, according to the substitution effect?",
+            options: [
+                { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
+                { id: 'B', text: "Consumers save more of their income" },
+                { id: 'C', text: "Demand remains unchanged" },
+                { id: 'D', text: "The good becomes a Giffen good" }
+            ],
+            correctAnswer: 'A' // Optional: For future use (e.g., validation)
         },
         {
-          id: 2,
-          question: "What is the primary purpose of a budget?",
-          options: [
-            { id: 'A', text: "To track income and expenses" },
-            { id: 'B', text: "To increase debt" },
-            { id: 'C', text: "To reduce savings" },
-            { id: 'D', text: "To avoid financial planning" }
-          ],
-          correctAnswer: 'A'
+            id: 2,
+            question: "What is the primary purpose of a budget?",
+            options: [
+                { id: 'A', text: "To track income and expenses" },
+                { id: 'B', text: "To increase debt" },
+                { id: 'C', text: "To reduce savings" },
+                { id: 'D', text: "To avoid financial planning" }
+            ],
+            correctAnswer: 'A'
         },
         {
-          id: 3,
-          question: "Which of the following is a fixed expense?",
-          options: [
-            { id: 'A', text: "Groceries" },
-            { id: 'B', text: "Rent" },
-            { id: 'C', text: "Entertainment" },
-            { id: 'D', text: "Clothing" }
-          ],
-          correctAnswer: 'B'
+            id: 3,
+            question: "Which of the following is a fixed expense?",
+            options: [
+                { id: 'A', text: "Groceries" },
+                { id: 'B', text: "Rent" },
+                { id: 'C', text: "Entertainment" },
+                { id: 'D', text: "Clothing" }
+            ],
+            correctAnswer: 'B'
         },
         {
             id: 4,
             question: "What is the primary purpose of a budget?",
             options: [
-              { id: 'A', text: "To track income and expenses" },
-              { id: 'B', text: "To increase debt" },
-              { id: 'C', text: "To reduce savings" },
-              { id: 'D', text: "To avoid financial planning" }
+                { id: 'A', text: "To track income and expenses" },
+                { id: 'B', text: "To increase debt" },
+                { id: 'C', text: "To reduce savings" },
+                { id: 'D', text: "To avoid financial planning" }
             ],
             correctAnswer: 'A'
-          },
+        },
         // Add more questions as needed
-      ];
-   
-    
-      // Function to handle "Next" button click
-      const handleNextQuestion = () => {
+    ];
+
+
+    // Function to handle "Next" button click
+    const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-          setSelectedOption(null); // Reset selected option for the next question
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setSelectedOption(null); // Reset selected option for the next question
         }
-      };
-      const currentQuestion = questions[currentQuestionIndex];
+    };
+    const currentQuestion = questions[currentQuestionIndex];
+    useEffect(() => {
+        const fetchModules = async () => {
+            try {
+                const authToken = localStorage.getItem('authToken');
+                if (!authToken) {
+                    throw new Error('No authentication token found');
+                }
+
+                const response = await fetch(`${baseUrl}/api/fetch-modules/${paperId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch modules');
+                }
+
+                const data = await response.json();
+                console.log(data)
+                setModules(data);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchModules();
+    }, []);
+
+    if (modules.message == 'No modules found for this paper in your semester and course.' || modules.length == 0 || modules.message == 'No modules found.') {
+        return <div >
+            No modules found for this paper in your semester and course.
+        </div>
+    }
+    if (loading) {
+        return <div>
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        </div>;
+    }
+
+    if (error) {
+        return <div>Error loading modules: {error}</div>;
+    }
+
 
     return (
         <div className="PaperDetailPageMainWrapper">
@@ -88,7 +144,7 @@ const PaperDetailPage = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
-                    <div><UserProfile/></div>
+                    <div><UserProfile /></div>
                     <Link to="/">
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
@@ -151,21 +207,34 @@ const PaperDetailPage = () => {
                                 )
                             ) : activeCategory === 'Study Notes' ? (
                                 activeSubCategory === 'Study Notes' ? (
-                                    [...Array(4)].map((_, index) => (
-                                        <div className="module-card" key={index}>
-                                            <div className="module-card-left">
-                                                <h4 className="module-title">Module {index + 1}: Love Across Time</h4>
-                                                <p>22nd September 2024</p>
-                                                <div className="button-heart">
-                                                    <button>Read Summary</button>
-                                                    <LuHeart className="hear-icon" />
+                                    modules?.map((module, index) => {
+                                        // Convert Firestore timestamp manually
+                                        let formattedDate = "22nd September 2024"; // Default fallback date
+
+                                        if (module.createTime?._seconds) {
+                                            const date = new Date(module.createTime._seconds * 1000); // Convert seconds to milliseconds
+                                            formattedDate = format(date, "do MMMM yyyy"); // Format the date
+                                        }
+
+
+                                        return (
+                                            <div className="module-card" key={module.id || index}>
+                                                <div className="module-card-left">
+                                                    <h4 className="module-title">
+                                                        Module {module.module} : {module.title}
+                                                    </h4>
+                                                    <p>{formattedDate}</p>
+                                                    <div className="button-heart">
+                                                        <a href={module.fileUrl} target='_blank'><button>Read Summary</button></a>
+                                                        <LuHeart className="hear-icon" />
+                                                    </div>
+                                                </div>
+                                                <div className="module-card-right">
+                                                    <img src="/Images/Module-icon.png" alt="" />
                                                 </div>
                                             </div>
-                                            <div className="module-card-right">
-                                                <img src="/Images/Module-icon.png" alt="" />
-                                            </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 ) : activeSubCategory === 'Model Question Paper' ? (
                                     <div>Model Question Paper Content</div>
                                 ) : (
@@ -174,40 +243,40 @@ const PaperDetailPage = () => {
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                       <div className="quiz-container">
-                                       <div className="quiz-content">
-                                         <div className="quiz-header">
-                                           <span>{currentQuestionIndex + 1}/{questions.length}</span>
-                                           <span>00:00:00</span>
-                                         </div>
-                                         <div className="question">
-                                           <h3>
-                                             <span>Qs {currentQuestion.id} : </span>
-                                             <p>{currentQuestion.question}</p>
-                                           </h3>
-                                           <div className="options">
-                                             {currentQuestion.options.map((option) => (
-                                               <div
-                                                 key={option.id}
-                                                 onClick={() => setSelectedOption(option.id)}
-                                                 className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                               >
-                                                 <span className="option-letter">{option.id}</span>
-                                                 <span>{option.text}</span>
-                                               </div>
-                                             ))}
-                                           </div>
-                                         </div>
-                                         <div className="buttons">
-                                           <button className="ignore">Ignore</button>
-                                           {currentQuestionIndex < questions.length - 1 ? (
-                                             <button className="next" onClick={handleNextQuestion}>Next</button>
-                                           ) : (
-                                             <Link to='/quiz-analysis' className="next">Finish</Link>
-                                           )}
-                                         </div>
-                                       </div>
-                                     </div>
+                                        <div className="quiz-container">
+                                            <div className="quiz-content">
+                                                <div className="quiz-header">
+                                                    <span>{currentQuestionIndex + 1}/{questions.length}</span>
+                                                    <span>00:00:00</span>
+                                                </div>
+                                                <div className="question">
+                                                    <h3>
+                                                        <span>Qs {currentQuestion.id} : </span>
+                                                        <p>{currentQuestion.question}</p>
+                                                    </h3>
+                                                    <div className="options">
+                                                        {currentQuestion.options.map((option) => (
+                                                            <div
+                                                                key={option.id}
+                                                                onClick={() => setSelectedOption(option.id)}
+                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
+                                                            >
+                                                                <span className="option-letter">{option.id}</span>
+                                                                <span>{option.text}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="buttons">
+                                                    <button className="ignore">Ignore</button>
+                                                    {currentQuestionIndex < questions.length - 1 ? (
+                                                        <button className="next" onClick={handleNextQuestion}>Next</button>
+                                                    ) : (
+                                                        <Link to='/quiz-analysis' className="next">Finish</Link>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     ) : activeSubCategory === 'Special Exam' ? (
                                         <div className="quiz-container">
                                             <div className="quiz-content">
@@ -301,21 +370,21 @@ const PaperDetailPage = () => {
                             <div className="content-details">
                                 {activeCategory === 'Study Notes' && (
                                     <>
-                                        <div 
+                                        <div
                                             className={`study-note-card ${activeSubCategory === 'Study Notes' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Study Notes')}
                                         >
                                             <img src="/Images/study note.png" alt="" />
                                             <span>Study Notes</span>
                                         </div>
-                                        <div 
+                                        <div
                                             className={`study-note-card ${activeSubCategory === 'Model Question Paper' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Model Question Paper')}
                                         >
                                             <img src="/Images/model qstn.png" alt="" />
                                             <span>Model Question Paper</span>
                                         </div>
-                                        <div 
+                                        <div
                                             className={`study-note-card ${activeSubCategory === 'Sample Question Paper' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Sample Question Paper')}
                                         >
@@ -326,14 +395,14 @@ const PaperDetailPage = () => {
                                 )}
                                 {activeCategory === 'Video Class' && (
                                     <>
-                                        <div 
+                                        <div
                                             className={`vedio-clas-card ${activeSubCategory === 'Lectures' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Lectures')}
                                         >
                                             <img src="/Images/lecture.png" alt="" />
                                             <span>Lectures</span>
                                         </div>
-                                        <div 
+                                        <div
                                             className={`vedio-clas-card ${activeSubCategory === 'Slides' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Slides')}
                                         >
@@ -344,21 +413,21 @@ const PaperDetailPage = () => {
                                 )}
                                 {activeCategory === 'Mock Test' && (
                                     <>
-                                        <div 
+                                        <div
                                             className={`weekly-Challange ${activeSubCategory === 'Weekly Challenge' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Weekly Challenge')}
                                         >
                                             <img src="/Images/weeklychallange.png" alt="" />
                                             <span>Weekly Challenge</span>
                                         </div>
-                                        <div 
+                                        <div
                                             className={`weekly-Challange ${activeSubCategory === 'Special Exam' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Special Exam')}
                                         >
                                             <img src="/Images/special exam.png" alt="" />
                                             <span>Special Exam</span>
                                         </div>
-                                        <div 
+                                        <div
                                             className={`weekly-Challange ${activeSubCategory === 'Assessment Test' ? 'active' : ''}`}
                                             onClick={() => setActiveSubCategory('Assessment Test')}
                                         >

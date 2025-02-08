@@ -36,6 +36,8 @@ const IndexPage = () => {
             });
 
             if (response.status === 200) {
+                console.log(response.data);
+                
                 setPapers(response.data);
                 setFilteredPapers(response.data); // Initialize filtered papers with all fetched papers
             } else {
@@ -94,8 +96,10 @@ const IndexPage = () => {
             });
 
             if (response.status === 200) {
-                setPapers([response.data]); // Assuming the API returns an array of papers
-                setFilteredPapers([response.data]);
+                setPapers(response.data); // Assuming the API returns an array of papers
+                console.log(response.data);
+                
+                setFilteredPapers(response.data);
             } else {
                 console.error("Error fetching common papers");
             }
@@ -216,7 +220,6 @@ const IndexPage = () => {
                                 {filteredPapers.length > 0 ? (
                                     filteredPapers.map((paper) => (
                                         <div className="col-lg-4" key={paper.id}>
-                                            <Link to={`/paper-details/${paper.title}`}>
                                                 <div className="paper-card">
                                                     <IoIosHeartEmpty className="heart-icon" />
                                                     <img
@@ -228,9 +231,9 @@ const IndexPage = () => {
                                                         {paper.courseTitle || paper.title}
                                                     </h1>
                                                     <p className="paper-description">{paper.description}</p>
-                                                    <button>Learn Now</button>
+                                                    <Link to={`/paper-details/${paper.id}`}> <button>Learn Now</button></Link>
                                                 </div>
-                                            </Link>
+                                            
                                         </div>
                                     ))
                                 ) : (
