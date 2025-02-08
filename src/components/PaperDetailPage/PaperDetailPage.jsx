@@ -10,6 +10,7 @@ import baseUrl from '../../baseUrl';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { format } from "date-fns";
+import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -246,40 +247,7 @@ const PaperDetailPage = () => {
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                        <div className="quiz-container">
-                                            <div className="quiz-content">
-                                                <div className="quiz-header">
-                                                    <span>{currentQuestionIndex + 1}/{questions.length}</span>
-                                                    <span>00:00:00</span>
-                                                </div>
-                                                <div className="question">
-                                                    <h3>
-                                                        <span>Qs {currentQuestion.id} : </span>
-                                                        <p>{currentQuestion.question}</p>
-                                                    </h3>
-                                                    <div className="options">
-                                                        {currentQuestion.options.map((option) => (
-                                                            <div
-                                                                key={option.id}
-                                                                onClick={() => setSelectedOption(option.id)}
-                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                                            >
-                                                                <span className="option-letter">{option.id}</span>
-                                                                <span>{option.text}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="buttons">
-                                                    <button className="ignore">Ignore</button>
-                                                    {currentQuestionIndex < questions.length - 1 ? (
-                                                        <button className="next" onClick={handleNextQuestion}>Next</button>
-                                                    ) : (
-                                                        <Link to='/quiz-analysis' className="next">Finish</Link>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <WeeklyChallenge paperId={paperId} />
                                     ) : activeSubCategory === 'Special Exam' ? (
                                         <div className="quiz-container">
                                             <div className="quiz-content">

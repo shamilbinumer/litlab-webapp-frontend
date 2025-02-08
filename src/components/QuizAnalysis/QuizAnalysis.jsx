@@ -1,25 +1,26 @@
-import { useState } from 'react'
-import './QuizAnalysis.scss'
-import { Activity, AlertCircle, Clock } from 'lucide-react';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import './QuizAnalysis.scss';
 import UserProfile from '../common/UserProfile/UserProfile';
 import SideNave from '../common/SideNav/SideNave';
-import { Link } from 'react-router-dom';
+
 const QuizAnalysis = () => {
     const [showSolution, setShowSolution] = useState(false);
+    const [searchParams] = useSearchParams();
 
-    // Sample data - replace with actual data from your application
-    const analyticsData = {
-        correct: 90,
-        wrong: 5,
-        unanswered: 5,
-        score: "9/50",
-        timePerQuestion: "2s",
-        totalTime: "16s"
-    };
-
-    const totalQuestions = analyticsData.correct + analyticsData.wrong + analyticsData.unanswered;
-    const correctPercentage = (analyticsData.correct / totalQuestions) * 100;
+    // Get values from URL query parameters
+    const totalQuestions = parseInt(searchParams.get('total') || '0');
+    const correctAnswers = parseInt(searchParams.get('correct') || '0');
+    const wrongAnswers = parseInt(searchParams.get('wrong') || '0');
+    
+    // Calculate additional statistics
+    const unansweredQuestions = totalQuestions - (correctAnswers + wrongAnswers);
+    const correctPercentage = (correctAnswers / totalQuestions) * 100;
+    const score = `${correctAnswers}/${totalQuestions}`;
+    
+    // Mock time data (since it's not in query params)
+    const timePerQuestion = "2s";
+    const totalTime = "16s";
 
     const StatCard = ({ image, value, label }) => (
         <div className="stat-card">
@@ -30,6 +31,7 @@ const QuizAnalysis = () => {
             <div className="label">{label}</div>
         </div>
     );
+
     return (
         <div className="quiz-analytics">
             <UserProfile />
@@ -40,14 +42,18 @@ const QuizAnalysis = () => {
                 </div>
 
                 <div className="right-side">
-                    <div className="heaing-section">    <Link to='/'>  <img src="/Images/arrow-back.png" alt="" /><h1>Quiz Analytics</h1></Link></div>
+                    <div className="heaing-section">    
+                        <Link to='/'>  
+                            <img src="/Images/arrow-back.png" alt="" />
+                            <h1>Quiz Analytics</h1>
+                        </Link>
+                    </div>
 
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-lg-6 chart-main-wrapper">
                                 <h1>Overview</h1>
                                 <div className="chart-container">
-
                                     <div className="donut-chart-container">
                                         <div className="donut-chart">
                                             <svg viewBox="0 0 100 100">
@@ -73,15 +79,15 @@ const QuizAnalysis = () => {
 
                                     <div className="stats-grid">
                                         <div className="stat-item" id='stat-item1'>
-                                            <div className="number" id='number1'>{analyticsData.correct}</div>
+                                            <div className="number" id='number1'>{correctAnswers}</div>
                                             <div className="label correct">Correct</div>
                                         </div>
                                         <div className="stat-item" id='stat-item2'>
-                                            <div className="number" id='number2'>{analyticsData.wrong}</div>
+                                            <div className="number" id='number2'>{wrongAnswers}</div>
                                             <div className="label wrong">Wrong</div>
                                         </div>
                                         <div className="stat-item" id='stat-item3'>
-                                            <div className="number" id='number3'>{analyticsData.unanswered}</div>
+                                            <div className="number" id='number3'>{unansweredQuestions}</div>
                                             <div className="label unanswered">Unanswered</div>
                                         </div>
                                     </div>
@@ -91,33 +97,30 @@ const QuizAnalysis = () => {
                                 <h2>Analytics</h2>
                                 <div className="stat-cards">
                                     <StatCard
-                                        image={`/Images/analysis1 (2).png`}
-                                        value={analyticsData.score}
+                                        image="/Images/analysis1 (2).png"
+                                        value={score}
                                         label="Score"
                                     />
                                     <StatCard
-                                        image={`/Images/clock-exclamation_svgrepo.com.png`}
-                                        value={analyticsData.timePerQuestion}
+                                        image="/Images/clock-exclamation_svgrepo.com.png"
+                                        value={timePerQuestion}
                                         label="Per Question"
                                     />
                                     <StatCard
-                                        image={`/Images/totaltime.png`}
-                                        value={analyticsData.totalTime}
+                                        image="/Images/totaltime.png"
+                                        value={totalTime}
                                         label="Total Time"
                                     />
                                 </div>
-
                             </div>
                         </div>
                     </div>
 
-              <Link className='Answer-Key-btn'>Answer Key & Solution</Link>  </div>
-
-
+                    <Link className='Answer-Key-btn'>Answer Key & Solution</Link>
+                </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default QuizAnalysis
+export default QuizAnalysis;
