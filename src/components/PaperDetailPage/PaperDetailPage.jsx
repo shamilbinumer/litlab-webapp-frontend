@@ -151,6 +151,9 @@ const PaperDetailPage = () => {
                         </div>
                     </Link>
                     <h2 className="paper-title">Budget Analysis</h2>
+                    <div className="small-screen-banner">
+                        <img src="/Images/image 11.png" alt="" />
+                    </div>
                     <div className="contents-main-wrapper row">
                         <div className="col-lg-6 content-left">
                             {activeCategory === 'Video Class' ? (
@@ -348,7 +351,7 @@ const PaperDetailPage = () => {
                         <div className="col-lg-6 content-right">
                             <div className="boxes-container row">
                                 {['Study Notes', 'Video Class', 'Mock Test'].map((category) => (
-                                    <div className="col-lg-4" key={category}>
+                                    <div className="col-lg-4 col-md-4 col-sm-4 col-4" key={category}>
                                         <div
                                             className={`box ${activeCategory === category ? 'active-box' : ''}`}
                                             onClick={() => {
