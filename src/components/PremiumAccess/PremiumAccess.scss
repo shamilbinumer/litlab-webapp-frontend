@@ -1,0 +1,231 @@
+.premium-access {
+    padding: 2rem;
+ .left-side {
+    width: 14%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.right-side{
+    padding: 1rem;
+    position: relative;
+    width: 86%;
+    margin-left: 14%;
+    text-align: center;
+    // display: flex;
+
+    margin-bottom: 2rem;
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+
+        h1 {
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 34.05px;
+            line-height: 72.87px;
+            letter-spacing: -2.28px;
+            
+        }
+
+        p {
+            font-family: Montserrat;
+            font-weight: 500;
+            font-size: 21.45px;
+            line-height: 23.91px;
+            letter-spacing: -1.14px;
+            text-align: center;
+            color: #0000008C;
+            
+        }
+    }
+
+    .pricing-cards {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        margin: 0 auto;
+        max-width: 1200px;
+
+        .card {
+            position: relative;
+            width: 300px;
+            // height: 256px;
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-evenly !important;
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #0000007D;
+
+            &.active {
+                transform: scale(1.09);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                z-index: 2;
+                height: 330px;
+                border: 2px solid #6BCCE5;
+                background: #DEF8FF;
+
+            }
+
+            &:not(.active) {
+                transform: scale(0.85);
+                // opacity: 0.8;
+            }
+
+            .discount-badge {
+                position: absolute;
+                top: -12px;
+                right: -12px;
+                background: linear-gradient(90deg, #6BCCE5 0%, #3B717F 100%);
+
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-family: Montserrat;
+                font-weight: 600;
+                font-size: 10.42px;
+                line-height: 20.02px;
+                letter-spacing: -0.63px;
+
+            }
+
+            h2 {
+                font-family: Montserrat;
+                font-weight: 700;
+                font-size: 24.47px;
+                padding-bottom: 2rem;
+                line-height: 15.56px;
+                letter-spacing: -0.74px;
+                text-align: center;
+            }
+
+            .features {
+                margin-bottom: 2rem;
+
+                .feature {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.8rem;
+                    font-family: Montserrat;
+                    font-weight: 500;
+                    font-size: 14.47px;
+                    line-height: 15.56px;
+                    letter-spacing: -0.74px;
+                    text-align: center;
+
+                    color: #000000;
+
+                    .bullet {
+                        color: black;
+                        margin-right: 0.5rem;
+                        font-size: 2rem;
+                    }
+                }
+            }
+
+            .price-container {
+                font-family: Montserrat;
+                font-weight: 700;
+                font-size: 30.05px;
+                line-height: 30.78px;
+                letter-spacing: -0.56px;
+                text-align: center;
+                color: #000000;
+
+                .price {
+                    font-family: Montserrat;
+                    font-weight: 700;
+                    font-size: 30.05px;
+                    line-height: 30.78px;
+                    letter-spacing: -0.56px;
+
+                    color: #000000;
+
+                    .currency {
+                        font-family: Montserrat;
+                        font-weight: 700;
+                        font-size: 30.05px;
+                        line-height: 30.78px;
+                        letter-spacing: -0.56px;
+                    }
+
+                    .period {
+                        font-family: Montserrat;
+                        font-weight: 500;
+                        font-size: 15.05px;
+                        line-height: 11.78px;
+                        letter-spacing: -0.56px;
+                        text-align: center;
+
+                    }
+                }
+
+
+                .original-price {
+                    font-family: Montserrat;
+                    font-weight: 500;
+                    font-size: 15.05px;
+                    line-height: 31.78px;
+                    letter-spacing: -0.56px;
+                    text-align: center;
+
+                    .strike {
+                        text-decoration: line-through;
+                    }
+                }
+            }
+
+            .explore-btn {
+                font-family: Montserrat;
+                font-weight: 700;
+                font-size: 13.9px;
+                line-height: 22.24px;
+                letter-spacing: -0.7px;
+                padding-top: 2rem;
+                text-align: end;
+
+                &:hover {
+                    color: #2980b9;
+                }
+            }
+        }
+     
+    }
+
+    .continue-btn {
+        display: block;
+        margin: 3rem auto 0;
+        padding: 1rem 5rem;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #6BCCE5 0%, #3B717F 100%);
+
+        color: white;
+        font-family: Montserrat;
+        font-weight: 700;
+        font-size: 24.61px;
+        line-height: 32.97px;
+        letter-spacing: -1.03px;
+
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background: linear-gradient(90deg, #56a6b9 0%, #264851 100%);
+        }
+    }
+
+}
+   
+    
+}
