@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { format } from "date-fns";
 import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent';
+import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -20,7 +21,7 @@ const PaperDetailPage = () => {
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { paperId } = useParams()
+    const { paperId,paperTitle } = useParams()
 
 
 
@@ -120,7 +121,7 @@ const PaperDetailPage = () => {
         fetchModules();
     }, []);
 
-    if (modules.message == 'No modules found for this paper in your semester and course.' || modules.length == 0 || modules.message == 'No modules found.') {
+    if (modules.message == 'No modules found for this paper in your semester and course.'|| modules.message == 'No modules found.') {
         return <div >
             No modules found for this paper in your semester and course.
         </div>
@@ -151,7 +152,7 @@ const PaperDetailPage = () => {
                             <FaArrowLeft className="back-btn" />
                         </div>
                     </Link>
-                    <h2 className="paper-title">Budget Analysis</h2>
+                    <h2 className="paper-title">{paperTitle}</h2>
                     <div className="small-screen-banner">
                         <img src="/Images/image 11.png" alt="" />
                     </div>
@@ -249,36 +250,37 @@ const PaperDetailPage = () => {
                                     {activeSubCategory === 'Weekly Challenge' ? (
                                         <WeeklyChallenge paperId={paperId} />
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        <div className="quiz-container">
-                                            <div className="quiz-content">
-                                                <div className="quiz-header">
-                                                    <span>1/50</span>
-                                                    <span>00:00:00</span>
-                                                </div>
-                                                <div className="question">
-                                                    <h3>
-                                                        <span>Qs 1 : </span>
-                                                        <p>What happens when a good's price decreases, according to the substitution effect?</p>
-                                                    </h3>
-                                                    <div className="options">
-                                                        {options.map((option) => (
-                                                            <div
-                                                                key={option.id}
-                                                                onClick={() => setSelectedOption(option.id)}
-                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                                            >
-                                                                <span className="option-letter">{option.id}</span>
-                                                                <span>{option.text}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="buttons">
-                                                    <button className="ignore">Ignore</button>
-                                                    <button className="next">Next</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        // <div className="quiz-container">
+                                        //     <div className="quiz-content">
+                                        //         <div className="quiz-header">
+                                        //             <span>1/50</span>
+                                        //             <span>00:00:00</span>
+                                        //         </div>
+                                        //         <div className="question">
+                                        //             <h3>
+                                        //                 <span>Qs 1 : </span>
+                                        //                 <p>What happens when a good's price decreases, according to the substitution effect?</p>
+                                        //             </h3>
+                                        //             <div className="options">
+                                        //                 {options.map((option) => (
+                                        //                     <div
+                                        //                         key={option.id}
+                                        //                         onClick={() => setSelectedOption(option.id)}
+                                        //                         className={`option ${selectedOption === option.id ? 'selected' : ''}`}
+                                        //                     >
+                                        //                         <span className="option-letter">{option.id}</span>
+                                        //                         <span>{option.text}</span>
+                                        //                     </div>
+                                        //                 ))}
+                                        //             </div>
+                                        //         </div>
+                                        //         <div className="buttons">
+                                        //             <button className="ignore">Ignore</button>
+                                        //             <button className="next">Next</button>
+                                        //         </div>
+                                        //     </div>
+                                        // </div>
+                                        <SpecialExam paperId={paperId}/>
                                     ) : activeSubCategory === 'Assessment Test' ? (
                                         <div className="quiz-container">
                                             <div className="quiz-content">

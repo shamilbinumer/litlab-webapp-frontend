@@ -231,7 +231,7 @@ const IndexPage = () => {
                                                         {paper.courseTitle || paper.title}
                                                     </h1>
                                                     <p className="paper-description">{paper.description}</p>
-                                                    <Link to={`/paper-details/${paper.id}`}> <button>Learn Now</button></Link>
+                                                    <Link to={`/paper-details/${paper.paperTitle || paper.title}/${paper.id}`}> <button>Learn Now</button></Link>
                                                 </div>
                                             
                                         </div>

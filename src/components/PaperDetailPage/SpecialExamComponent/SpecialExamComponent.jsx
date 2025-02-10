@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './PaperDetailPage.scss';
+// import './PaperDetailPage.scss';
 import baseUrl from '../../../baseUrl';
 
-const WeeklyChallenge = ({paperId}) => {
+const SpecialExam = ({paperId}) => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -24,7 +24,7 @@ const WeeklyChallenge = ({paperId}) => {
           throw new Error('No authentication token found');
         }
 
-        const response = await fetch(`${baseUrl}/api/fetch-weakly-chellange/${paperId}`, {
+        const response = await fetch(`${baseUrl}/api/fetch-special-exam/${paperId}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
@@ -184,7 +184,7 @@ const WeeklyChallenge = ({paperId}) => {
 
   if (loading) {
     return <div className="quiz-container">
-      <div className="quiz-content">Loading weekly challenge...</div>
+      <div className="quiz-content">Loading Specia Exam Questians</div>
     </div>;
   }
 
@@ -259,4 +259,4 @@ const WeeklyChallenge = ({paperId}) => {
   );
 };
 
-export default WeeklyChallenge;
+export default SpecialExam;

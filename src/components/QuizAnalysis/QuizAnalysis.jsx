@@ -12,15 +12,22 @@ const QuizAnalysis = () => {
     const totalQuestions = parseInt(searchParams.get('total') || '0');
     const correctAnswers = parseInt(searchParams.get('correct') || '0');
     const wrongAnswers = parseInt(searchParams.get('wrong') || '0');
+    const ignoredQuestions = parseInt(searchParams.get('ignored') || '0');
+    const totalTime = parseInt(searchParams.get('totalTime') || '0');
+    const avgTime = parseInt(searchParams.get('avgTime') || '0');
+    const paperId = searchParams.get('paperId') || '0';
+
+    
     
     // Calculate additional statistics
-    const unansweredQuestions = totalQuestions - (correctAnswers + wrongAnswers);
     const correctPercentage = (correctAnswers / totalQuestions) * 100;
     const score = `${correctAnswers}/${totalQuestions}`;
     
-    // Mock time data (since it's not in query params)
-    const timePerQuestion = "2s";
-    const totalTime = "16s";
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    };
 
     const StatCard = ({ image, value, label }) => (
         <div className="stat-card">
@@ -43,7 +50,7 @@ const QuizAnalysis = () => {
 
                 <div className="right-side">
                     <div className="heaing-section">    
-                        <Link to='/'>  
+                        <Link to={`/paper-details/${paperId}`}>  
                             <img src="/Images/arrow-back.png" alt="" />
                             <h1>Quiz Analytics</h1>
                         </Link>
@@ -87,8 +94,8 @@ const QuizAnalysis = () => {
                                             <div className="label wrong">Wrong</div>
                                         </div>
                                         <div className="stat-item" id='stat-item3'>
-                                            <div className="number" id='number3'>{unansweredQuestions}</div>
-                                            <div className="label unanswered">Unanswered</div>
+                                            <div className="number" id='number3'>{ignoredQuestions}</div>
+                                            <div className="label unanswered">Ignored</div>
                                         </div>
                                     </div>
                                 </div>
@@ -103,12 +110,12 @@ const QuizAnalysis = () => {
                                     />
                                     <StatCard
                                         image="/Images/clock-exclamation_svgrepo.com.png"
-                                        value={timePerQuestion}
-                                        label="Per Question"
+                                        value={formatTime(avgTime)}
+                                        label="Avg Time/Question"
                                     />
                                     <StatCard
                                         image="/Images/totaltime.png"
-                                        value={totalTime}
+                                        value={formatTime(totalTime)}
                                         label="Total Time"
                                     />
                                 </div>
