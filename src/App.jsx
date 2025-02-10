@@ -23,7 +23,7 @@ function App() {
           <Route path="/signup" Component={UserRegister} />
           <Route path="/login" Component={UserLogin} />
           <Route path="/welcome" Component={WelcomPage} />
-          <Route path="/paper-details/:paperId" Component={PaperDetailPage} />
+          <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />
           <Route path="/lectures" Component={Lectures} />
           <Route path="/my-profile" Component={MyProfile} />
           <Route path="/quiz-analysis" Component={QuizAnalysis} />
