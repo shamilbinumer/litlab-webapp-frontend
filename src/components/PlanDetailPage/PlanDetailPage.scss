@@ -208,6 +208,12 @@
 @media(max-width:575px){
     .right-side{
         height: auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 40px !important;
+    }
+    .userprofile{
+        display: none !important;
     }
     .plan-detail-wrapper{
         margin: 0 !important;
@@ -236,6 +242,12 @@
 @media (min-width:576px) and (max-width:768px){
     .right-side{
         height: auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 40px !important;
+    }
+    .userprofile{
+        display: none !important;
     }
     .plan-detail-wrapper{
         margin: 0 !important;
@@ -264,6 +276,12 @@
 @media (min-width:769px) and (max-width:993px){
     .right-side{
         height: auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 40px !important;
+    }
+    .userprofile{
+        display: none !important;
     }
     .plan-detail-wrapper{
         margin: 0 !important;

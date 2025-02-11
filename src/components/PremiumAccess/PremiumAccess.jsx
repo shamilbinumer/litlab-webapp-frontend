@@ -60,7 +60,9 @@ const PremiumAccess = () => {
                 <SideNave />
             </div>
             <div className="right-side">
-                <UserProfile />
+          <div className="user-pro">
+          <UserProfile />
+          </div>
                 <div className="header">
                     <h1>Unlock Premium Access</h1>
                     <p>Experience the best learning journey with premium resources and expert support.</p>

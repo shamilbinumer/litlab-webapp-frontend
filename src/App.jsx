@@ -12,6 +12,7 @@ import MyCourses from "./components/MyCourses/MyCourses"
 import Help from "./components/HelpPage/Help"
 import PremiumAccess from "./components/PremiumAccess/PremiumAccess"
 import PlanDetailPage from "./components/PlanDetailPage/PlanDetailPage"
+import AnswerKey from "./components/Answerkey/AnswerKey"
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/help" Component={Help} />
           <Route path="/premium-access" Component={PremiumAccess} />
           <Route path="/plan-detail-page" Component={PlanDetailPage} />
+          <Route path="/answer-key" Component={AnswerKey} />
         </Routes>
       </BrowserRouter>
     </>

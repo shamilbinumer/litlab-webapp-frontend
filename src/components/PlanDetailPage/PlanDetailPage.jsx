@@ -142,57 +142,59 @@ const PlanDetailPage = () => {
                 <SideNave />
             </div>
             <div className="right-side">
-                <UserProfile/>
-            <div className="plan-detail-wrapper">
-            <h1>{activePlan.charAt(0).toUpperCase() + activePlan.slice(1)} Plans</h1>
+                <div className="userprofile">
+                    <UserProfile />
+                </div>
+                <div className="plan-detail-wrapper">
+                    <h1>{activePlan.charAt(0).toUpperCase() + activePlan.slice(1)} Plans</h1>
 
-<div className="plan-tabs">
-    <button
-        className={`tab ${activePlan === 'silver' ? 'active' : ''}`}
-        onClick={() => setActivePlan('silver')}
-    >
-        Silver
-    </button>
-    <button
-        className={`tab ${activePlan === 'gold' ? 'active' : ''}`}
-        onClick={() => setActivePlan('gold')}
-    >
-        Gold
-    </button>
-    <button
-        className={`tab ${activePlan === 'diamond' ? 'active' : ''}`}
-        onClick={() => setActivePlan('diamond')}
-    >
-        Diamond
-    </button>
-</div>
-
-<div className="plan-cards">
-    {getOrderedCards().map((plan, index) => (
-        <div
-            key={plan.id}
-            className={`plan-card ${plan.id === activePeriod ? 'active' : ''}`}
-            onClick={() => setActivePeriod(plan.id)}
-        >
-            <div className="price">
-                <span className="currency">₹</span>
-                {plan.price}
-                <span className="period">/{plan.period}</span>
-            </div>
-
-            <div className="features">
-                {plan.features.map((feature, idx) => (
-                    <div key={idx} className="feature">
-                        <span className="bullet">•</span> <span>{feature}</span>
+                    <div className="plan-tabs">
+                        <button
+                            className={`tab ${activePlan === 'silver' ? 'active' : ''}`}
+                            onClick={() => setActivePlan('silver')}
+                        >
+                            Silver
+                        </button>
+                        <button
+                            className={`tab ${activePlan === 'gold' ? 'active' : ''}`}
+                            onClick={() => setActivePlan('gold')}
+                        >
+                            Gold
+                        </button>
+                        <button
+                            className={`tab ${activePlan === 'diamond' ? 'active' : ''}`}
+                            onClick={() => setActivePlan('diamond')}
+                        >
+                            Diamond
+                        </button>
                     </div>
-                ))}
-            </div>
 
-            <button className="buy-now">Buy Now</button>
-        </div>
-    ))}
-</div>
-            </div>
+                    <div className="plan-cards">
+                        {getOrderedCards().map((plan, index) => (
+                            <div
+                                key={plan.id}
+                                className={`plan-card ${plan.id === activePeriod ? 'active' : ''}`}
+                                onClick={() => setActivePeriod(plan.id)}
+                            >
+                                <div className="price">
+                                    <span className="currency">₹</span>
+                                    {plan.price}
+                                    <span className="period">/{plan.period}</span>
+                                </div>
+
+                                <div className="features">
+                                    {plan.features.map((feature, idx) => (
+                                        <div key={idx} className="feature">
+                                            <span className="bullet">•</span> <span>{feature}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button className="buy-now">Buy Now</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

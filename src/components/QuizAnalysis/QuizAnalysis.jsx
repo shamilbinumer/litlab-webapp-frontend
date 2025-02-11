@@ -41,7 +41,9 @@ const QuizAnalysis = () => {
 
     return (
         <div className="quiz-analytics">
-            <UserProfile />
+           <div className="userProfile">
+           <UserProfile />
+           </div>
 
             <div className="quiz-analyticsMain-Wrapper">
                 <div className="left-side">
