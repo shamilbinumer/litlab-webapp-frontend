@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './PaperDetailPage.scss';
+// import './PaperDetailPage.scss';
 import baseUrl from '../../../baseUrl';
 
 const WeeklyChallenge = ({paperId}) => {

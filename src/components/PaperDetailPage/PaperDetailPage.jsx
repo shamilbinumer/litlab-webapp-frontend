@@ -1,9 +1,8 @@
 import { FaArrowLeft } from 'react-icons/fa';
-import { IoPlayCircleSharp } from 'react-icons/io5';
-import { LuHeart, LuEye } from 'react-icons/lu';
+import { LuHeart } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
-import { data, Link, useParams } from 'react-router-dom';
+import {  Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './PaperDetailPage.scss';
 import baseUrl from '../../baseUrl';
@@ -12,12 +11,12 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { format } from "date-fns";
 import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent';
 import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
+import VideoClasses from './VedioClass/VideoClass';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
     const [selectedOption, setSelectedOption] = useState(null);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,63 +31,10 @@ const PaperDetailPage = () => {
         { id: 'D', text: "The good becomes a Giffen good" }
     ];
 
-    const questions = [
-        {
-            id: 1,
-            question: "What happens when a good's price decreases, according to the substitution effect?",
-            options: [
-                { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
-                { id: 'B', text: "Consumers save more of their income" },
-                { id: 'C', text: "Demand remains unchanged" },
-                { id: 'D', text: "The good becomes a Giffen good" }
-            ],
-            correctAnswer: 'A' // Optional: For future use (e.g., validation)
-        },
-        {
-            id: 2,
-            question: "What is the primary purpose of a budget?",
-            options: [
-                { id: 'A', text: "To track income and expenses" },
-                { id: 'B', text: "To increase debt" },
-                { id: 'C', text: "To reduce savings" },
-                { id: 'D', text: "To avoid financial planning" }
-            ],
-            correctAnswer: 'A'
-        },
-        {
-            id: 3,
-            question: "Which of the following is a fixed expense?",
-            options: [
-                { id: 'A', text: "Groceries" },
-                { id: 'B', text: "Rent" },
-                { id: 'C', text: "Entertainment" },
-                { id: 'D', text: "Clothing" }
-            ],
-            correctAnswer: 'B'
-        },
-        {
-            id: 4,
-            question: "What is the primary purpose of a budget?",
-            options: [
-                { id: 'A', text: "To track income and expenses" },
-                { id: 'B', text: "To increase debt" },
-                { id: 'C', text: "To reduce savings" },
-                { id: 'D', text: "To avoid financial planning" }
-            ],
-            correctAnswer: 'A'
-        },
-        // Add more questions as needed
-    ];
 
 
     // Function to handle "Next" button click
-    const handleNextQuestion = () => {
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedOption(null); // Reset selected option for the next question
-        }
-    };
-    const currentQuestion = questions[currentQuestionIndex];
+ 
     useEffect(() => {
         const fetchModules = async () => {
             try {
@@ -146,7 +92,7 @@ const PaperDetailPage = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
-                    <div><UserProfile /></div>
+                    <div className='user-profilee'><UserProfile /></div>
                     <Link to="/">
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
@@ -176,39 +122,7 @@ const PaperDetailPage = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="videoMainWrapper">
-                                        <div className="video-content-wrapper">
-                                            <div className="main-content-right">
-                                                <div className="vedio-list-wrapper">
-                                                    {[...Array(3)].map((_, index) => (
-                                                        <Link to='/lectures' key={index}>
-                                                            <div className="vedio-item row">
-                                                                <div className="col-lg-5 col-md-5 col-sm-5 col-5">
-                                                                    <div className="vedio-item-left">
-                                                                        <div className="thumbnile">
-                                                                            <img src="/Images/teacher.jpg" className="thumbnile-image" alt="" />
-                                                                            <IoPlayCircleSharp className="play-icon" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-lg-7 col-md-7 col-sm-7 col-7">
-                                                                    <div className="vedio-item-right">
-                                                                        <h1>Introduction to Budgeting</h1>
-                                                                        <div className="teacer-name">Dr. Muhammed Rayis</div>
-                                                                        <p className="vedio-description">Definition and Importance of Budgeting</p>
-                                                                        <div className="button-icon">
-                                                                            <button>Watch now <LuEye /></button>
-                                                                            <LuHeart className="heart-icon" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </Link>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <VideoClasses paperId={paperId} paperTitle={paperTitle} />
                                 )
                             ) : activeCategory === 'Study Notes' ? (
                                 activeSubCategory === 'Study Notes' ? (
@@ -250,36 +164,6 @@ const PaperDetailPage = () => {
                                     {activeSubCategory === 'Weekly Challenge' ? (
                                         <WeeklyChallenge paperId={paperId} />
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        // <div className="quiz-container">
-                                        //     <div className="quiz-content">
-                                        //         <div className="quiz-header">
-                                        //             <span>1/50</span>
-                                        //             <span>00:00:00</span>
-                                        //         </div>
-                                        //         <div className="question">
-                                        //             <h3>
-                                        //                 <span>Qs 1 : </span>
-                                        //                 <p>What happens when a good's price decreases, according to the substitution effect?</p>
-                                        //             </h3>
-                                        //             <div className="options">
-                                        //                 {options.map((option) => (
-                                        //                     <div
-                                        //                         key={option.id}
-                                        //                         onClick={() => setSelectedOption(option.id)}
-                                        //                         className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                        //                     >
-                                        //                         <span className="option-letter">{option.id}</span>
-                                        //                         <span>{option.text}</span>
-                                        //                     </div>
-                                        //                 ))}
-                                        //             </div>
-                                        //         </div>
-                                        //         <div className="buttons">
-                                        //             <button className="ignore">Ignore</button>
-                                        //             <button className="next">Next</button>
-                                        //         </div>
-                                        //     </div>
-                                        // </div>
                                         <SpecialExam paperId={paperId}/>
                                     ) : activeSubCategory === 'Assessment Test' ? (
                                         <div className="quiz-container">
@@ -291,7 +175,7 @@ const PaperDetailPage = () => {
                                                 <div className="question">
                                                     <h3>
                                                         <span>Qs 1 : </span>
-                                                        <p>What happens when a good's price decreases, according to the substitution effect?</p>
+                                                        <p>What happens when a good s price decreases, according to the substitution effect?</p>
                                                     </h3>
                                                     <div className="options">
                                                         {options.map((option) => (

@@ -25,7 +25,7 @@ function App() {
           <Route path="/login" Component={UserLogin} />
           <Route path="/welcome" Component={WelcomPage} />
           <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />
-          <Route path="/lectures" Component={Lectures} />
+          <Route path="/lectures/:paperTitle/:paperId/:videoId" Component={Lectures}/>
           <Route path="/my-profile" Component={MyProfile} />
           <Route path="/quiz-analysis" Component={QuizAnalysis} />
           <Route path="/my-mock-details" Component={MyMockDetails} />
