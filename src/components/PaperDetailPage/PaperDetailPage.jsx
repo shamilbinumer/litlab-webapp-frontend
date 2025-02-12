@@ -13,6 +13,7 @@ import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent
 import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
 import VideoClasses from './VedioClass/VideoClass';
 import Slides from './Slides';
+import AssessmentTest from './AssistmentTest/AssistmentTest';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -155,36 +156,7 @@ const PaperDetailPage = () => {
                                     ) : activeSubCategory === 'Special Exam' ? (
                                         <SpecialExam paperId={paperId}/>
                                     ) : activeSubCategory === 'Assessment Test' ? (
-                                        <div className="quiz-container">
-                                            <div className="quiz-content">
-                                                <div className="quiz-header">
-                                                    <span>1/50</span>
-                                                    <span>00:00:00</span>
-                                                </div>
-                                                <div className="question">
-                                                    <h3>
-                                                        <span>Qs 1 : </span>
-                                                        <p>What happens when a good s price decreases, according to the substitution effect?</p>
-                                                    </h3>
-                                                    <div className="options">
-                                                        {options.map((option) => (
-                                                            <div
-                                                                key={option.id}
-                                                                onClick={() => setSelectedOption(option.id)}
-                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                                            >
-                                                                <span className="option-letter">{option.id}</span>
-                                                                <span>{option.text}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="buttons">
-                                                    <button className="ignore">Ignore</button>
-                                                    <button className="next">Next</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <AssessmentTest paperId={paperId} />
                                     ) : (
                                         <div>Select a Mock Test type</div>
                                     )}
