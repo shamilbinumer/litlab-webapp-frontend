@@ -276,7 +276,8 @@ const MyProfile = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-6">
-                                    <div className="four-card">
+                                   <Link to='/premium-access'>
+                                   <div className="four-card">
                                         <div className="card-content">
                                             <div className="icon-wrapper">
                                                 <IoDiamondOutline className="card-icon" />
@@ -284,6 +285,7 @@ const MyProfile = () => {
                                             <h3 className="card-title">Get Premium</h3>
                                         </div>
                                     </div>
+                                   </Link>
                                 </div>
                                 <div className="col-lg-6 col-6">
                                     <Link to='/my-mock-details'>

@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent';
 import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
 import VideoClasses from './VedioClass/VideoClass';
+import Slides from './Slides';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -107,19 +108,7 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                        {[...Array(4)].map((_, index) => (
-                                            <div className="slide-item" key={index}>
-                                                <div className="slide-preview">
-                                                    <img src="/Images/slides.png" alt={`Slide ${index + 1}`} />
-                                                    <h3>Chapter {index + 1}: Budgeting Basics</h3>
-                                                    <p>Last updated: 20 Feb 2024</p>
-                                                    <div className="slide-actions">
-                                                        <button>View Slides</button>
-                                                        <LuHeart className="heart-icon" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                       <Slides paperId={paperId} paperTitle={paperTitle} />
                                     </div>
                                 ) : (
                                     <VideoClasses paperId={paperId} paperTitle={paperTitle} />
