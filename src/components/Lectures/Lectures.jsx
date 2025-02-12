@@ -9,9 +9,10 @@ import { LuEye, LuHeart } from 'react-icons/lu';
 import baseUrl from '../../baseUrl';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
+import CustomVideoPlayer from './CustomVideoPlayer';
 
 const Lectures = () => {
-  const { videoId, paperId,paperTitle } = useParams();
+  const { videoId, paperId, paperTitle } = useParams();
   const [videoDetails, setVideoDetails] = useState(null);
   const [videoClasses, setVideoClasses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -105,6 +106,8 @@ const Lectures = () => {
     return <div className="LecturesMainWrapper">Error loading video details: {error}</div>;
   }
 
+  
+
   return (
     <div className='LecturesMainWrapper'>
       <div className="lecture-main">
@@ -121,7 +124,7 @@ const Lectures = () => {
           </Link>
           <div className="content-wrapper">
             <div><img src="/Images/Group 1000004455.png" alt="" className='header-image' /></div>
-            <div><h1>Lit Lab s Recorded Classes</h1></div>
+            <div><h1>Lit Lab's Recorded Classes</h1></div>
             <div className="main-content">
               <div className="row">
                 <div className="col-lg-7 main-content-left">
@@ -134,23 +137,20 @@ const Lectures = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
-                  {videoDetails && (
+                  {videoDetails && videoDetails.tutorial && (
                     <div className="vedio-card">
                       <div className="vedio-container">
-                        <a href={videoDetails.tutorial} target='_blank'>
-                          <img src="/Images/playicon.png" alt="" className="play-image" />
-                          <img
-                            src={videoDetails.thumbnail || "/Images/teacher.jpg"}
-                            className='main-img'
-                            alt={videoDetails.title}
-                          /></a>
+                        <div className="vedio-wrapper">
+                          <CustomVideoPlayer url={videoDetails.tutorial} />
+                        </div>
+
                         <div className="vedio-details">
                           <div>
                             <h1>{videoDetails.title}</h1>
                             <p>Description: {videoDetails.description}</p>
                           </div>
                           <div>
-                            <LuHeart className='fav-icon' />
+                            <LuHeart className="fav-icon" />
                           </div>
                         </div>
                       </div>
@@ -159,13 +159,13 @@ const Lectures = () => {
                 </div>
                 <div className="col-lg-5 main-content-right">
                   <h3>
-                    {filteredVideos.length} Vedio in this Paper
+                    {filteredVideos.length} Video in this Paper
                     {searchQuery && ` (filtered from ${videoClasses.length})`}
                   </h3>
                   <div className="vedio-list-wrapper">
                     {filteredVideos.length > 0 ? (
                       filteredVideos.map((video, index) => (
-                        <Link to={`/lectures/${paperId}/${video.id}`} key={video.id || index}>
+                        <Link to={`/lectures/${paperTitle}/${paperId}/${video.id}`} key={video.id || index}>
                           <div className="vedio-item row">
                             <div className="col-lg-5 col-md-5 col-sm-5 col-5">
                               <div className="vedio-item-left">
@@ -205,6 +205,54 @@ const Lectures = () => {
           </div>
         </div>
       </div>
+
+      {/* Global styles to prevent copying and ensure elements stay hidden */}
+      <style jsx global>{`
+        .react-player {
+          pointer-events: auto !important;
+        }
+        
+        .react-player iframe {
+          pointer-events: auto !important;
+        }
+        
+        .ytp-copy-link-button,
+        .ytp-share-button,
+        .ytp-button[aria-label*="Copy"],
+        .ytp-button[aria-label*="Share"],
+        .ytp-copylink-icon,
+        .ytp-share-icon,
+        [title*="Copy"],
+        [title*="Share"],
+        .ytp-chrome-top-buttons {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          position: absolute !important;
+          z-index: -1 !important;
+        }
+        
+        .video-wrapper {
+          user-select: none !important;
+          -webkit-user-select: none !important;
+          -moz-user-select: none !important;
+          -ms-user-select: none !important;
+          position: relative;
+        }
+        
+        .video-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          pointer-events: none;
+        }
+      `}</style>
     </div>
   );
 };

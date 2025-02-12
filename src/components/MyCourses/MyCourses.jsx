@@ -121,7 +121,7 @@ const MyCourses = () => {
                                                         </div>
                                                         <img src="/Images/Module-icon.png" alt="Module icon" />
                                                     </div>
-                                                    <Link to={`/paper-details/${paper.title || paper.paperTitle}`} className="summary-link">
+                                                    <Link to={`/paper-details/${paper.title || paper.paperTitle}/${paper.id}`} className="summary-link">
                                                         <button>Learn Now <LuEye /></button>
                                                     </Link>
                                                 </div>

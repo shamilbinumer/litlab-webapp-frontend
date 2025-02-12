@@ -20,9 +20,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.4.0",
+    "react-player": "^2.16.0",
     "react-router-dom": "^7.1.5",
     "recharts": "^2.15.1",
-    "sass": "^1.83.4"
+    "sass": "^1.83.4",
+    "video-react": "^0.16.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

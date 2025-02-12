@@ -11,6 +11,11 @@ import './MyMockDetails.scss';
 
 const MyMockDetails = () => {
     // Set default category and sub-category
+    const [loading, setLoading] = useState(false)
+    // const [timeLeft, setTimeLeft] = useState(60); // 1 min countdown
+    const [startTime, setStartTime] = useState(null);
+    const [currentTime, setCurrentTime] = useState(0);
+    const TIME_LIMIT = 300; // 5 minutes (300 seconds) for the quiz
     const [activeCategory, setActiveCategory] = useState('Mock Test');
     const [activeSubCategory, setActiveSubCategory] = useState('Weekly Challenge');
     const [selectedOption, setSelectedOption] = useState(null);
@@ -66,6 +71,39 @@ const MyMockDetails = () => {
 
         fetchPurchasedPapers();
     }, []);
+    // Add this useEffect to handle the timer
+useEffect(() => {
+    // Only start timer when quiz data is loaded and rendered
+    if (quizData && quizData.length > 0) {
+      setStartTime(Date.now());
+      
+      const timer = setInterval(() => {
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        const remainingTime = TIME_LIMIT - elapsedTime;
+        
+        if (remainingTime <= 0) {
+          clearInterval(timer);
+          handleIgnore(); // Auto-ignore when time runs out
+        } else {
+          setCurrentTime(elapsedTime);
+        }
+      }, 1000);
+  
+      // Cleanup on unmount or when quiz changes
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [quizData, startTime]); // Dependencies
+    const formatRemainingTime = () => {
+        if (!startTime) return "5:00";
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        const remainingTime = Math.max(0, TIME_LIMIT - elapsedTime);
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      };
+
     const fetchModules = async (paperId) => {
         console.log(paperId);
 
@@ -98,6 +136,7 @@ const MyMockDetails = () => {
         }
     };
     const fetchWeeklyQuestions = async (paperId, moduleNumber) => {
+        setLoading(true)
         try {
             const authToken = localStorage.getItem('authToken');
             if (!authToken) {
@@ -121,9 +160,12 @@ const MyMockDetails = () => {
         } catch (err) {
             console.error('Error fetching questions:', err);
             throw err;
+        } finally {
+            setLoading(false)
         }
     };
     const fetchspecialExamQuestions = async (paperId, moduleNumber) => {
+        setLoading(true)
         try {
             const authToken = localStorage.getItem('authToken');
             if (!authToken) {
@@ -147,9 +189,11 @@ const MyMockDetails = () => {
         } catch (err) {
             console.error('Error fetching questions:', err);
             throw err;
+        } finally {
+            setLoading(false)
         }
     };
-    
+
     const handleWeeklyChallengeSelect = async (paper) => {
         setSelectedWeeklyChallenge(paper.id);
         await fetchModules(paper.id);
@@ -178,14 +222,6 @@ const MyMockDetails = () => {
         setSelectedSpecialExamModule(null);
         setQuizData([]);
     };
-    
-
-    const options = [
-        { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
-        { id: 'B', text: "Consumers save more of their income" },
-        { id: 'C', text: "Demand remains unchanged" },
-        { id: 'D', text: "The good becomes a Giffen good" }
-    ];
 
     const questions = [
         {
@@ -242,10 +278,7 @@ const MyMockDetails = () => {
         }
     };
 
-    const handleModuleSelect = (module) => {
-        setSelectedModule(module);
-        setQuizData(questions);
-    };
+
 
     const handleAssessmentModuleSelect = (module) => {
         setSelectedAssessmentModule(module);
@@ -269,48 +302,17 @@ const MyMockDetails = () => {
             // Handle error appropriately
         }
     };
-    const handleSpeciaExamModuleSelect = async (module) => {
-        try {
-            setSelectedWeeklyModule(module);
-            // Assuming module number is in the title string "Module : 1" - extract the number
-            const moduleNumber = module.module;
-            const questions = await fetchspecialExamQuestions(selectedWeeklyChallenge, moduleNumber);
-            setQuizData(questions);
-        } catch (err) {
-            console.error('Error loading questions:', err);
-            // Handle error appropriately
-        }
-    };
 
     const handleWeeklyModuleBack = () => {
         setSelectedWeeklyModule(null);
         setQuizData([]);
     };
 
-    const handleModuleBack = () => {
-        setSelectedModule(null);
-        setQuizData([]);
-    };
+
 
     const currentQuestion = questions[currentQuestionIndex];
 
-    const specialExamModules = {
-        microeconomics: [
-            { title: 'Module : 1', description: 'Intertemporal Choice and Capital Decisions', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module : 2', description: 'General Equilibrium and Welfare Economics', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module : 3', description: "Asymmetric Information and Market Failure", icon: '/Images/papers_svgrepo.com.png' }
-        ],
-        fiscal: [
-            { title: 'Module 1: Fiscal Policy Framework', date: '22nd September 2024' },
-            { title: 'Module 2: Government Expenditure and Revenue', description: '' },
-            { title: 'Module 3: Public Debt Management', date: '24th September 2024' }
-        ],
-        arabic: [
-            { title: 'Module 1: Advanced Grammar and Syntax', date: '22nd September 2024' },
-            { title: 'Module 2: Classical Arabic Literature', description: '' },
-            { title: 'Module 3: Modern Arabic Communication', date: '24th September 2024' }
-        ]
-    };
+
 
     const assessmentModules = {
         economics: [
@@ -330,23 +332,6 @@ const MyMockDetails = () => {
         ]
     };
 
-    const weeklyChallengeModules = {
-        'quantitative-methods': [
-            { title: 'Module : 1', description: 'Statistical Analysis and Probability', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module : 2', description: 'Advanced Economic Modeling', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module : 3', description: 'Research Design and Analysis', icon: '/Images/papers_svgrepo.com.png' }
-        ],
-        'development-economics': [
-            { title: 'Module : 1', description: 'Theories of Economic Development', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module : 2', description: 'Development Policy and Planning', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module : 3', description: 'Global Economic Relations', icon: '/Images/papers_svgrepo.com.png' }
-        ],
-        'financial-economics': [
-            { title: 'Module : 1', description: 'Market Structure and Operations', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module : 2', description: 'Portfolio Theory and Management', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module : 3', description: 'Financial Risk Assessment', icon: '/Images/papers_svgrepo.com.png' }
-        ]
-    };
 
     const handleIgnore = () => {
         setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
@@ -356,7 +341,7 @@ const MyMockDetails = () => {
         if (!answered) {
             setSelectedOption(option);
             setAnswered(true);
-            
+
             // Save the answer
             const newAnswers = [...answers];
             newAnswers[currentQuestionIndex] = {
@@ -403,6 +388,9 @@ const MyMockDetails = () => {
             transition: 'all 0.3s ease'
         };
     };
+    if (loading) {
+        return <div>loading ...</div>
+    }
 
     return (
         <div className="MyMockDetailsMainWrapper">
@@ -435,10 +423,7 @@ const MyMockDetails = () => {
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft
-                                                                    className="back-btn"
-                                                                    onClick={handleWeeklyModuleBack}
-                                                                />
+                                                                <FaArrowLeft className="back-btn" onClick={handleWeeklyModuleBack} />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedWeeklyModule.title}</h4>
                                                         </div>
@@ -446,7 +431,7 @@ const MyMockDetails = () => {
                                                             <div className="quiz-content">
                                                                 <div className="quiz-header">
                                                                     <span>{currentQuestionIndex + 1}/{quizData.length}</span>
-                                                                    <span>00:00:00</span>
+                                                                    <span>{formatRemainingTime()}</span>
                                                                 </div>
                                                                 <div className="question">
                                                                     <h3>
@@ -517,7 +502,7 @@ const MyMockDetails = () => {
                                                                 />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>
-                                                                {paperModules.length > 0 ? paperModules[0].paperType : ''} : {paperModules.length > 0 ? paperModules[0].title : ''}
+                                                                {paperModules.length > 0 ? paperModules[0].paperType || 'Common' : ''} : {paperModules.length > 0 ? paperModules[0].title || paperModules[0].paperTitle : ''}
                                                             </h4>
                                                         </div>
                                                         {loadingModules ? (
@@ -562,7 +547,7 @@ const MyMockDetails = () => {
                                                             onClick={() => handleWeeklyChallengeSelect(paper)}  // Changed here
                                                         >
                                                             <div className="module-card-left">
-                                                                <h4 className="module-title">{paper.title}</h4>
+                                                                <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
                                                                 <p>Weekly Challenge Series</p>
                                                                 <div className="button-heart">
                                                                     <button>
@@ -584,47 +569,74 @@ const MyMockDetails = () => {
                                         selectedSpecialExam ? (
                                             // Existing special exam view...
                                             <div>
-                                                {selectedModule ? (
+                                                {selectedSpecialExamModule && quizData ? (
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft
-                                                                    className="back-btn"
-                                                                    onClick={handleModuleBack}
-                                                                />
+                                                                <FaArrowLeft className="back-btn" onClick={handleSpecialExamModuleBack} />
                                                             </div>
-                                                            <h4 style={{ margin: '0', padding: '0' }}>{selectedModule.title}</h4>
+                                                            <h4 style={{ margin: '0', padding: '0' }}>{selectedSpecialExamModule.title}</h4>
                                                         </div>
                                                         <div className="quiz-container">
                                                             <div className="quiz-content">
                                                                 <div className="quiz-header">
-                                                                    <span>{currentQuestionIndex + 1}/{questions.length}</span>
-                                                                    <span>00:00:00</span>
+                                                                    <span>{currentQuestionIndex + 1}/{quizData.length}</span>
+                                                                    <span>000</span>
                                                                 </div>
                                                                 <div className="question">
                                                                     <h3>
-                                                                        <span>Qs {currentQuestion.id} : </span>
-                                                                        <p>{currentQuestion.question}</p>
+                                                                        <span>Qs {currentQuestionIndex + 1} : </span>
+                                                                        <p>{quizData[currentQuestionIndex]?.question}</p>
                                                                     </h3>
                                                                     <div className="options">
-                                                                        {currentQuestion.options.map((option) => (
+                                                                        {quizData[currentQuestionIndex]?.options.map((option, index) => (
                                                                             <div
-                                                                                key={option.id}
-                                                                                onClick={() => setSelectedOption(option.id)}
-                                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
+                                                                                key={index}
+                                                                                onClick={() => !answered && handleOptionSelect(option, index)}
+                                                                                className="option"
+                                                                                style={getOptionStyle(option)}
                                                                             >
-                                                                                <span className="option-letter">{option.id}</span>
-                                                                                <span>{option.text}</span>
+                                                                                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                                                                                <span>{option}</span>
                                                                             </div>
                                                                         ))}
                                                                     </div>
                                                                 </div>
                                                                 <div className="buttons">
-                                                                    <button className="ignore">Ignore</button>
-                                                                    {currentQuestionIndex < questions.length - 1 ? (
-                                                                        <button className="next" onClick={handleNextQuestion}>Next</button>
+                                                                    <button
+                                                                        className="ignore"
+                                                                        onClick={handleIgnore}
+                                                                        style={{
+                                                                            opacity: answered ? 0.5 : 1,
+                                                                            cursor: answered ? 'not-allowed' : 'pointer'
+                                                                        }}
+                                                                        disabled={answered}
+                                                                    >
+                                                                        Ignore
+                                                                    </button>
+                                                                    {currentQuestionIndex < quizData.length - 1 ? (
+                                                                        <button
+                                                                            className="next"
+                                                                            onClick={handleNextQuestion}
+                                                                            style={{
+                                                                                opacity: !answered ? 0.5 : 1,
+                                                                                cursor: !answered ? 'not-allowed' : 'pointer'
+                                                                            }}
+                                                                            disabled={!answered}
+                                                                        >
+                                                                            Next
+                                                                        </button>
                                                                     ) : (
-                                                                        <Link to='/quiz-analysis' className="next">Finish</Link>
+                                                                        <Link
+                                                                            to={`/quiz-analysis?total=${quizData.length}&correct=${answers.filter(a => a?.correct).length}&wrong=${answers.filter(a => !a?.correct && !a?.ignored).length}&ignored=${ignoredQuestions.length}`}
+                                                                            className="next"
+                                                                            style={{
+                                                                                opacity: !answered ? 0.5 : 1,
+                                                                                pointerEvents: !answered ? 'none' : 'auto'
+                                                                            }}
+                                                                        >
+                                                                            Finish
+                                                                        </Link>
                                                                     )}
                                                                 </div>
                                                             </div>
@@ -632,42 +644,42 @@ const MyMockDetails = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
-                                                        <div className="">
-                                                            <FaArrowLeft
-                                                                className="back-btn"
-                                                                onClick={() => setSelectedSpecialExam(null)}
-                                                            />
-                                                        </div>
-                                                        <h4 style={{ margin: '0', padding: '0' }}>
-                                                            {paperModules.length > 0 ? paperModules[0].paperType : ''} : {paperModules.length > 0 ? paperModules[0].title : ''}
-                                                        </h4>
-                                                    </div>
-                                                    {loadingModules ? (
-                                                        <div>Loading modules...</div>
-                                                    ) : moduleError ? (
-                                                        <div>Error loading modules: {moduleError}</div>
-                                                    ) : paperModules.length > 0 ? (
-                                                        paperModules.map((module, index) => (
-                                                            <div
-                                                                className="module-card"
-                                                                id='submoduleCard'
-                                                                key={module.id || index}
-                                                                onClick={() => handleSpeciaExamModuleSelect(module)}
-                                                            >
-                                                                <div className="module-card-left">
-                                                                    <h4 className="module-title">Module {index + 1} : {module.title}</h4>
-                                                                    <p>{module.course} - {module.department}</p>
-                                                                </div>
-                                                                <div className="module-card-right">
-                                                                    <img src="/Images/Module-icon.png" alt="" />
-                                                                </div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
+                                                            <div className="">
+                                                                <FaArrowLeft
+                                                                    className="back-btn"
+                                                                    onClick={() => setSelectedSpecialExam(null)}
+                                                                />
                                                             </div>
-                                                        ))
-                                                    ) : (
-                                                        <div>No modules available for this paper.</div>
-                                                    )}
-                                                </>
+                                                            <h4 style={{ margin: '0', padding: '0' }}>
+                                                                {paperModules.length > 0 ? paperModules[0].paperType : ''} : {paperModules.length > 0 ? paperModules[0].title : ''}
+                                                            </h4>
+                                                        </div>
+                                                        {loadingModules ? (
+                                                            <div>Loading modules...</div>
+                                                        ) : moduleError ? (
+                                                            <div>Error loading modules: {moduleError}</div>
+                                                        ) : paperModules.length > 0 ? (
+                                                            paperModules.map((module, index) => (
+                                                                <div
+                                                                    className="module-card"
+                                                                    id='submoduleCard'
+                                                                    key={module.id || index}
+                                                                    onClick={() => handleSpecialExamModuleSelect(module)}
+                                                                >
+                                                                    <div className="module-card-left">
+                                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
+                                                                        <p>{module.course} - {module.department}</p>
+                                                                    </div>
+                                                                    <div className="module-card-right">
+                                                                        <img src="/Images/Module-icon.png" alt="" />
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div>No modules available for this paper.</div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                         ) : (
@@ -685,7 +697,7 @@ const MyMockDetails = () => {
                                                             onClick={() => handleSpecialExamSelect(paper)}  // Changed here
                                                         >
                                                             <div className="module-card-left">
-                                                                <h4 className="module-title">{paper.title}</h4>
+                                                                <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
                                                                 <p>Special Exam</p>
                                                                 <div className="button-heart">
                                                                     <button>
@@ -794,7 +806,7 @@ const MyMockDetails = () => {
                                                             onClick={() => handleAssessmentSelect(paper)}  // Changed here
                                                         >
                                                             <div className="module-card-left">
-                                                                <h4 className="module-title">{paper.title}</h4>
+                                                                <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
                                                                 <p>Assessment Test</p>
                                                                 <div className="button-heart">
                                                                     <button>
