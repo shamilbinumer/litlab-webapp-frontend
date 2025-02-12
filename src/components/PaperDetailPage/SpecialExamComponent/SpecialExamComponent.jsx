@@ -94,7 +94,7 @@ const SpecialExam = ({ paperId }) => {
         }
         return prevTime - 1;
       });
-      
+
       setTotalTime(prev => prev + 1);
     }, 1000);
 
@@ -167,7 +167,7 @@ const SpecialExam = ({ paperId }) => {
     };
     setAnswers(newAnswers);
     setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
-    
+
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
@@ -185,7 +185,7 @@ const SpecialExam = ({ paperId }) => {
     const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
 
     const avgTimePerQuestion = Math.round(
-      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
+      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
       answeredQuestions.length
     );
 
@@ -212,9 +212,9 @@ const SpecialExam = ({ paperId }) => {
 
   const getOptionStyle = (optionText) => {
     if (selectedOption === null) return {};
-    
+
     const isCorrect = optionText === currentQuestion.correctAnswer;
-    
+
     if (selectedOption === optionText) {
       return {
         backgroundColor: isCorrect ? '#e6ffe6' : '#ffe6e6',
@@ -222,7 +222,7 @@ const SpecialExam = ({ paperId }) => {
         color: isCorrect ? '#006600' : '#cc0000'
       };
     }
-    
+
     if (isCorrect) {
       return {
         backgroundColor: '#e6ffe6',
@@ -230,7 +230,7 @@ const SpecialExam = ({ paperId }) => {
         color: '#006600'
       };
     }
-    
+
     return {};
   };
 
@@ -249,34 +249,31 @@ const SpecialExam = ({ paperId }) => {
   // Display modules if no module is selected
   if (!selectedModule) {
     return (
-        <div className="modules-container">
-          <div className="modules-grid">
-            {modules.map((module) => (
-              <div
-                key={module.id}
-                className="module-card"
-                onClick={() => handleModuleSelect(module)}
-              >
-                <div>
-                  <h3>{module.title}</h3>
-                  {module.description && <p>{module.description}</p>}
-                  <div className="button-heart">
-                    <button>
-                      Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
-                    </button>
-                  </div>
-               
+      <div className="modules-container">
+        <div className="modules-grid">
+          {modules.map((module) => (
+            <div
+              key={module.id}
+              className="module-card"
+              onClick={() => handleModuleSelect(module)}
+            >
+              <div>
+                <h3>{module.title}</h3>
+                {module.description && <p>{module.description}</p>}
+                <div className="button-heart">
+                  <button>
+                    Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
+                  </button>
                 </div>
-                <div>
-  
-                </div>
-                <div className="module-card-right">
-                    <img src="/Images/Module-icon.png" alt="" />
-                  </div> </div>
-            ))}
-          </div>
+              </div>
+              <div className="module-card-right">
+                <img src="/Images/Module-icon.png" alt="" />
+              </div>
+            </div>
+          ))}
         </div>
-      );
+      </div>
+    );
   }
 
   // Display quiz if module is selected and questions are loaded
@@ -289,12 +286,10 @@ const SpecialExam = ({ paperId }) => {
 
   return (
     <div className="quiz-container">
-      <div className="quiz-header">
-        <button onClick={handleModuleBack} className="back-button">
-          ← Back to Modules
+          <button onClick={handleModuleBack} className="back-button">
+          <IoArrowBack className="back-icon" /> Back to Modules
         </button>
         <h2>{selectedModule.title}</h2>
-      </div>
       <div className="quiz-content">
         <div className="quiz-header">
           <span>{currentQuestionIndex + 1}/{questions.length}</span>
@@ -324,10 +319,10 @@ const SpecialExam = ({ paperId }) => {
           </div>
         </div>
         <div className="buttons">
-          <button 
-            className="ignore" 
+          <button
+            className="ignore"
             onClick={handleIgnore}
-            style={{ 
+            style={{
               cursor: 'pointer',
               opacity: selectedOption ? 0.5 : 1,
               pointerEvents: selectedOption ? 'none' : 'auto'
@@ -335,12 +330,12 @@ const SpecialExam = ({ paperId }) => {
           >
             Ignore
           </button>
-          <button 
-            className="next" 
+          <button
+            className="next"
             onClick={handleNextQuestion}
-            style={{ 
-              opacity: selectedOption ? 1 : 0.5, 
-              cursor: selectedOption ? 'pointer' : 'not-allowed' 
+            style={{
+              opacity: selectedOption ? 1 : 0.5,
+              cursor: selectedOption ? 'pointer' : 'not-allowed'
             }}
           >
             {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
