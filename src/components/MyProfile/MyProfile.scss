@@ -175,7 +175,51 @@
             }
         }
     }
-    @media(max-width:1250px){
+
+    @media(max-width:993px){
+        .right-side{
+            width: 100% !important;
+            padding-bottom: 90px !important;
+            margin: 0 !important;
+        }
+        .user-pro{
+            display: none;
+        }
+        .profile-contanet-left{
+            padding: 1rem !important;
+            .profile-card{
+                width: 90% !important;
+                padding: 1rem !important;
+                .detsils-container{
+                    .details{
+                        .icon{
+                            font-size: 15px !important;
+                        }
+                        .details-text{
+                            font-size: 12.47px !important;
+                            line-height: 23.37px !important;
+                        }
+                    }
+                }
+            }
+        }
+        .four-card-main {
+            width: 100% !important;
+            height: auto !important;
+            .four-card {
+                margin-bottom: 1rem !important;
+                height: 100px !important;
+                .icon-wrapper {
+                    width: 44px !important;
+                    height: 44px !important;
+                    .card-icon {
+                        font-size: 20px !important;
+                      }
+                  }
+            }
+          }
+    }
+    @media(min-width:994px) and (max-width:1250px){
         .profile-contanet-left{
             padding: 1rem !important;
             .profile-card{

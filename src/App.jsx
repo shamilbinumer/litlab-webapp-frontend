@@ -13,6 +13,10 @@ import Help from "./components/HelpPage/Help"
 import PremiumAccess from "./components/PremiumAccess/PremiumAccess"
 import PlanDetailPage from "./components/PlanDetailPage/PlanDetailPage"
 import AnswerKey from "./components/Answerkey/AnswerKey"
+import Cart from "./components/Cart/Cart"
+import Instructions from "./components/Instructions/Instructions"
+import YourFavorite from "./components/YourFavorites/YourFavorite"
+import FavoriteModuleDetail from "./components/FavoriteModuleDetail/FavoriteModuleDetail"
 
 function App() {
 
@@ -34,6 +38,10 @@ function App() {
           <Route path="/premium-access" Component={PremiumAccess} />
           <Route path="/plan-detail-page" Component={PlanDetailPage} />
           <Route path="/answer-key" Component={AnswerKey} />
+          <Route path="/cart-page" Component={Cart} />
+          <Route path="/instructions" Component={Instructions} />
+          <Route path="/Your-Favorites" Component={YourFavorite} />
+          <Route path="/fav-module" Component={FavoriteModuleDetail} />
         </Routes>
       </BrowserRouter>
     </>

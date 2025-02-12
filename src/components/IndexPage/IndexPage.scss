@@ -242,6 +242,14 @@
     }
     @media(max-width:991px){
         .home-right{
+            width: 100% !important;
+            padding-bottom: 90px !important;
+            margin: 0 !important;
+        }
+        .user-pro{
+            display: none;
+        }
+        .home-right{
             .welcome-heading{
                 font-size: 15.41px !important;
             }

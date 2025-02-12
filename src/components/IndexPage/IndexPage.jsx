@@ -39,7 +39,9 @@ const IndexPage = () => {
                 console.log(response.data);
                 
                 setPapers(response.data);
-                setFilteredPapers(response.data); // Initialize filtered papers with all fetched papers
+                setFilteredPapers(response.data); 
+                console.log(response.data,'this is paper response');
+                // Initialize filtered papers with all fetched papers
             } else {
                 console.error("Error fetching major papers");
             }
@@ -97,7 +99,8 @@ const IndexPage = () => {
 
             if (response.status === 200) {
                 setPapers(response.data); // Assuming the API returns an array of papers
-                console.log(response.data);
+                console.log(response.data,'this is common paper response');
+
                 
                 setFilteredPapers(response.data);
             } else {
@@ -231,7 +234,7 @@ const IndexPage = () => {
                                                         {paper.courseTitle || paper.title}
                                                     </h1>
                                                     <p className="paper-description">{paper.description}</p>
-                                                    <Link to={`/paper-details/${paper.paperTitle || paper.title}/${paper.id}`}> <button>Learn Now</button></Link>
+                                                    <Link to={`/paper-details/${paper.courseTitle || paper.title}/${paper.id}`}> <button>Learn Now</button></Link>
                                                 </div>
                                             
                                         </div>

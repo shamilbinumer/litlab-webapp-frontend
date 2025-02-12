@@ -180,6 +180,17 @@
     }
 
     @media (max-width:565px) {
+
+        .right-side {
+            width: 100% !important;
+            padding-bottom: 90px !important;
+            margin: 0 !important;
+        }
+
+        .user-pro {
+            display: none;
+        }
+
         .help-wrapper {
             padding-bottom: 1rem !important;
 
@@ -207,15 +218,25 @@
             padding-right: 15px !important;
 
         }
-        .submit-button{
+
+        .submit-button {
             width: 100% !important;
         }
     }
-    @media (min-width:566px) and  (max-width:993px) {
+
+    @media (min-width:566px) and (max-width:993px) {
         .help-wrapper {
             padding-bottom: 1rem !important;
 
 
+        }
+        .right-side{
+            width: 100% !important;
+            padding-bottom: 90px !important;
+            margin: 0 !important;
+        }
+        .user-pro{
+            display: none;
         }
 
         select {
@@ -239,7 +260,8 @@
             padding-right: 15px !important;
 
         }
-        .submit-button{
+
+        .submit-button {
             width: 100% !important;
         }
     }
