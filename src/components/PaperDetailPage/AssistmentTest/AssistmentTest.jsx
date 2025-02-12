@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
-const WeeklyChallenge = ({ paperId }) => {
+
+const AssessmentTest = ({ paperId }) => {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState(null);
@@ -53,14 +54,14 @@ const WeeklyChallenge = ({ paperId }) => {
   useEffect(() => {
     if (!selectedModule) return;
 
-    const fetchWeeklyChallenge = async () => {
+    const fetchAssessmentTest = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
           throw new Error('No authentication token found');
         }
 
-        const response = await fetch(`${baseUrl}/api/fetch-weakly-chellange/${selectedModule.id}`, {
+        const response = await fetch(`${baseUrl}/api/fetch-assessment-test/${selectedModule.id}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
@@ -68,7 +69,7 @@ const WeeklyChallenge = ({ paperId }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch weekly challenge');
+          throw new Error('Failed to fetch assessment test');
         }
 
         const data = await response.json();
@@ -78,10 +79,10 @@ const WeeklyChallenge = ({ paperId }) => {
       }
     };
 
-    fetchWeeklyChallenge();
+    fetchAssessmentTest();
   }, [selectedModule]);
 
-  // Timer effect - only start when module and questions are loaded
+  // Timer effect
   useEffect(() => {
     if (!selectedModule || !questions.length) return;
 
@@ -93,7 +94,7 @@ const WeeklyChallenge = ({ paperId }) => {
         }
         return prevTime - 1;
       });
-
+      
       setTotalTime(prev => prev + 1);
     }, 1000);
 
@@ -102,17 +103,15 @@ const WeeklyChallenge = ({ paperId }) => {
 
   const handleModuleSelect = (module) => {
     setSelectedModule(module);
-    setCurrentQuestionIndex(0);
-    setSelectedOption(null);
-    setAnswers([]);
-    setIgnoredQuestions([]);
-    setTimeLeft(60);
-    setTotalTime(0);
-    setQuestionTimes([]);
+    resetQuizState();
   };
 
   const handleModuleBack = () => {
     setSelectedModule(null);
+    resetQuizState();
+  };
+
+  const resetQuizState = () => {
     setQuestions([]);
     setCurrentQuestionIndex(0);
     setSelectedOption(null);
@@ -123,11 +122,115 @@ const WeeklyChallenge = ({ paperId }) => {
     setQuestionTimes([]);
   };
 
-  // ... (keep all your existing helper functions: formatTime, handleOptionSelect, handleIgnore, etc.)
+  const handleTimesUp = () => {
+    const newQuestionTimes = [...questionTimes];
+    newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
+    setQuestionTimes(newQuestionTimes);
+
+    if (!selectedOption) {
+      handleIgnore();
+    } else {
+      handleNextQuestion();
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  const handleOptionSelect = (selectedOptionText) => {
+    setSelectedOption(selectedOptionText);
+    const newAnswers = [...answers];
+    newAnswers[currentQuestionIndex] = {
+      selected: selectedOptionText,
+      correct: selectedOptionText === currentQuestion.correctAnswer,
+      ignored: false,
+      timeTaken: 60 - timeLeft
+    };
+    setAnswers(newAnswers);
+  };
+
+  const handleIgnore = () => {
+    const newAnswers = [...answers];
+    newAnswers[currentQuestionIndex] = {
+      selected: null,
+      correct: false,
+      ignored: true,
+      timeTaken: 60 - timeLeft
+    };
+    setAnswers(newAnswers);
+    setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
+    
+    if (currentQuestionIndex < questions.length - 1) {
+      moveToNextQuestion();
+    } else {
+      handleFinish();
+    }
+  };
+
+  const moveToNextQuestion = () => {
+    setCurrentQuestionIndex(prev => prev + 1);
+    setSelectedOption(null);
+    setTimeLeft(60);
+  };
+
+  const handleNextQuestion = () => {
+    const newQuestionTimes = [...questionTimes];
+    newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
+    setQuestionTimes(newQuestionTimes);
+
+    if (currentQuestionIndex < questions.length - 1) {
+      moveToNextQuestion();
+    } else {
+      handleFinish();
+    }
+  };
+
+  const handleFinish = () => {
+    const totalQuestions = questions.length;
+    const ignoredCount = ignoredQuestions.length;
+    const answeredQuestions = answers.filter(answer => !answer?.ignored);
+    const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
+    const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
+    const avgTimePerQuestion = Math.round(
+      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
+      answeredQuestions.length
+    );
+
+    navigate(`/quiz-analysis?paperId=${paperId}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
+  };
+
+  const getOptionLetter = (index) => String.fromCharCode(65 + index);
+
+  const getOptionStyle = (optionText) => {
+    if (selectedOption === null) return {};
+    
+    const isCorrect = optionText === currentQuestion.correctAnswer;
+    
+    if (selectedOption === optionText) {
+      return {
+        backgroundColor: isCorrect ? '#e6ffe6' : '#ffe6e6',
+        borderColor: isCorrect ? '#00cc00' : '#ff0000',
+        color: isCorrect ? '#006600' : '#cc0000'
+      };
+    }
+    
+    if (isCorrect) {
+      return {
+        backgroundColor: '#e6ffe6',
+        borderColor: '#00cc00',
+        color: '#006600'
+      };
+    }
+    
+    return {};
+  };
 
   if (loading) {
     return <div className="quiz-container">
-      <div className="quiz-content">Loading modules...</div>
+      <div className="quiz-content">Loading Assessment Test Modules...</div>
     </div>;
   }
 
@@ -137,44 +240,42 @@ const WeeklyChallenge = ({ paperId }) => {
     </div>;
   }
 
-  // Display modules if no module is selected
   if (!selectedModule) {
     return (
-      <div className="modules-container">
-        <div className="modules-grid">
-          {modules.map((module) => (
-            <div
-              key={module.id}
-              className="module-card"
-              onClick={() => handleModuleSelect(module)}
-            >
-              <div>
-                <h3>{module.title}</h3>
-                {module.description && <p>{module.description}</p>}
-                <div className="button-heart">
-                  <button>
-                    Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
-                  </button>
+     <div className="modules-container">
+          <div className="modules-grid">
+            {modules.map((module) => (
+              <div
+                key={module.id}
+                className="module-card"
+                onClick={() => handleModuleSelect(module)}
+              >
+                <div>
+                  <h3>{module.title}</h3>
+                  {module.description && <p>{module.description}</p>}
+                  <div className="button-heart">
+                    <button>
+                      Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
+                    </button>
+                  </div>
+               
                 </div>
-             
-              </div>
-              <div>
-
-              </div>
-              <div className="module-card-right">
-                  <img src="/Images/Module-icon.png" alt="" />
-                </div> </div>
-          ))}
+                <div>
+  
+                </div>
+                <div className="module-card-right">
+                    <img src="/Images/Module-icon.png" alt="" />
+                  </div> </div>
+            ))}
+          </div>
         </div>
-      </div>
     );
   }
 
-  // Display quiz if module is selected and questions are loaded
   const currentQuestion = questions[currentQuestionIndex];
   if (!currentQuestion) {
     return <div className="quiz-container">
-      <div className="quiz-content">No questions available</div>
+      <div className="quiz-content">No questions available for this module</div>
     </div>;
   }
 
@@ -208,17 +309,17 @@ const WeeklyChallenge = ({ paperId }) => {
                   ...getOptionStyle(option)
                 }}
               >
-                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                <span className="option-letter">{getOptionLetter(index)}</span>
                 <span>{option}</span>
               </div>
             ))}
           </div>
         </div>
         <div className="buttons">
-          <button
-            className="ignore"
+          <button 
+            className="ignore" 
             onClick={handleIgnore}
-            style={{
+            style={{ 
               cursor: 'pointer',
               opacity: selectedOption ? 0.5 : 1,
               pointerEvents: selectedOption ? 'none' : 'auto'
@@ -226,12 +327,12 @@ const WeeklyChallenge = ({ paperId }) => {
           >
             Ignore
           </button>
-          <button
-            className="next"
+          <button 
+            className="next" 
             onClick={handleNextQuestion}
-            style={{
-              opacity: selectedOption ? 1 : 0.5,
-              cursor: selectedOption ? 'pointer' : 'not-allowed'
+            style={{ 
+              opacity: selectedOption ? 1 : 0.5, 
+              cursor: selectedOption ? 'pointer' : 'not-allowed' 
             }}
           >
             {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
@@ -242,4 +343,4 @@ const WeeklyChallenge = ({ paperId }) => {
   );
 };
 
-export default WeeklyChallenge;
+export default AssessmentTest;

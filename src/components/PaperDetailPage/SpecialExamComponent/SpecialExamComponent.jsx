@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-// import './PaperDetailPage.scss';
+import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
-const SpecialExam = ({paperId}) => {
+const SpecialExam = ({ paperId }) => {
   const navigate = useNavigate();
+  const [modules, setModules] = useState([]);
+  const [selectedModule, setSelectedModule] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -12,19 +14,20 @@ const SpecialExam = ({paperId}) => {
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [ignoredQuestions, setIgnoredQuestions] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(60); // 60 seconds per question
+  const [timeLeft, setTimeLeft] = useState(60);
   const [totalTime, setTotalTime] = useState(0);
-  const [questionTimes, setQuestionTimes] = useState([]); // Track time per question
+  const [questionTimes, setQuestionTimes] = useState([]);
 
+  // Fetch modules first
   useEffect(() => {
-    const fetchWeeklyChallenge = async () => {
+    const fetchModules = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
           throw new Error('No authentication token found');
         }
 
-        const response = await fetch(`${baseUrl}/api/fetch-special-exam/${paperId}`, {
+        const response = await fetch(`${baseUrl}/api/fetch-modules/${paperId}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
@@ -32,11 +35,11 @@ const SpecialExam = ({paperId}) => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch weekly challenge');
+          throw new Error('Failed to fetch modules');
         }
 
         const data = await response.json();
-        setQuestions(data || []);
+        setModules(data || []);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -44,19 +47,50 @@ const SpecialExam = ({paperId}) => {
       }
     };
 
-    fetchWeeklyChallenge();
+    fetchModules();
   }, [paperId]);
 
-  // Timer effect
+  // Fetch questions when a module is selected
   useEffect(() => {
-    if (loading || !questions.length) return;
+    if (!selectedModule) return;
+
+    const fetchSpecialExam = async () => {
+      try {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          throw new Error('No authentication token found');
+        }
+
+        const response = await fetch(`${baseUrl}/api/fetch-special-exam/${selectedModule.id}`, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch special exam');
+        }
+
+        const data = await response.json();
+        setQuestions(data || []);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchSpecialExam();
+  }, [selectedModule]);
+
+  // Timer effect - only start when module and questions are loaded
+  useEffect(() => {
+    if (!selectedModule || !questions.length) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prevTime => {
         if (prevTime <= 1) {
-          // Time's up for this question
           handleTimesUp();
-          return 60; // Reset for next question
+          return 60;
         }
         return prevTime - 1;
       });
@@ -65,15 +99,39 @@ const SpecialExam = ({paperId}) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [loading, currentQuestionIndex, questions]);
+  }, [selectedModule, questions, currentQuestionIndex]);
 
+  const handleModuleSelect = (module) => {
+    setSelectedModule(module);
+    // Reset all states when selecting a new module
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setAnswers([]);
+    setIgnoredQuestions([]);
+    setTimeLeft(60);
+    setTotalTime(0);
+    setQuestionTimes([]);
+  };
+
+  const handleModuleBack = () => {
+    setSelectedModule(null);
+    setQuestions([]);
+    // Reset all states when going back to module selection
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setAnswers([]);
+    setIgnoredQuestions([]);
+    setTimeLeft(60);
+    setTotalTime(0);
+    setQuestionTimes([]);
+  };
+
+  // Keep your existing helper functions
   const handleTimesUp = () => {
-    // Save the time taken for this question
     const newQuestionTimes = [...questionTimes];
     newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
     setQuestionTimes(newQuestionTimes);
 
-    // If no option selected, mark as ignored
     if (!selectedOption) {
       handleIgnore();
     } else {
@@ -89,7 +147,6 @@ const SpecialExam = ({paperId}) => {
 
   const handleOptionSelect = (selectedOptionText) => {
     setSelectedOption(selectedOptionText);
-    // Save the answer
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = {
       selected: selectedOptionText,
@@ -101,7 +158,6 @@ const SpecialExam = ({paperId}) => {
   };
 
   const handleIgnore = () => {
-    // Mark current question as ignored
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = {
       selected: null,
@@ -112,11 +168,10 @@ const SpecialExam = ({paperId}) => {
     setAnswers(newAnswers);
     setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
     
-    // Move to next question
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
-      setTimeLeft(60); // Reset timer
+      setTimeLeft(60);
     } else {
       handleFinish();
     }
@@ -129,18 +184,15 @@ const SpecialExam = ({paperId}) => {
     const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
     const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
 
-    // Calculate average time per question (excluding ignored)
     const avgTimePerQuestion = Math.round(
       answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
       answeredQuestions.length
     );
 
-    // Navigate with all parameters
     navigate(`/quiz-analysis?paperId=${paperId}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
   };
 
   const handleNextQuestion = () => {
-    // Save time taken for current question
     const newQuestionTimes = [...questionTimes];
     newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
     setQuestionTimes(newQuestionTimes);
@@ -148,7 +200,7 @@ const SpecialExam = ({paperId}) => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
-      setTimeLeft(60); // Reset timer
+      setTimeLeft(60);
     } else {
       handleFinish();
     }
@@ -184,7 +236,7 @@ const SpecialExam = ({paperId}) => {
 
   if (loading) {
     return <div className="quiz-container">
-      <div className="quiz-content">Loading Specia Exam Questians</div>
+      <div className="quiz-content">Loading Special Exam Modules...</div>
     </div>;
   }
 
@@ -194,15 +246,55 @@ const SpecialExam = ({paperId}) => {
     </div>;
   }
 
+  // Display modules if no module is selected
+  if (!selectedModule) {
+    return (
+        <div className="modules-container">
+          <div className="modules-grid">
+            {modules.map((module) => (
+              <div
+                key={module.id}
+                className="module-card"
+                onClick={() => handleModuleSelect(module)}
+              >
+                <div>
+                  <h3>{module.title}</h3>
+                  {module.description && <p>{module.description}</p>}
+                  <div className="button-heart">
+                    <button>
+                      Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
+                    </button>
+                  </div>
+               
+                </div>
+                <div>
+  
+                </div>
+                <div className="module-card-right">
+                    <img src="/Images/Module-icon.png" alt="" />
+                  </div> </div>
+            ))}
+          </div>
+        </div>
+      );
+  }
+
+  // Display quiz if module is selected and questions are loaded
   const currentQuestion = questions[currentQuestionIndex];
   if (!currentQuestion) {
     return <div className="quiz-container">
-      <div className="quiz-content">No questions available</div>
+      <div className="quiz-content">No questions available for this module</div>
     </div>;
   }
 
   return (
     <div className="quiz-container">
+      <div className="quiz-header">
+        <button onClick={handleModuleBack} className="back-button">
+          ← Back to Modules
+        </button>
+        <h2>{selectedModule.title}</h2>
+      </div>
       <div className="quiz-content">
         <div className="quiz-header">
           <span>{currentQuestionIndex + 1}/{questions.length}</span>

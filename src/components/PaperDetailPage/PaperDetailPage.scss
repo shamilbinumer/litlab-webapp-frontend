@@ -1,4 +1,56 @@
 .PaperDetailPageMainWrapper {
+  
+        .module-card {
+            margin-bottom: 25px;
+            border: 0.8px solid #000000;
+            width: 100%;
+            background-color: #6BCCE5 !important;
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 1.5rem;
+            border-radius: 9px;
+
+            h3{
+                font-family: Montserrat !important;
+                font-size: 18.34px;
+                font-weight: 700;
+                line-height: 23.25px;
+                letter-spacing: -0.37582165002822876px;
+            }
+
+            p {
+                font-family: Inter;
+                font-size: 12.17px;
+                font-weight: 400;
+                line-height: 7.32px;
+                margin-top: 10px;
+            }
+
+            .button-heart {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+
+                button {
+                    background-color: #FBD63C;
+                    border: 1px solid #FBD63C;
+                    font-family: Montserrat;
+                    border-radius: 7px;
+                    font-size: 12.57px;
+                    font-weight: 700;
+                    line-height: 8.76px;
+                    padding: 10px 20px;
+                }
+
+                .hear-icon {
+                    font-size: 25px;
+                }
+            }
+        
+    }
+
     .detail-page-main {
         display: flex;
     }
@@ -18,6 +70,9 @@
         position: relative;
         width: 86%;
         margin-left: 14%;
+
+    
+
 
         .back-btn-container {
             background-color: #6BCCE5;
@@ -404,12 +459,13 @@
                 }
             }
         }
+
         .main-content {
             margin-top: 2rem;
-        
+
             .main-content-left {
                 padding: 1rem;
-        
+
                 .search-bar {
                     width: 100%;
                     height: 50px;
@@ -421,11 +477,11 @@
                     align-items: center;
                     gap: 10px;
                     overflow: hidden;
-        
+
                     .search-icon {
                         font-size: 19px;
                     }
-        
+
                     input {
                         height: 47px;
                         border: none;
@@ -437,7 +493,7 @@
                         text-underline-position: from-font;
                         text-decoration-skip-ink: none;
                     }
-        
+
                     input::placeholder {
                         font-family: Inter;
                         font-size: 16.2px;
@@ -446,13 +502,13 @@
                         text-underline-position: from-font;
                         text-decoration-skip-ink: none;
                     }
-        
+
                     input:focus {
                         outline: none;
                     }
-        
+
                 }
-        
+
                 .vedio-card {
                     margin-top: 2rem;
                     width: 100%;
@@ -461,25 +517,25 @@
                     border: 1px solid #00000091;
                     position: sticky;
                     top: 1rem;
-        
+
                     .vedio-container {
                         width: 100%;
                         height: 500px;
                         position: relative;
-        
+
                         .main-img {
                             width: 100%;
                             height: 100%;
                             object-fit: cover;
                         }
-        
+
                         .play-image {
                             position: absolute;
                             left: 50%;
                             top: 50%;
                             transform: translate(-50%, -50%);
                         }
-        
+
                         .vedio-details {
                             position: absolute;
                             bottom: 0;
@@ -490,7 +546,7 @@
                             background-color: white;
                             width: 100%;
                             padding: 1rem;
-        
+
                             h1 {
                                 font-family: Montserrat;
                                 margin-top: 0 !important;
@@ -500,7 +556,7 @@
                                 text-align: left;
                                 letter-spacing: -0.9268941283226013px;
                             }
-        
+
                             p {
                                 width: 70%;
                                 margin-bottom: 0 !important;
@@ -510,7 +566,7 @@
                                 line-height: 15.78px;
                                 text-align: left;
                             }
-        
+
                             .fav-icon {
                                 font-size: 30px;
                             }
@@ -518,20 +574,20 @@
                     }
                 }
             }
-        
+
         }
-        
-        
+
+
         .videoMainWrapper {
             .video-content-wrapper {
                 .main-content-right {
-        
+
                     .vedio-list-wrapper {
                         padding-top: 2.4rem;
-        
+
                         .vedio-item {
                             margin-bottom: 1rem;
-        
+
                             .vedio-item-left {
                                 .thumbnile {
                                     width: 70% !important;
@@ -541,13 +597,13 @@
                                     border-radius: 10px;
                                     overflow: hidden;
                                     position: relative;
-        
+
                                     .thumbnile-image {
                                         width: 100%;
                                         height: 100%;
                                         object-fit: cover;
                                     }
-        
+
                                     .play-icon {
                                         position: absolute;
                                         right: 10px;
@@ -557,7 +613,7 @@
                                     }
                                 }
                             }
-        
+
                             .vedio-item-right {
                                 h1 {
                                     font-family: Montserrat;
@@ -570,7 +626,7 @@
                                     margin-top: 0 !important;
                                     margin-bottom: 0 !important;
                                 }
-        
+
                                 .teacer-name {
                                     font-family: Inter;
                                     font-size: 10.57px;
@@ -578,7 +634,7 @@
                                     line-height: 10.7px;
                                     padding-top: 5px;
                                 }
-        
+
                                 .vedio-description {
                                     font-family: Inter;
                                     font-size: 12.26px;
@@ -587,12 +643,12 @@
                                     text-align: left;
                                     margin-top: 10px;
                                 }
-        
+
                                 .button-icon {
                                     display: flex;
                                     gap: 1rem;
                                     align-items: center;
-        
+
                                     button {
                                         background-color: #FBD63C;
                                         padding: 5px 25px;
@@ -602,20 +658,21 @@
                                         font-weight: 600;
                                         border-radius: 9px;
                                     }
-        
+
                                     .heart-icon {
                                         font-size: 25px;
                                     }
                                 }
                             }
-        
+
                         }
-        
+
                     }
                 }
             }
-        
+
         }
+
         .small-screen-banner {
             display: none;
 
@@ -629,17 +686,20 @@
                 height: 100%;
                 object-fit: cover;
             }
-        } }
+        }
+    }
 
     @media (max-width:575px) {
-        .right-side{
+        .right-side {
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
+
         .paper-title {
             font-size: 20px !important;
             text-align: center !important;
@@ -692,62 +752,76 @@
             font-size: 10px !important;
             font-weight: 500 !important;
         }
-        #submoduleCard{
-            p{
+
+        #submoduleCard {
+            p {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
                 width: 80% !important;
             }
+
             .module-title {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
             }
-         
+
         }
-        .quiz-container{
+
+        .quiz-container {
             padding: 10px !important;
-            .question h3{
+
+            .question h3 {
                 // padding-left: 10px !important;
                 font-size: 11px !important;
-                span{
+
+                span {
                     width: 20% !important;
                 }
             }
-            .option span{
+
+            .option span {
                 font-size: 8px !important;
             }
-            .option-letter{
+
+            .option-letter {
                 width: 20px !important;
                 height: 20px !important;
             }
-            .quiz-header{
+
+            .quiz-header {
                 justify-content: space-between !important;
                 gap: 0 !important;
                 padding-right: 10px !important;
             }
         }
-        .buttons button{
+
+        .buttons button {
             width: 425 !important;
             height: 28px !important;
             font-size: 11px !important;
         }
-        .thumbnile{
+
+        .thumbnile {
             height: 140px !important;
         }
-        .vedio-item-right{
+
+        .vedio-item-right {
             margin-top: 20px !important;
         }
 
     }
+
     @media (min-width:576px) and (max-width:768px) {
-        .right-side{
+        .right-side {
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
+
         .paper-title {
             font-size: 20px !important;
             text-align: center !important;
@@ -800,54 +874,64 @@
             font-size: 10px !important;
             font-weight: 500 !important;
         }
-        #submoduleCard{
-            p{
+
+        #submoduleCard {
+            p {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
                 width: 80% !important;
             }
+
             .module-title {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
             }
-         
+
         }
-        .quiz-container{
+
+        .quiz-container {
             padding: 10px !important;
-            .question h3{
+
+            .question h3 {
                 // padding-left: 10px !important;
                 font-size: 11px !important;
-                span{
+
+                span {
                     width: 20% !important;
                 }
             }
-            .option span{
+
+            .option span {
                 font-size: 8px !important;
             }
-            .option-letter{
+
+            .option-letter {
                 width: 20px !important;
                 height: 20px !important;
             }
-            .quiz-header{
+
+            .quiz-header {
                 justify-content: space-between !important;
                 gap: 0 !important;
                 padding-right: 10px !important;
             }
         }
-        .buttons button{
+
+        .buttons button {
             width: 425 !important;
             height: 28px !important;
             font-size: 11px !important;
         }
 
     }
+
     @media (min-width:769px) and (max-width:993px) {
-        .right-side{
+        .right-side {
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-      
+
         .paper-title {
             font-size: 25px !important;
             text-align: center !important;
@@ -900,50 +984,60 @@
             font-size: 10px !important;
             font-weight: 500 !important;
         }
-        #submoduleCard{
-            p{
+
+        #submoduleCard {
+            p {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
                 width: 80% !important;
             }
+
             .module-title {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
             }
-         
+
         }
-        .quiz-container{
+
+        .quiz-container {
             padding: 10px !important;
-            .question h3{
+
+            .question h3 {
                 // padding-left: 10px !important;
                 font-size: 11px !important;
-                span{
+
+                span {
                     width: 20% !important;
                 }
             }
-            .option span{
+
+            .option span {
                 font-size: 8px !important;
             }
-            .option-letter{
+
+            .option-letter {
                 width: 20px !important;
                 height: 20px !important;
             }
-            .quiz-header{
+
+            .quiz-header {
                 justify-content: space-between !important;
                 gap: 0 !important;
                 padding-right: 10px !important;
             }
         }
-        .buttons button{
+
+        .buttons button {
             width: 425 !important;
             height: 28px !important;
             font-size: 11px !important;
         }
 
     }
+
     @media (min-width:994px) and (max-width:1200px) {
-     
-      
+
+
         .paper-title {
             font-size: 25px !important;
             text-align: center !important;
@@ -996,41 +1090,50 @@
             font-size: 10px !important;
             font-weight: 500 !important;
         }
-        #submoduleCard{
-            p{
+
+        #submoduleCard {
+            p {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
                 width: 80% !important;
             }
+
             .module-title {
                 font-size: 15px !important;
                 padding-bottom: 0 !important;
             }
-         
+
         }
-        .quiz-container{
+
+        .quiz-container {
             padding: 10px !important;
-            .question h3{
+
+            .question h3 {
                 // padding-left: 10px !important;
                 font-size: 11px !important;
-                span{
+
+                span {
                     width: 20% !important;
                 }
             }
-            .option span{
+
+            .option span {
                 font-size: 8px !important;
             }
-            .option-letter{
+
+            .option-letter {
                 width: 20px !important;
                 height: 20px !important;
             }
-            .quiz-header{
+
+            .quiz-header {
                 justify-content: space-between !important;
                 gap: 0 !important;
                 padding-right: 10px !important;
             }
         }
-        .buttons button{
+
+        .buttons button {
             width: 425 !important;
             height: 28px !important;
             font-size: 11px !important;
@@ -1040,4 +1143,3 @@
 
 
 }
-
