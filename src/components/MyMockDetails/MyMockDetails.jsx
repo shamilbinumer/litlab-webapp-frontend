@@ -3,11 +3,12 @@ import { IoPlayCircleSharp } from 'react-icons/io5';
 import { LuHeart, LuEye } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import baseUrl from '../../baseUrl';
 import './MyMockDetails.scss';
+import axios from 'axios';
 
 const MyMockDetails = () => {
     const [loading, setLoading] = useState(false);
@@ -35,16 +36,43 @@ const MyMockDetails = () => {
     const [selectedSpecialExamModule, setSelectedSpecialExamModule] = useState(null);
     const [loadingPapers, setLoadingPapers] = useState(true);
     const [paperError, setPaperError] = useState(null);
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const checkUserAuthentication = async () => {
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
     // Timer Effect
     useEffect(() => {
         if (quizData && quizData.length > 0) {
             setStartTime(Date.now());
-            
+
             const timer = setInterval(() => {
                 const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
                 const remainingTime = TIME_LIMIT - elapsedTime;
-                
+
                 if (remainingTime <= 0) {
                     clearInterval(timer);
                     handleIgnore();
@@ -415,12 +443,12 @@ const MyMockDetails = () => {
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft 
-                                                                    className="back-btn" 
+                                                                <FaArrowLeft
+                                                                    className="back-btn"
                                                                     onClick={() => {
                                                                         setSelectedWeeklyModule(null);
                                                                         setQuizData([]);
-                                                                    }} 
+                                                                    }}
                                                                 />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedWeeklyModule.title}</h4>
@@ -506,12 +534,12 @@ const MyMockDetails = () => {
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft 
-                                                                    className="back-btn" 
+                                                                <FaArrowLeft
+                                                                    className="back-btn"
                                                                     onClick={() => {
                                                                         setSelectedSpecialExamModule(null);
                                                                         setQuizData([]);
-                                                                    }} 
+                                                                    }}
                                                                 />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedSpecialExamModule.title}</h4>
@@ -597,12 +625,12 @@ const MyMockDetails = () => {
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft 
-                                                                    className="back-btn" 
+                                                                <FaArrowLeft
+                                                                    className="back-btn"
                                                                     onClick={() => {
                                                                         setSelectedAssessmentModule(null);
                                                                         setQuizData([]);
-                                                                    }} 
+                                                                    }}
                                                                 />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedAssessmentModule.title}</h4>
