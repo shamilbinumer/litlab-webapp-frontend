@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import './PremiumAccess.scss';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
+import './PremiumAccess.scss';
 
 const PremiumAccess = () => {
     const [activeCard, setActiveCard] = useState('diamond');
-    const navigate = useNavigate(); // Hook for navigation
+    const [cardOrder, setCardOrder] = useState([]);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const navigate = useNavigate();
 
     const cards = [
         {
@@ -33,24 +35,46 @@ const PremiumAccess = () => {
         },
     ];
 
-    // Reorder cards to ensure active card is in the middle
-    const getOrderedCards = () => {
-        const activeIndex = cards.findIndex(card => card.id === activeCard);
-        const result = [...cards];
+    useEffect(() => {
+        // Initialize card order
+        updateCardOrder(activeCard, true);
+    }, []);
 
-        if (activeIndex !== 1) { // If active card is not in middle
-            // Swap active card with middle card
-            const temp = result[1];
-            result[1] = result[activeIndex];
-            result[activeIndex] = temp;
+    const updateCardOrder = (newActiveId, isInitial = false) => {
+        if (!isInitial && isAnimating) return;
+
+        const currentIndex = cards.findIndex(card => card.id === newActiveId);
+        let newOrder = [];
+
+        // Calculate the new order based on the clicked card
+        for (let i = 0; i < cards.length; i++) {
+            const index = (currentIndex - 1 + i + cards.length) % cards.length;
+            newOrder.push(cards[index].id);
         }
 
-        return result;
+        if (!isInitial) {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setIsAnimating(false);
+            }, 600); // Match this with your CSS transition duration
+        }
+
+        setCardOrder(newOrder);
     };
 
-    // Handle continue button click
+    const handleCardClick = (cardId) => {
+        if (cardId === activeCard || isAnimating) return;
+        
+        setActiveCard(cardId);
+        updateCardOrder(cardId);
+    };
+
+    const getCardPosition = (index) => {
+        const positions = ['left', 'center', 'right'];
+        return positions[index];
+    };
+
     const handleContinue = () => {
-        // Navigate to the plan detail page with the active plan name as a query parameter
         navigate(`/plan-detail-page?plan=${activeCard}`);
     };
 
@@ -60,42 +84,44 @@ const PremiumAccess = () => {
                 <SideNave />
             </div>
             <div className="right-side">
-          <div className="user-pro">
-          <UserProfile />
-          </div>
+                <div className="user-pro">
+                    <UserProfile />
+                </div>
                 <div className="header">
                     <h1>Unlock Premium Access</h1>
                     <p>Experience the best learning journey with premium resources and expert support.</p>
                 </div>
-                <div className="pricing-cards">
-                    {getOrderedCards().map((card) => (
-                        <div
-                            key={card.id}
-                            className={`card ${card.id} ${activeCard === card.id ? 'active' : ''}`}
-                            onClick={() => setActiveCard(card.id)}
-                        >
-                            {card.discount && <div className="discount-badge">{card.discount}</div>}
-                            <h2>{card.title}</h2>
-
-                            <div className="features">
-                                {card.features.map((feature, index) => (
-                                    <div className="feature" key={index}>
-                                        <span className="bullet">•</span> {feature}
+                <div className={`pricing-cards ${isAnimating ? 'animating' : ''}`}>
+                    {cardOrder.map((cardId, index) => {
+                        const card = cards.find(c => c.id === cardId);
+                        return (
+                            <div
+                                key={card.id}
+                                className={`card ${card.id} ${activeCard === card.id ? 'active' : ''} position-${getCardPosition(index)}`}
+                                onClick={() => handleCardClick(card.id)}
+                            >
+                                {card.discount && <div className="discount-badge">{card.discount}</div>}
+                                <h2>{card.title}</h2>
+                                <div className="features">
+                                    {card.features.map((feature, index) => (
+                                        <div className="feature" key={index}>
+                                            <span className="bullet">•</span> {feature}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="price-container">
+                                    <div className="price">
+                                        <span className="currency">₹</span>{card.price}
+                                        <span className="period">/6 Papers</span>
                                     </div>
-                                ))}
-                            </div>
-                            <div className="price-container">
-                                <div className="price">
-                                    <span className="currency">₹</span>{card.price}
-                                    <span className="period">/6 Papers</span>
+                                    <div className="original-price">
+                                        <span className="strike">₹{card.originalPrice}/6 Papers</span>
+                                    </div>
                                 </div>
-                                <div className="original-price">
-                                    <span className="strike">₹{card.originalPrice}/6 Papers</span>
-                                </div>
+                                <Link to="" className="explore-btn">Explore More</Link>
                             </div>
-                            <Link to='' className="explore-btn">Explore More</Link>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
                 <button className="continue-btn" onClick={handleContinue}>Continue</button>
             </div>

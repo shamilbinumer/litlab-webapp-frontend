@@ -91,7 +91,7 @@
             margin-top: 2rem;
     
             .plan-card {
-                width: 238px ;
+                width: 90% ;
     
                 padding: 30px 10px;
                 display: flex;
@@ -101,7 +101,7 @@
                 background: white;
                 border: 1.25px solid #B5A8A8;
                 transition: all 0.3s ease;
-    
+    height: 350px;
                 &.active {
                     transform: scale(1.09);
                     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
