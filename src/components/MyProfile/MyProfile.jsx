@@ -27,8 +27,6 @@ const MyProfile = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editFormData, setEditFormData] = useState({
         name: '',
-        phone: '',
-        email: '',
     });
     const [updateLoading, setUpdateLoading] = useState(false);
     const [updateError, setUpdateError] = useState(null);
@@ -60,8 +58,6 @@ const MyProfile = () => {
             setUser(response.data.user);
             setEditFormData({
                 name: response.data.user.name || '',
-                phone: response.data.user.phone || '',
-                email: response.data.user.email || '',
             });
 
             if (response.status !== 200) {
@@ -217,26 +213,7 @@ const MyProfile = () => {
                                         value={editFormData.name}
                                         onChange={handleInputChange}
                                     />
-                                    <TextField
-                                        margin="dense"
-                                        label="Phone"
-                                        type="tel"
-                                        fullWidth
-                                        variant="outlined"
-                                        name="phone"
-                                        value={editFormData.phone}
-                                        onChange={handleInputChange}
-                                    />
-                                    <TextField
-                                        margin="dense"
-                                        label="Email"
-                                        type="email"
-                                        fullWidth
-                                        variant="outlined"
-                                        name="email"
-                                        value={editFormData.email}
-                                        onChange={handleInputChange}
-                                    />
+                               
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleCloseModal}>Cancel</Button>

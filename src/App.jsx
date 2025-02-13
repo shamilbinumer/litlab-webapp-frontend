@@ -41,7 +41,7 @@ function App() {
           <Route path="/cart-page" Component={Cart} />
           <Route path="/instructions" Component={Instructions} />
           <Route path="/Your-Favorites" Component={YourFavorite} />
-          <Route path="/fav-module" Component={FavoriteModuleDetail} />
+          <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
         </Routes>
       </BrowserRouter>
     </>

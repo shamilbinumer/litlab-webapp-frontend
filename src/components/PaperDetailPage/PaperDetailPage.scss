@@ -1,5 +1,9 @@
 .PaperDetailPageMainWrapper {
-  
+   
+  .back-button{
+    background-color: #6BCCE5;
+    color: white;
+  }
         .module-card {
             margin-bottom: 25px;
             border: 0.8px solid #000000;
@@ -323,10 +327,11 @@
 
                 .quiz-header {
                     display: flex;
-                    justify-content: start;
+                    justify-content: space-between;
                     gap: 13rem;
                     height: 45px;
                     padding-left: 1rem;
+                    padding-right: 1rem;
                     align-items: center;
                     color: #6b7280;
                     margin-bottom: 16px;

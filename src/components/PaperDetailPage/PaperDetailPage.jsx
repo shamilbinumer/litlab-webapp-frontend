@@ -2,7 +2,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { LuHeart } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
-import {  Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './PaperDetailPage.scss';
 import baseUrl from '../../baseUrl';
@@ -14,29 +14,48 @@ import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
 import VideoClasses from './VedioClass/VideoClass';
 import Slides from './Slides';
 import AssessmentTest from './AssistmentTest/AssistmentTest';
+import axios from 'axios';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
-    const [selectedOption, setSelectedOption] = useState(null);
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { paperId,paperTitle } = useParams()
-
-
-
-    const options = [
-        { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
-        { id: 'B', text: "Consumers save more of their income" },
-        { id: 'C', text: "Demand remains unchanged" },
-        { id: 'D', text: "The good becomes a Giffen good" }
-    ];
-
-
+    const { paperId, paperTitle } = useParams();
+    const navigate = useNavigate();
+    const [userDetails,setUserDetails]=useState(null)
 
     // Function to handle "Next" button click
- 
+    useEffect(() => {
+        const checkUserAuthentication = async () => {
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUserDetails(response.data.user)
+                
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
+    console.log(userDetails);
+
     useEffect(() => {
         const fetchModules = async () => {
             try {
@@ -69,7 +88,7 @@ const PaperDetailPage = () => {
         fetchModules();
     }, []);
 
-    if (modules.message == 'No modules found for this paper in your semester and course.'|| modules.message == 'No modules found.') {
+    if (modules.message == 'No modules found for this paper in your semester and course.' || modules.message == 'No modules found.') {
         return <div >
             No modules found for this paper in your semester and course.
         </div>
@@ -109,7 +128,7 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                       <Slides paperId={paperId} paperTitle={paperTitle} />
+                                        <Slides paperId={paperId} paperTitle={paperTitle} />
                                     </div>
                                 ) : (
                                     <VideoClasses paperId={paperId} paperTitle={paperTitle} />
@@ -134,7 +153,7 @@ const PaperDetailPage = () => {
                                                     </h4>
                                                     <p>{formattedDate}</p>
                                                     <div className="button-heart">
-                                                        <a href={module.fileUrl} target='_blank'><button>Read Summary</button></a>
+                                                        <Link to={`/module-summery/${module.id}`}><button>Read Summary</button></Link>
                                                         <LuHeart className="hear-icon" />
                                                     </div>
                                                 </div>
@@ -152,11 +171,11 @@ const PaperDetailPage = () => {
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                        <WeeklyChallenge paperId={paperId} />
+                                        <WeeklyChallenge paperId={paperId} userDetails={userDetails} />
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        <SpecialExam paperId={paperId}/>
+                                        <SpecialExam paperId={paperId} userDetails={userDetails}/>
                                     ) : activeSubCategory === 'Assessment Test' ? (
-                                        <AssessmentTest paperId={paperId} />
+                                        <AssessmentTest paperId={paperId} userDetails={userDetails}/>
                                     ) : (
                                         <div>Select a Mock Test type</div>
                                     )}

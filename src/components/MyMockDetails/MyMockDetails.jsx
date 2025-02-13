@@ -10,12 +10,10 @@ import baseUrl from '../../baseUrl';
 import './MyMockDetails.scss';
 
 const MyMockDetails = () => {
-    // Set default category and sub-category
-    const [loading, setLoading] = useState(false)
-    // const [timeLeft, setTimeLeft] = useState(60); // 1 min countdown
+    const [loading, setLoading] = useState(false);
     const [startTime, setStartTime] = useState(null);
     const [currentTime, setCurrentTime] = useState(0);
-    const TIME_LIMIT = 300; // 5 minutes (300 seconds) for the quiz
+    const TIME_LIMIT = 300; // 5 minutes for the quiz
     const [activeCategory, setActiveCategory] = useState('Mock Test');
     const [activeSubCategory, setActiveSubCategory] = useState('Weekly Challenge');
     const [selectedOption, setSelectedOption] = useState(null);
@@ -33,20 +31,38 @@ const MyMockDetails = () => {
     const [answered, setAnswered] = useState(false);
     const [ignoredQuestions, setIgnoredQuestions] = useState([]);
     const [answers, setAnswers] = useState([]);
-    // New states for purchased papers
     const [purchasedPapers, setPurchasedPapers] = useState([]);
     const [selectedSpecialExamModule, setSelectedSpecialExamModule] = useState(null);
     const [loadingPapers, setLoadingPapers] = useState(true);
     const [paperError, setPaperError] = useState(null);
+
+    // Timer Effect
+    useEffect(() => {
+        if (quizData && quizData.length > 0) {
+            setStartTime(Date.now());
+            
+            const timer = setInterval(() => {
+                const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                const remainingTime = TIME_LIMIT - elapsedTime;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(timer);
+                    handleIgnore();
+                } else {
+                    setCurrentTime(elapsedTime);
+                }
+            }, 1000);
+
+            return () => clearInterval(timer);
+        }
+    }, [quizData, startTime]);
 
     // Fetch purchased papers
     useEffect(() => {
         const fetchPurchasedPapers = async () => {
             try {
                 const authToken = localStorage.getItem('authToken');
-                if (!authToken) {
-                    throw new Error('No authentication token found');
-                }
+                if (!authToken) throw new Error('No authentication token found');
 
                 const response = await fetch(`${baseUrl}/api/fetch-purchased-papers`, {
                     headers: {
@@ -55,12 +71,8 @@ const MyMockDetails = () => {
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch purchased papers');
-                }
-
+                if (!response.ok) throw new Error('Failed to fetch purchased papers');
                 const data = await response.json();
-
                 setPurchasedPapers(data.papers || []);
             } catch (err) {
                 setPaperError(err.message);
@@ -71,30 +83,7 @@ const MyMockDetails = () => {
 
         fetchPurchasedPapers();
     }, []);
-    // Add this useEffect to handle the timer
-useEffect(() => {
-    // Only start timer when quiz data is loaded and rendered
-    if (quizData && quizData.length > 0) {
-      setStartTime(Date.now());
-      
-      const timer = setInterval(() => {
-        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-        const remainingTime = TIME_LIMIT - elapsedTime;
-        
-        if (remainingTime <= 0) {
-          clearInterval(timer);
-          handleIgnore(); // Auto-ignore when time runs out
-        } else {
-          setCurrentTime(elapsedTime);
-        }
-      }, 1000);
-  
-      // Cleanup on unmount or when quiz changes
-      return () => {
-        clearInterval(timer);
-      };
-    }
-  }, [quizData, startTime]); // Dependencies
+
     const formatRemainingTime = () => {
         if (!startTime) return "5:00";
         const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
@@ -102,17 +91,13 @@ useEffect(() => {
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-      };
+    };
 
     const fetchModules = async (paperId) => {
-        console.log(paperId);
-
         setLoadingModules(true);
         try {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken) {
-                throw new Error('No authentication token found');
-            }
+            if (!authToken) throw new Error('No authentication token found');
 
             const response = await fetch(`${baseUrl}/api/fetch-modules/${paperId}`, {
                 headers: {
@@ -121,13 +106,8 @@ useEffect(() => {
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch modules');
-            }
-
+            if (!response.ok) throw new Error('Failed to fetch modules');
             const data = await response.json();
-            console.log(data, "module");
-
             setPaperModules(data || []);
         } catch (err) {
             setModuleError(err.message);
@@ -135,13 +115,12 @@ useEffect(() => {
             setLoadingModules(false);
         }
     };
+
     const fetchWeeklyQuestions = async (paperId, moduleNumber) => {
-        setLoading(true)
+        setLoading(true);
         try {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken) {
-                throw new Error('No authentication token found');
-            }
+            if (!authToken) throw new Error('No authentication token found');
 
             const response = await fetch(`${baseUrl}/api/fetch-weakly-chellange/${paperId}/${moduleNumber}`, {
                 headers: {
@@ -150,27 +129,22 @@ useEffect(() => {
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch questions');
-            }
-
+            if (!response.ok) throw new Error('Failed to fetch questions');
             const data = await response.json();
-
             return data;
         } catch (err) {
             console.error('Error fetching questions:', err);
             throw err;
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
+
     const fetchspecialExamQuestions = async (paperId, moduleNumber) => {
-        setLoading(true)
+        setLoading(true);
         try {
             const authToken = localStorage.getItem('authToken');
-            if (!authToken) {
-                throw new Error('No authentication token found');
-            }
+            if (!authToken) throw new Error('No authentication token found');
 
             const response = await fetch(`${baseUrl}/api/fetch-special-exam/${paperId}/${moduleNumber}`, {
                 headers: {
@@ -179,18 +153,38 @@ useEffect(() => {
                 }
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch questions');
-            }
-
+            if (!response.ok) throw new Error('Failed to fetch questions');
             const data = await response.json();
-
             return data;
         } catch (err) {
             console.error('Error fetching questions:', err);
             throw err;
         } finally {
-            setLoading(false)
+            setLoading(false);
+        }
+    };
+
+    const fetchAssessmentQuestions = async (paperId, moduleNumber) => {
+        setLoading(true);
+        try {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) throw new Error('No authentication token found');
+
+            const response = await fetch(`${baseUrl}/api/fetch-assessment/${paperId}/${moduleNumber}`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch questions');
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Error fetching questions:', err);
+            throw err;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -208,67 +202,45 @@ useEffect(() => {
         setSelectedAssessment(paper.id);
         await fetchModules(paper.id);
     };
+
+    const handleWeeklyModuleSelect = async (module) => {
+        try {
+            setSelectedWeeklyModule(module);
+            const moduleNumber = module.module;
+            const questions = await fetchWeeklyQuestions(selectedWeeklyChallenge, moduleNumber);
+            if (questions && questions.length > 0) {
+                setQuizData(questions[0].questions);
+            }
+        } catch (err) {
+            console.error('Error loading questions:', err);
+        }
+    };
+
     const handleSpecialExamModuleSelect = async (module) => {
         try {
             setSelectedSpecialExamModule(module);
             const moduleNumber = module.module;
             const questions = await fetchspecialExamQuestions(selectedSpecialExam, moduleNumber);
-            setQuizData(questions);
+            if (questions && questions.length > 0) {
+                setQuizData(questions[0].questions);
+            }
         } catch (err) {
             console.error('Error loading special exam questions:', err);
         }
     };
-    const handleSpecialExamModuleBack = () => {
-        setSelectedSpecialExamModule(null);
-        setQuizData([]);
-    };
 
-    const questions = [
-        {
-            id: 1,
-            question: "What happens when a good's price decreases, according to the substitution effect?",
-            options: [
-                { id: 'A', text: "Consumers buy more of the good as it's relatively cheaper" },
-                { id: 'B', text: "Consumers save more of their income" },
-                { id: 'C', text: "Demand remains unchanged" },
-                { id: 'D', text: "The good becomes a Giffen good" }
-            ],
-            correctAnswer: 'A'
-        },
-        {
-            id: 2,
-            question: "What is the primary purpose of a budget?",
-            options: [
-                { id: 'A', text: "To track income and expenses" },
-                { id: 'B', text: "To increase debt" },
-                { id: 'C', text: "To reduce savings" },
-                { id: 'D', text: "To avoid financial planning" }
-            ],
-            correctAnswer: 'A'
-        },
-        {
-            id: 3,
-            question: "Which of the following is a fixed expense?",
-            options: [
-                { id: 'A', text: "Groceries" },
-                { id: 'B', text: "Rent" },
-                { id: 'C', text: "Entertainment" },
-                { id: 'D', text: "Clothing" }
-            ],
-            correctAnswer: 'B'
-        },
-        {
-            id: 4,
-            question: "What is the primary purpose of a budget?",
-            options: [
-                { id: 'A', text: "To track income and expenses" },
-                { id: 'B', text: "To increase debt" },
-                { id: 'C', text: "To reduce savings" },
-                { id: 'D', text: "To avoid financial planning" }
-            ],
-            correctAnswer: 'A'
+    const handleAssessmentModuleSelect = async (module) => {
+        try {
+            setSelectedAssessmentModule(module);
+            const moduleNumber = module.module;
+            const questions = await fetchAssessmentQuestions(selectedAssessment, moduleNumber);
+            if (questions && questions.length > 0) {
+                setQuizData(questions[0].questions);
+            }
+        } catch (err) {
+            console.error('Error loading assessment questions:', err);
         }
-    ];
+    };
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < quizData.length - 1) {
@@ -278,80 +250,27 @@ useEffect(() => {
         }
     };
 
-
-
-    const handleAssessmentModuleSelect = (module) => {
-        setSelectedAssessmentModule(module);
-        setQuizData(questions);
-    };
-
-    const handleAssessmentModuleBack = () => {
-        setSelectedAssessmentModule(null);
-        setQuizData([]);
-    };
-
-    const handleWeeklyModuleSelect = async (module) => {
-        try {
-            setSelectedWeeklyModule(module);
-            // Assuming module number is in the title string "Module : 1" - extract the number
-            const moduleNumber = module.module;
-            const questions = await fetchWeeklyQuestions(selectedWeeklyChallenge, moduleNumber);
-            setQuizData(questions);
-        } catch (err) {
-            console.error('Error loading questions:', err);
-            // Handle error appropriately
-        }
-    };
-
-    const handleWeeklyModuleBack = () => {
-        setSelectedWeeklyModule(null);
-        setQuizData([]);
-    };
-
-
-
-    const currentQuestion = questions[currentQuestionIndex];
-
-
-
-    const assessmentModules = {
-        economics: [
-            { title: 'Production and Cost', description: 'Basic Economic Concepts and Theories', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Consumer Behavior', description: 'Supply, Demand, and Market Equilibrium', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Market Structures', description: 'Monetary and Fiscal Policy', icon: '/Images/papers_svgrepo.com.png' }
-        ],
-        mathematics: [
-            { title: 'Module 1: Calculus', description: 'Differentiation and Integration', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module 2: Statistics', description: 'Probability and Statistical Analysis', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module 3: Linear Algebra', description: 'Matrices and Vector Spaces', icon: '/Images/papers_svgrepo.com.png' }
-        ],
-        english: [
-            { title: 'Module 1: Grammar', description: 'Advanced English Grammar', icon: '/Images/education-book-learn-school-library_svgrepo.com.png' },
-            { title: 'Module 2: Writing', description: 'Essay and Academic Writing', icon: '/Images/Layer_x0020_1.png' },
-            { title: 'Module 3: Literature', description: 'Literary Analysis', icon: '/Images/papers_svgrepo.com.png' }
-        ]
-    };
-
-
     const handleIgnore = () => {
         setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
         handleNextQuestion();
     };
+
     const handleOptionSelect = (option, index) => {
         if (!answered) {
             setSelectedOption(option);
             setAnswered(true);
 
-            // Save the answer
             const newAnswers = [...answers];
             newAnswers[currentQuestionIndex] = {
                 selected: option,
                 correct: option === quizData[currentQuestionIndex].correctAnswer,
-                ignored: false
+                ignored: false,
+                solution: quizData[currentQuestionIndex].solution
             };
             setAnswers(newAnswers);
         }
     };
+
     const getOptionStyle = (option) => {
         if (!answered) {
             return {
@@ -388,8 +307,82 @@ useEffect(() => {
             transition: 'all 0.3s ease'
         };
     };
+
+    const renderQuiz = () => (
+        <div className="quiz-container">
+            <div className="quiz-content">
+                <div className="quiz-header">
+                    <span>{currentQuestionIndex + 1}/{quizData.length}</span>
+                    <span>{formatRemainingTime()}</span>
+                </div>
+                <div className="question">
+                    <h3>
+                        <span>Qs {currentQuestionIndex + 1} : </span>
+                        <p>{quizData[currentQuestionIndex]?.question}</p>
+                    </h3>
+                    <div className="options">
+                        {quizData[currentQuestionIndex]?.options.map((option, index) => (
+                            <div
+                                key={index}
+                                onClick={() => !answered && handleOptionSelect(option, index)}
+                                className="option"
+                                style={getOptionStyle(option)}
+                            >
+                                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                                <span>{option}</span>
+                            </div>
+                        ))}
+                    </div>
+                    {answered && (
+                        <div className="solution">
+                            <h4>Solution:</h4>
+                            <p>{quizData[currentQuestionIndex]?.solution}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="buttons">
+                    <button
+                        className="ignore"
+                        onClick={handleIgnore}
+                        style={{
+                            opacity: answered ? 0.5 : 1,
+                            cursor: answered ? 'not-allowed' : 'pointer'
+                        }}
+                        disabled={answered}
+                    >
+                        Ignore
+                    </button>
+                    {currentQuestionIndex < quizData.length - 1 ? (
+                        <button
+                            className="next"
+                            onClick={handleNextQuestion}
+                            style={{
+                                opacity: !answered ? 0.5 : 1,
+                                cursor: !answered ? 'not-allowed' : 'pointer'
+                            }}
+                            disabled={!answered}
+                        >
+                            Next
+                        </button>
+                    ) : (
+                        <Link
+                            to={`/quiz-analysis?total=${quizData.length}&correct=${answers.filter(a => a?.correct).length}&wrong=${answers.filter(a => !a?.correct && !a?.ignored).length}&ignored=${ignoredQuestions.length}`}
+                            className="next"
+                            style={{
+                                opacity: !answered ? 0.5 : 1,
+                                pointerEvents: !answered ? 'none' : 'auto'
+                            }}
+                        >
+                            Finish
+                        </Link>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+
     if (loading) {
-        return <div>loading ...</div>
+        return <div>Loading...</div>;
     }
 
     return (
@@ -417,80 +410,22 @@ useEffect(() => {
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
                                         selectedWeeklyChallenge ? (
-                                            // Existing selected challenge view...
                                             <div>
                                                 {selectedWeeklyModule && quizData ? (
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft className="back-btn" onClick={handleWeeklyModuleBack} />
+                                                                <FaArrowLeft 
+                                                                    className="back-btn" 
+                                                                    onClick={() => {
+                                                                        setSelectedWeeklyModule(null);
+                                                                        setQuizData([]);
+                                                                    }} 
+                                                                />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedWeeklyModule.title}</h4>
                                                         </div>
-                                                        <div className="quiz-container">
-                                                            <div className="quiz-content">
-                                                                <div className="quiz-header">
-                                                                    <span>{currentQuestionIndex + 1}/{quizData.length}</span>
-                                                                    <span>{formatRemainingTime()}</span>
-                                                                </div>
-                                                                <div className="question">
-                                                                    <h3>
-                                                                        <span>Qs {currentQuestionIndex + 1} : </span>
-                                                                        <p>{quizData[currentQuestionIndex]?.question}</p>
-                                                                    </h3>
-                                                                    <div className="options">
-                                                                        {quizData[currentQuestionIndex]?.options.map((option, index) => (
-                                                                            <div
-                                                                                key={index}
-                                                                                onClick={() => !answered && handleOptionSelect(option, index)}
-                                                                                className={`option`}
-                                                                                style={getOptionStyle(option)}
-                                                                            >
-                                                                                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                                                                                <span>{option}</span>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-                                                                <div className="buttons">
-                                                                    <button
-                                                                        className="ignore"
-                                                                        onClick={handleIgnore}
-                                                                        style={{
-                                                                            opacity: answered ? 0.5 : 1,
-                                                                            cursor: answered ? 'not-allowed' : 'pointer'
-                                                                        }}
-                                                                        disabled={answered}
-                                                                    >
-                                                                        Ignore
-                                                                    </button>
-                                                                    {currentQuestionIndex < quizData.length - 1 ? (
-                                                                        <button
-                                                                            className="next"
-                                                                            onClick={handleNextQuestion}
-                                                                            style={{
-                                                                                opacity: !answered ? 0.5 : 1,
-                                                                                cursor: !answered ? 'not-allowed' : 'pointer'
-                                                                            }}
-                                                                            disabled={!answered}
-                                                                        >
-                                                                            Next
-                                                                        </button>
-                                                                    ) : (
-                                                                        <Link
-                                                                            to={`/quiz-analysis?total=${quizData.length}&correct=${answers.filter(a => a?.correct).length}&wrong=${answers.filter(a => !a?.correct && !a?.ignored).length}&ignored=${ignoredQuestions.length}`}
-                                                                            className="next"
-                                                                            style={{
-                                                                                opacity: !answered ? 0.5 : 1,
-                                                                                pointerEvents: !answered ? 'none' : 'auto'
-                                                                            }}
-                                                                        >
-                                                                            Finish
-                                                                        </Link>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        {renderQuiz()}
                                                     </>
                                                 ) : (
                                                     <>
@@ -533,7 +468,6 @@ useEffect(() => {
                                                 )}
                                             </div>
                                         ) : (
-                                            // Initial purchased papers view for Weekly Challenge
                                             <div>
                                                 {loadingPapers ? (
                                                     <div>Loading papers...</div>
@@ -544,7 +478,7 @@ useEffect(() => {
                                                         <div
                                                             className="module-card"
                                                             key={paper.id}
-                                                            onClick={() => handleWeeklyChallengeSelect(paper)}  // Changed here
+                                                            onClick={() => handleWeeklyChallengeSelect(paper)}
                                                         >
                                                             <div className="module-card-left">
                                                                 <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
@@ -567,80 +501,22 @@ useEffect(() => {
                                         )
                                     ) : activeSubCategory === 'Special Exam' ? (
                                         selectedSpecialExam ? (
-                                            // Existing special exam view...
                                             <div>
                                                 {selectedSpecialExamModule && quizData ? (
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
                                                             <div className="">
-                                                                <FaArrowLeft className="back-btn" onClick={handleSpecialExamModuleBack} />
+                                                                <FaArrowLeft 
+                                                                    className="back-btn" 
+                                                                    onClick={() => {
+                                                                        setSelectedSpecialExamModule(null);
+                                                                        setQuizData([]);
+                                                                    }} 
+                                                                />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedSpecialExamModule.title}</h4>
                                                         </div>
-                                                        <div className="quiz-container">
-                                                            <div className="quiz-content">
-                                                                <div className="quiz-header">
-                                                                    <span>{currentQuestionIndex + 1}/{quizData.length}</span>
-                                                                    <span>000</span>
-                                                                </div>
-                                                                <div className="question">
-                                                                    <h3>
-                                                                        <span>Qs {currentQuestionIndex + 1} : </span>
-                                                                        <p>{quizData[currentQuestionIndex]?.question}</p>
-                                                                    </h3>
-                                                                    <div className="options">
-                                                                        {quizData[currentQuestionIndex]?.options.map((option, index) => (
-                                                                            <div
-                                                                                key={index}
-                                                                                onClick={() => !answered && handleOptionSelect(option, index)}
-                                                                                className="option"
-                                                                                style={getOptionStyle(option)}
-                                                                            >
-                                                                                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                                                                                <span>{option}</span>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-                                                                <div className="buttons">
-                                                                    <button
-                                                                        className="ignore"
-                                                                        onClick={handleIgnore}
-                                                                        style={{
-                                                                            opacity: answered ? 0.5 : 1,
-                                                                            cursor: answered ? 'not-allowed' : 'pointer'
-                                                                        }}
-                                                                        disabled={answered}
-                                                                    >
-                                                                        Ignore
-                                                                    </button>
-                                                                    {currentQuestionIndex < quizData.length - 1 ? (
-                                                                        <button
-                                                                            className="next"
-                                                                            onClick={handleNextQuestion}
-                                                                            style={{
-                                                                                opacity: !answered ? 0.5 : 1,
-                                                                                cursor: !answered ? 'not-allowed' : 'pointer'
-                                                                            }}
-                                                                            disabled={!answered}
-                                                                        >
-                                                                            Next
-                                                                        </button>
-                                                                    ) : (
-                                                                        <Link
-                                                                            to={`/quiz-analysis?total=${quizData.length}&correct=${answers.filter(a => a?.correct).length}&wrong=${answers.filter(a => !a?.correct && !a?.ignored).length}&ignored=${ignoredQuestions.length}`}
-                                                                            className="next"
-                                                                            style={{
-                                                                                opacity: !answered ? 0.5 : 1,
-                                                                                pointerEvents: !answered ? 'none' : 'auto'
-                                                                            }}
-                                                                        >
-                                                                            Finish
-                                                                        </Link>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        {renderQuiz()}
                                                     </>
                                                 ) : (
                                                     <>
@@ -683,7 +559,6 @@ useEffect(() => {
                                                 )}
                                             </div>
                                         ) : (
-                                            // Initial purchased papers view for Special Exam
                                             <div>
                                                 {loadingPapers ? (
                                                     <div>Loading papers...</div>
@@ -694,7 +569,7 @@ useEffect(() => {
                                                         <div
                                                             className="module-card"
                                                             key={paper.id}
-                                                            onClick={() => handleSpecialExamSelect(paper)}  // Changed here
+                                                            onClick={() => handleSpecialExamSelect(paper)}
                                                         >
                                                             <div className="module-card-left">
                                                                 <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
@@ -717,82 +592,62 @@ useEffect(() => {
                                         )
                                     ) : activeSubCategory === 'Assessment Test' ? (
                                         selectedAssessment ? (
-                                            // Existing assessment view...
                                             <div>
-                                                {selectedAssessmentModule ? (
+                                                {selectedAssessmentModule && quizData ? (
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
-                                                            <div>
-                                                                <FaArrowLeft
-                                                                    className="back-btn"
-                                                                    onClick={handleAssessmentModuleBack}
+                                                            <div className="">
+                                                                <FaArrowLeft 
+                                                                    className="back-btn" 
+                                                                    onClick={() => {
+                                                                        setSelectedAssessmentModule(null);
+                                                                        setQuizData([]);
+                                                                    }} 
                                                                 />
                                                             </div>
                                                             <h4 style={{ margin: '0', padding: '0' }}>{selectedAssessmentModule.title}</h4>
                                                         </div>
-                                                        <div className="quiz-container">
-                                                            <div className="quiz-content">
-                                                                <div className="quiz-header">
-                                                                    <span>{currentQuestionIndex + 1}/{questions.length}</span>
-                                                                    <span>00:00:00</span>
-                                                                </div>
-                                                                <div className="question">
-                                                                    <h3>
-                                                                        <span>Qs {currentQuestion.id} : </span>
-                                                                        <p>{currentQuestion.question}</p>
-                                                                    </h3>
-                                                                    <div className="options">
-                                                                        {currentQuestion.options.map((option) => (
-                                                                            <div
-                                                                                key={option.id}
-                                                                                onClick={() => setSelectedOption(option.id)}
-                                                                                className={`option ${selectedOption === option.id ? 'selected' : ''}`}
-                                                                            >
-                                                                                <span className="option-letter">{option.id}</span>
-                                                                                <span>{option.text}</span>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                </div>
-                                                                <div className="buttons">
-                                                                    <button className="ignore">Ignore</button>
-                                                                    {currentQuestionIndex < questions.length - 1 ? (
-                                                                        <button className="next" onClick={handleNextQuestion}>Next</button>
-                                                                    ) : (
-                                                                        <Link to='/quiz-analysis' className="next">Finish</Link>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        {renderQuiz()}
                                                     </>
                                                 ) : (
                                                     <>
                                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
-                                                            <div>
+                                                            <div className="">
                                                                 <FaArrowLeft
                                                                     className="back-btn"
                                                                     onClick={() => setSelectedAssessment(null)}
                                                                 />
                                                             </div>
-                                                            <h4 style={{ margin: '0', padding: '0' }}>{selectedAssessment}</h4>
+                                                            <h4 style={{ margin: '0', padding: '0' }}>Assessment Modules</h4>
                                                         </div>
-                                                        {assessmentModules[selectedAssessment].map((module, index) => (
-                                                            <div
-                                                                className="module-card"
-                                                                id='submoduleCardAssistment'
-                                                                key={index}
-                                                                onClick={() => handleAssessmentModuleSelect(module)}
-                                                            >
-                                                                <div className="module-card-left">
-                                                                    <h4 className="module-title">{module.title}</h4>
+                                                        {loadingModules ? (
+                                                            <div>Loading modules...</div>
+                                                        ) : moduleError ? (
+                                                            <div>Error loading modules: {moduleError}</div>
+                                                        ) : paperModules.length > 0 ? (
+                                                            paperModules.map((module, index) => (
+                                                                <div
+                                                                    className="module-card"
+                                                                    id='submoduleCard'
+                                                                    key={module.id || index}
+                                                                    onClick={() => handleAssessmentModuleSelect(module)}
+                                                                >
+                                                                    <div className="module-card-left">
+                                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
+                                                                        <p>{module.course} - {module.department}</p>
+                                                                    </div>
+                                                                    <div className="module-card-right">
+                                                                        <img src="/Images/Module-icon.png" alt="" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        ))}
+                                                            ))
+                                                        ) : (
+                                                            <div>No modules available for this paper.</div>
+                                                        )}
                                                     </>
                                                 )}
                                             </div>
                                         ) : (
-                                            // Initial purchased papers view for Assessment Test
                                             <div>
                                                 {loadingPapers ? (
                                                     <div>Loading papers...</div>
@@ -803,7 +658,7 @@ useEffect(() => {
                                                         <div
                                                             className="module-card"
                                                             key={paper.id}
-                                                            onClick={() => handleAssessmentSelect(paper)}  // Changed here
+                                                            onClick={() => handleAssessmentSelect(paper)}
                                                         >
                                                             <div className="module-card-left">
                                                                 <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
@@ -824,9 +679,7 @@ useEffect(() => {
                                                 )}
                                             </div>
                                         )
-                                    ) : (
-                                        <div>Select a Mock Test type</div>
-                                    )}
+                                    ) : null}
                                 </div>
                             )}
                         </div>

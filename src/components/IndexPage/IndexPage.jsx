@@ -222,7 +222,7 @@ const IndexPage = () => {
                             <div className="cards-main row">
                                 {filteredPapers.length > 0 ? (
                                     filteredPapers.map((paper) => (
-                                        <div className="col-lg-4" key={paper.id}>
+                                        <div className="col-xl-4 col-lg-6 col-md-12 col-sm-12" key={paper.id}>
                                                 <div className="paper-card">
                                                     <IoIosHeartEmpty className="heart-icon" />
                                                     <img
@@ -240,7 +240,7 @@ const IndexPage = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <p className='no-result'>No papers found matching your search.</p>
+                                    <p className='no-result'>No papers found.</p>
                                 )}
                             </div>
                         )}

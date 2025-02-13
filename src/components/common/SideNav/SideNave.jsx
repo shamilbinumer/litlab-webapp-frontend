@@ -1,69 +1,31 @@
 import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom' // ✅ Import useLocation
 import './SideNav.scss'
 import UserProfile from '../UserProfile/UserProfile'
-import { Link } from 'react-router-dom'
 import { ImHome3 } from 'react-icons/im'
-import { MdOutlineFileDownload } from "react-icons/md";
-import { GrDiamond } from "react-icons/gr";
-import { TbBook2 } from "react-icons/tb";
-import { LuUserRound } from "react-icons/lu";
-
+import { GrDiamond } from 'react-icons/gr'
+import { TbBook2 } from 'react-icons/tb'
+import { LuUserRound } from 'react-icons/lu'
 
 const SideNave = () => {
-    const [activePath, setActivePath] = useState('')
-    const [activeTab, setActiveTab] = useState('home');
+    const location = useLocation(); // ✅ Get current route
+    const [activeTab, setActiveTab] = useState('');
 
     useEffect(() => {
-        setActivePath(window.location.pathname)
-    }, [activePath])
+        const pathToTab = {
+            '/': 'home',
+            '/premium-access': 'premium',
+            '/my-course-details': 'courses',
+            '/my-profile': 'profile'
+        };
+        setActiveTab(pathToTab[location.pathname] || 'home'); // ✅ Update activeTab based on URL
+    }, [location.pathname]); // ✅ Re-run effect when pathname changes
 
     const navItems = [
-        {
-            id: 'home',
-            icon: (
-                <ImHome3 />
-
-            ),
-            label: 'Home'
-        },
-        {
-            id: 'downloads',
-            icon: (
-                <MdOutlineFileDownload />
-
-            ),
-            label: 'Downloads'
-        },
-        {
-            id: 'Get Premium',
-            icon: (
-                <GrDiamond />
-
-            ),
-            label: 'Get Premium'
-        },
-
-
-        {
-            id: 'courses',
-            icon: (
-                <TbBook2 />
-
-            ),
-            label: 'My courses'
-        },
-
-        {
-            id: 'Profile',
-            icon: (
-                <LuUserRound />
-
-
-            ),
-            label: 'Profile'
-        },
-    
-   
+        { id: 'home', icon: <ImHome3 />, label: 'Home', path: '/' },
+        { id: 'premium', icon: <GrDiamond />, label: 'Get Premium', path: '/premium-access' },
+        { id: 'courses', icon: <TbBook2 />, label: 'My courses', path: '/my-course-details' },
+        { id: 'profile', icon: <LuUserRound />, label: 'Profile', path: '/my-profile' }
     ];
 
     return (
@@ -80,10 +42,26 @@ const SideNave = () => {
                             <img src="/Images/Frame 1261153187.png" alt="" />
                         </div>
                         <div className="nav-items">
-                            <div className={`nav-item ${activePath == '/' ? 'active' : ''}`}><img src="/Images/Group 1000004529.png" alt="" /></div>
-                            <div className={`nav-item`}><img src="/Images/Group 1000004528.png" alt="" /></div>
-                            <div className={`nav-item`}><img src="/Images/Vector (1).png" alt="" /></div>
-                            <div className={`nav-item`}><img src="/Images/Group 1000004528 (1).png" alt="" /></div>
+                            <Link to='/'>
+                                <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`}>
+                                    <img src="/Images/Group 1000004529.png" alt="" />
+                                </div>
+                            </Link>
+                            <Link to='/my-course-details'>
+                                <div className={`nav-item ${activeTab === 'courses' ? 'active' : ''}`}>
+                                    <img src="/Images/Group 1000004528.png" alt="" />
+                                </div>
+                            </Link>
+                            <Link to='/premium-access'>
+                                <div className={`nav-item ${activeTab === 'premium' ? 'active' : ''}`}>
+                                    <img src="/Images/Vector (1).png" alt="" />
+                                </div>
+                            </Link>
+                            <Link to='/my-course-details'>
+                                <div className={`nav-item ${activeTab === 'notification' ? 'active' : ''}`}>
+                                    <img src="/Images/Group 1000004528 (1).png" alt="" />
+                                </div>
+                            </Link>
                         </div>
                     </div>
                     <div className="phone-user-profile">
@@ -96,14 +74,14 @@ const SideNave = () => {
                 <nav className="bottom-navbar">
                     <div className="bottom-navbar-container">
                         {navItems.map((item) => (
-                            <button
+                            <Link
+                                to={item.path}
                                 key={item.id}
                                 className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
-                                onClick={() => setActiveTab(item.id)}
                             >
                                 <div className="icon">{item.icon}</div>
                                 <span className="label">{item.label}</span>
-                            </button>
+                            </Link>
                         ))}
                     </div>
                 </nav>

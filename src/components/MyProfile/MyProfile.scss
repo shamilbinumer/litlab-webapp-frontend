@@ -177,9 +177,14 @@
     }
 
     @media(max-width:993px){
-        .right-side{
+        .my-profile-main{
+            padding-bottom: 3rem;
+        }
+        .my-profile-left{
+            width: 0 !important;
+        }
+        .my-profile-right{
             width: 100% !important;
-            padding-bottom: 90px !important;
             margin: 0 !important;
         }
         .user-pro{

@@ -143,13 +143,17 @@
         }
     }
     @media (max-width:993px){
+        .cards-main-wrapper {
+            width: 100% !important;
+           
+        }
         .right-side{
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
         .user-pro{
-            display: none;
+            display: none !important;
         }
     }
 }

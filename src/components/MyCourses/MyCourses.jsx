@@ -93,7 +93,7 @@ const MyCourses = () => {
                         </Link>
                         <h2 className='my-course-heading'>My Courses</h2>
                     </div>
-                    <div>
+                    <div className='user-pro'>
                         <UserProfile />
                     </div>
                     <h1 className='main-heading'>All your purchased papers</h1>
