@@ -396,19 +396,23 @@ const MyMockDetails = () => {
         const answeredQuestions = answers.filter(answer => !answer?.ignored);
         const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
         const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
-
+    
         const avgTimePerQuestion = Math.round(
             answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
             (answeredQuestions.length || 1)
         );
-
-        // Call API to add mock test before navigating
+    
+        // Determine exam type
+        const examType = selectedWeeklyChallenge ? 'weekly' : 
+                        selectedSpecialExam ? 'special' : 
+                        selectedAssessment ? 'assessment' : 'unknown';
+    
         try {
             const authToken = localStorage.getItem("authToken");
             if (!authToken) {
                 throw new Error("No authentication token found");
             }
-
+    
             const mockTestData = {
                 category: activeSubCategory,
                 isSubmitted: true,
@@ -418,7 +422,7 @@ const MyMockDetails = () => {
                 paperTitle: paperModules.length > 0 ? paperModules[0].paperTitle : "",
                 paperType: paperModules.length > 0 ? paperModules[0].paperType : "",
             };
-
+    
             const response = await axios.post(
                 `${baseUrl}/api/add-mock-test`,
                 mockTestData,
@@ -429,15 +433,23 @@ const MyMockDetails = () => {
                     },
                 }
             );
-
+    
             console.log("Mock test added successfully:", response.data);
         } catch (error) {
             console.error("Error adding mock test:", error.response?.data?.message || error.message);
             alert("Failed to submit mock test. Try again.");
         }
-
+    
         navigate(
-            `/quiz-analysis?paperId=${selectedWeeklyChallenge || selectedSpecialExam || selectedAssessment}&moduleId=${selectedWeeklyModule?.id || selectedSpecialExamModule?.id || selectedAssessmentModule?.id}&module=${selectedWeeklyModule?.module || selectedSpecialExamModule?.module || selectedAssessmentModule?.module || 0}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&avgTime=${avgTimePerQuestion}`
+            `/quiz-analysis?paperId=${selectedWeeklyChallenge || selectedSpecialExam || selectedAssessment}` +
+            `&moduleId=${selectedWeeklyModule?.id || selectedSpecialExamModule?.id || selectedAssessmentModule?.id}` +
+            `&module=${selectedWeeklyModule?.module || selectedSpecialExamModule?.module || selectedAssessmentModule?.module || 0}` +
+            `&total=${totalQuestions}` +
+            `&correct=${correctCount}` +
+            `&wrong=${wrongCount}` +
+            `&ignored=${ignoredCount}` +
+            `&avgTime=${avgTimePerQuestion}` +
+            `&examType=${examType}`  // Added exam type parameter
         );
     };
     const handleAssessmentModuleSelect = async (module) => {

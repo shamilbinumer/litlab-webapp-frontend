@@ -17,6 +17,7 @@ const QuizAnalysis = () => {
     const avgTime = parseInt(searchParams.get('avgTime') || '0');
     const paperId = searchParams.get('paperId') || '0';
     const module = searchParams.get('module') || '0';
+    const examType = searchParams.get('examType') || '0';
 
 
     // Calculate additional statistics
@@ -135,7 +136,7 @@ const QuizAnalysis = () => {
                         </div>
                     </div>
                     <Link
-                        to={`/answer-key?paperId=${paperId}&module=${module}`}
+                        to={`/answer-key?paperId=${paperId}&module=${module}&examType=${examType}`}
                         className='Answer-Key-btn'
                     >
                         Answer Key & Solution

@@ -38,6 +38,23 @@
       padding: 3rem 0rem;
     }
 
+    .navigation-buttons {
+      padding: 3px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      button {
+        padding: 3px 30px;
+        border: none;
+        border-radius: 4px;
+        background-color: #66666696;
+        color: white;
+
+      }
+    }
+
     .question-section {
       border: 1px solid #e0e0e0;
       border-radius: 8px;
@@ -357,7 +374,7 @@
       display: none !important;
     }
 
-   
+
   }
 
   @media (min-width:769px) and (max-width:993px) {
@@ -365,7 +382,7 @@
       padding: 10px !important;
     }
 
-    .right-side{
+    .right-side {
       width: 100% !important;
       margin: 0 !important;
     }
