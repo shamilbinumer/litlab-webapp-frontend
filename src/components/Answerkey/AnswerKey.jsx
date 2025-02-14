@@ -1,12 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './AnswerKey.scss'
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
 import { FaArrowLeft } from 'react-icons/fa';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
-import { Link } from 'react-router-dom';
-
+import { Link, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 const AnswerKey = () => {
+
+    const [searchParams] = useSearchParams();
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const paperId = searchParams.get('paperId');
+          const module = searchParams.get('module');
+  
+          if (!paperId || !module) {
+            throw new Error('Missing required parameters: paperId or module');
+          }
+  
+          const response = await axios.get(
+            `http://localhost:8000/api/fetch-weakly-chellange/${paperId}/${module}`
+          );
+  
+          setData(response.data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, [searchParams]);
+  
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!data) return <div>No data found</div>;
     const options = [
         { id: 'A', text: 'Consumers buy more of the good as it\'s relatively cheaper' },
         { id: 'B', text: 'Consumers save more of their income' },

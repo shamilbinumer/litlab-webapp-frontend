@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import './QuizAnalysis.scss';
 import UserProfile from '../common/UserProfile/UserProfile';
@@ -16,18 +16,28 @@ const QuizAnalysis = () => {
     const totalTime = parseInt(searchParams.get('totalTime') || '0');
     const avgTime = parseInt(searchParams.get('avgTime') || '0');
     const paperId = searchParams.get('paperId') || '0';
+    const module = searchParams.get('module') || '0';
 
-    
-    
+
     // Calculate additional statistics
     const correctPercentage = (correctAnswers / totalQuestions) * 100;
     const score = `${correctAnswers}/${totalQuestions}`;
-    
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     };
+    useEffect(() => {
+        console.log("Query Parameters:", searchParams.toString());
+        console.log("Total Questions:", totalQuestions);
+        console.log("Correct Answers:", correctAnswers);
+        console.log("Wrong Answers:", wrongAnswers);
+        console.log("Ignored Questions:", ignoredQuestions);
+        console.log("Total Time:", totalTime);
+        console.log("Average Time:", avgTime);
+        console.log("Paper ID:", paperId);
+    }, [searchParams]);
 
     const StatCard = ({ image, value, label }) => (
         <div className="stat-card">
@@ -41,9 +51,9 @@ const QuizAnalysis = () => {
 
     return (
         <div className="quiz-analytics">
-           <div className="userProfile">
-           <UserProfile />
-           </div>
+            <div className="userProfile">
+                <UserProfile />
+            </div>
 
             <div className="quiz-analyticsMain-Wrapper">
                 <div className="left-side">
@@ -51,8 +61,8 @@ const QuizAnalysis = () => {
                 </div>
 
                 <div className="right-side">
-                    <div className="heaing-section">    
-                        <Link to={`/paper-details/${paperId}`}>  
+                    <div className="heaing-section">
+                        <Link to={`/paper-details/${paperId}`}>
                             <img src="/Images/arrow-back.png" alt="" />
                             <h1>Quiz Analytics</h1>
                         </Link>
@@ -124,8 +134,12 @@ const QuizAnalysis = () => {
                             </div>
                         </div>
                     </div>
-
-                    <Link className='Answer-Key-btn'>Answer Key & Solution</Link>
+                    <Link
+                        to={`/answer-key?paperId=${paperId}&module=${module}`}
+                        className='Answer-Key-btn'
+                    >
+                        Answer Key & Solution
+                    </Link>
                 </div>
             </div>
         </div>

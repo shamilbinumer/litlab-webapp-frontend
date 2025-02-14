@@ -36,11 +36,12 @@ const MyMockDetails = () => {
     const [selectedSpecialExamModule, setSelectedSpecialExamModule] = useState(null);
     const [loadingPapers, setLoadingPapers] = useState(true);
     const [paperError, setPaperError] = useState(null);
+    const [userDetails, setUserDetails] = useState(null);
+    const [quizLoading, setQuizLoading] = useState(false); 
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkUserAuthentication = async () => {
-
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
@@ -56,9 +57,15 @@ const MyMockDetails = () => {
 
                 if (response.status !== 200) {
                     navigate('/login');
+
+                } else {
+                    setUserDetails(response.data.user);
+                    console.log(response.data.user);
+
                 }
             } catch (error) {
                 navigate('/login');
+
             }
         };
 
@@ -232,7 +239,21 @@ const MyMockDetails = () => {
     };
 
     const handleWeeklyModuleSelect = async (module) => {
+        // Check if this module has already been submitted
+        const isModuleSubmitted = userDetails?.mockTestResult?.some(
+            result =>
+                result.module === module.module &&
+                result.category === "Weekly Challenge" &&
+                result.isSubmitted === true
+        );
+
+        if (isModuleSubmitted) {
+            alert("You have already submitted this module's assessment!");
+            return;
+        }
+
         try {
+            setQuizLoading(true); 
             setSelectedWeeklyModule(module);
             const moduleNumber = module.module;
             const questions = await fetchWeeklyQuestions(selectedWeeklyChallenge, moduleNumber);
@@ -241,9 +262,67 @@ const MyMockDetails = () => {
             }
         } catch (err) {
             console.error('Error loading questions:', err);
-        }
+        }finally {
+        setQuizLoading(false); // Set local loading state to false
+    }
+        
     };
 
+    const renderModuleCards = (modules, handleModuleSelect) => {
+        return modules.map((module, index) => {
+            // Check if this module is already completed
+            const isCompleted = userDetails?.mockTestResult?.some(
+                result =>
+                    result.module === module.module &&
+                    result.category === "Weekly Challenge" &&
+                    result.isSubmitted === true
+            );
+
+            const completedScore = userDetails?.mockTestResult?.find(
+                result =>
+                    result.module === module.module &&
+                    result.category === "Weekly Challenge" &&
+                    result.isSubmitted === true
+            )?.marks || 0;
+
+            return (
+                <div
+                    className={`module-card ${isCompleted ? 'completed' : ''}`}
+                    key={module.id || index}
+                    onClick={() => !isCompleted && handleModuleSelect(module)}
+                    style={{
+                        opacity: isCompleted ? 0.8 : 1,
+                        position: 'relative',
+                        cursor: isCompleted ? 'not-allowed' : 'pointer'
+                    }}
+                >
+                    {isCompleted && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                background: '#4CAF50',
+                                color: 'white',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '12px'
+                            }}
+                        >
+                            Completed (Score: {completedScore})
+                        </div>
+                    )}
+                    <div className="module-card-left">
+                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
+                        <p>{module.course} - {module.department}</p>
+                    </div>
+                    <div className="module-card-right">
+                        <img src="/Images/Module-icon.png" alt="" />
+                    </div>
+                </div>
+            );
+        });
+    };
     const handleSpecialExamModuleSelect = async (module) => {
         try {
             setSelectedSpecialExamModule(module);
@@ -256,7 +335,111 @@ const MyMockDetails = () => {
             console.error('Error loading special exam questions:', err);
         }
     };
+    const renderSpecialExamModuleCards = (modules, handleSpecialExamModuleSelect) => {
+        return modules.map((module, index) => {
+            // Check if this module is already completed for Special Exam category
+            const isCompleted = userDetails?.mockTestResult?.some(
+                result =>
+                    result.module === module.module &&
+                    result.category === "Special Exam" &&  // Changed from "Weekly Challenge"
+                    result.isSubmitted === true
+            );
+    
+            const completedScore = userDetails?.mockTestResult?.find(
+                result =>
+                    result.module === module.module &&
+                    result.category === "Special Exam" &&  // Changed from "Weekly Challenge"
+                    result.isSubmitted === true
+            )?.marks || 0;
+    
+            return (
+                <div
+                    className={`module-card ${isCompleted ? 'completed' : ''}`}
+                    key={module.id || index}
+                    onClick={() => !isCompleted && handleSpecialExamModuleSelect(module)}
+                    style={{
+                        opacity: isCompleted ? 0.8 : 1,
+                        position: 'relative',
+                        cursor: isCompleted ? 'not-allowed' : 'pointer'
+                    }}
+                >
+                    {isCompleted && (
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                background: '#4CAF50',
+                                color: 'white',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '12px'
+                            }}
+                        >
+                            Completed (Score: {completedScore})
+                        </div>
+                    )}
+                    <div className="module-card-left">
+                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
+                        <p>{module.course} - {module.department}</p>
+                    </div>
+                    <div className="module-card-right">
+                        <img src="/Images/Module-icon.png" alt="" />
+                    </div>
+                </div>
+            );
+        });
+    };
+    const handleFinish = async () => {
+        const totalQuestions = quizData.length;
+        const ignoredCount = ignoredQuestions.length;
+        const answeredQuestions = answers.filter(answer => !answer?.ignored);
+        const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
+        const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
 
+        const avgTimePerQuestion = Math.round(
+            answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
+            (answeredQuestions.length || 1)
+        );
+
+        // Call API to add mock test before navigating
+        try {
+            const authToken = localStorage.getItem("authToken");
+            if (!authToken) {
+                throw new Error("No authentication token found");
+            }
+
+            const mockTestData = {
+                category: activeSubCategory,
+                isSubmitted: true,
+                marks: correctCount,
+                module: selectedWeeklyModule?.module || selectedSpecialExamModule?.module || selectedAssessmentModule?.module || 0,
+                moduleTitle: selectedWeeklyModule?.title || selectedSpecialExamModule?.title || selectedAssessmentModule?.title || "",
+                paperTitle: paperModules.length > 0 ? paperModules[0].paperTitle : "",
+                paperType: paperModules.length > 0 ? paperModules[0].paperType : "",
+            };
+
+            const response = await axios.post(
+                `${baseUrl}/api/add-mock-test`,
+                mockTestData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            console.log("Mock test added successfully:", response.data);
+        } catch (error) {
+            console.error("Error adding mock test:", error.response?.data?.message || error.message);
+            alert("Failed to submit mock test. Try again.");
+        }
+
+        navigate(
+            `/quiz-analysis?paperId=${selectedWeeklyChallenge || selectedSpecialExam || selectedAssessment}&moduleId=${selectedWeeklyModule?.id || selectedSpecialExamModule?.id || selectedAssessmentModule?.id}&module=${selectedWeeklyModule?.module || selectedSpecialExamModule?.module || selectedAssessmentModule?.module || 0}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&avgTime=${avgTimePerQuestion}`
+        );
+    };
     const handleAssessmentModuleSelect = async (module) => {
         try {
             setSelectedAssessmentModule(module);
@@ -393,16 +576,17 @@ const MyMockDetails = () => {
                             Next
                         </button>
                     ) : (
-                        <Link
-                            to={`/quiz-analysis?total=${quizData.length}&correct=${answers.filter(a => a?.correct).length}&wrong=${answers.filter(a => !a?.correct && !a?.ignored).length}&ignored=${ignoredQuestions.length}`}
+                        <button
+                            to="#"
                             className="next"
                             style={{
                                 opacity: !answered ? 0.5 : 1,
                                 pointerEvents: !answered ? 'none' : 'auto'
                             }}
+                            onClick={handleFinish}
                         >
                             Finish
-                        </Link>
+                        </button>
                     )}
                 </div>
             </div>
@@ -473,22 +657,7 @@ const MyMockDetails = () => {
                                                         ) : moduleError ? (
                                                             <div>Error loading modules: {moduleError}</div>
                                                         ) : paperModules.length > 0 ? (
-                                                            paperModules.map((module, index) => (
-                                                                <div
-                                                                    className="module-card"
-                                                                    id='submoduleCard'
-                                                                    key={module.id || index}
-                                                                    onClick={() => handleWeeklyModuleSelect(module)}
-                                                                >
-                                                                    <div className="module-card-left">
-                                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
-                                                                        <p>{module.course} - {module.department}</p>
-                                                                    </div>
-                                                                    <div className="module-card-right">
-                                                                        <img src="/Images/Module-icon.png" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            ))
+                                                            renderModuleCards(paperModules, handleWeeklyModuleSelect)
                                                         ) : (
                                                             <div>No modules available for this paper.</div>
                                                         )}
@@ -564,22 +733,7 @@ const MyMockDetails = () => {
                                                         ) : moduleError ? (
                                                             <div>Error loading modules: {moduleError}</div>
                                                         ) : paperModules.length > 0 ? (
-                                                            paperModules.map((module, index) => (
-                                                                <div
-                                                                    className="module-card"
-                                                                    id='submoduleCard'
-                                                                    key={module.id || index}
-                                                                    onClick={() => handleSpecialExamModuleSelect(module)}
-                                                                >
-                                                                    <div className="module-card-left">
-                                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
-                                                                        <p>{module.course} - {module.department}</p>
-                                                                    </div>
-                                                                    <div className="module-card-right">
-                                                                        <img src="/Images/Module-icon.png" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            ))
+                                                            renderSpecialExamModuleCards(paperModules, handleSpecialExamModuleSelect)
                                                         ) : (
                                                             <div>No modules available for this paper.</div>
                                                         )}
