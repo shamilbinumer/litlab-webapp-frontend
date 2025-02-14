@@ -88,10 +88,10 @@ const VideoClasses = ({ paperId ,paperTitle}) => {
                   <div className="col-lg-7 col-md-7 col-sm-12 col-12">
                     <div className="vedio-item-right">
                       <h1>{video.title}</h1>
-                      <div className="teacer-name">Module : {video.Module}</div>
-                      <p className="vedio-description">{video.description}</p>
+                      <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
+                      {/* <p className="vedio-description">{video.description}</p> */}
                       <div className="button-icon">
-                       <a href={video.tutorial}> <button>Watch now <LuEye /></button></a>
+                      <Link to={`/lectures/${paperTitle}/${paperId}/${video.id}`}> <button>Watch now <LuEye /></button></Link>
                         <LuHeart className="heart-icon" />
                       </div>
                     </div>

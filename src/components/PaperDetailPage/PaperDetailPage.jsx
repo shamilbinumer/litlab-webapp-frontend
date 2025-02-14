@@ -15,6 +15,7 @@ import VideoClasses from './VedioClass/VideoClass';
 import Slides from './Slides';
 import AssessmentTest from './AssistmentTest/AssistmentTest';
 import axios from 'axios';
+import ModalQuestanPaper from './ModalQuestanPaper';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -164,7 +165,9 @@ const PaperDetailPage = () => {
                                         );
                                     })
                                 ) : activeSubCategory === 'Model Question Paper' ? (
-                                    <div>Model Question Paper Content</div>
+                                    <div>
+                                        <ModalQuestanPaper paperId={paperId}/>
+                                    </div>
                                 ) : (
                                     <div>Sample Question Paper Content</div>
                                 )

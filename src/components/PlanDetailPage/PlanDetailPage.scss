@@ -35,7 +35,23 @@
             color: black;
     
         }
-    
+        .slick-track{
+            // background-color: red;
+            height: 450px;
+            padding-top: 3rem;
+        }
+        .slick-slide.slick-active:not(.slick-center):not(.slick-current) {
+            // transform: scale(1.09);
+            z-index: 10;
+            
+            .plan-card {
+                transform: scale(1.09);
+                border: 1px solid #6BCCE5;
+                background: linear-gradient(180deg, #6BCCE5 0%, #3B717F 100%);
+                color: white;
+                opacity: 1;
+            }
+        }
         .plan-tabs {
             display: flex;
             width: 534px;
@@ -85,15 +101,16 @@
         }
     
         .plan-cards {
-            display: flex;
+            // display: flex;
             justify-content: center;
             gap: 2rem;
-            margin-top: 2rem;
+            // margin-top: 2rem;
     
             .plan-card {
                 width: 90% ;
-    
+                margin: auto;
                 padding: 30px 10px;
+                transition: .3s;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-evenly;
@@ -101,7 +118,7 @@
                 background: white;
                 border: 1.25px solid #B5A8A8;
                 transition: all 0.3s ease;
-    height: 350px;
+                height: 350px;
                 &.active {
                     transform: scale(1.09);
                     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);

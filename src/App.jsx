@@ -16,7 +16,7 @@ import AnswerKey from "./components/Answerkey/AnswerKey"
 import Cart from "./components/Cart/Cart"
 import Instructions from "./components/Instructions/Instructions"
 import YourFavorite from "./components/YourFavorites/YourFavorite"
-import FavoriteModuleDetail from "./components/FavoriteModuleDetail/FavoriteModuleDetail"
+import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetail"
 
 function App() {
 

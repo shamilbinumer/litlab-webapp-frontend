@@ -10,6 +10,27 @@
         padding: 1.5rem;
         position: relative; // Ensures absolute positioning works
 
+        .notification {
+            position: relative;
+
+            .count {
+                position: absolute;
+                top: 0;
+                right: -5px;
+                background-color: red;
+                color: white;
+                font-family: Montserrat;
+                width: 19px;
+                height: 19px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        }
+
         .phone-user-profile {
             display: none; // Hide by default on larger screens
         }
@@ -53,9 +74,10 @@
                 border: 2px solid #438ea1;
             }
         }
-      
+
 
     }
+
     .mobile-sideNav {
         display: none !important;
 
@@ -94,7 +116,7 @@
 
                 &.active {
                     .icon {
-                      color: #438ea1;
+                        color: #438ea1;
                     }
                 }
 
@@ -115,6 +137,7 @@
             }
         }
     }
+
     @media (max-width: 575px) {
         .desktopSideNavWrapper {
             display: none !important;
@@ -125,24 +148,28 @@
 
         }
     }
+
     @media (min-width:576px) and (max-width:768px) {
         .desktopSideNavWrapper {
             display: none !important;
         }
-        .mobile-sideNav{
+
+        .mobile-sideNav {
             display: block !important;
         }
 
- 
+
     }
+
     @media (min-width:769px) and (max-width:993px) {
         .desktopSideNavWrapper {
             display: none !important;
         }
-        .mobile-sideNav{
+
+        .mobile-sideNav {
             display: block !important;
         }
 
- 
+
     }
 }

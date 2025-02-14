@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import './Lectures.scss';
+
 
 const CustomVideoPlayer = ({ url }) => {
   const playerRef = useRef(null);
@@ -50,21 +52,25 @@ const CustomVideoPlayer = ({ url }) => {
       const iframe = document.querySelector('.react-player iframe');
       if (iframe) {
         const iframeDoc = iframe.contentWindow.document;
-        
+  
         const style = document.createElement('style');
         style.textContent = `
-          .ytp-chrome-top,
-          .ytp-show-cards-title,
-          .ytp-share-button,
-          .ytp-share-panel,
-          .ytp-share-menu,
-          .ytp-button[aria-label*="Share"],
-          .ytp-button[title*="Share"],
-          .ytp-menuitem[aria-label*="Share"],
-          [data-title-no-tooltip*="Share"],
-          [data-tooltip-text*="Share"],
-          .ytp-contextmenu,
-          .ytp-popup {
+          .ytp-watermark, /* YouTube logo watermark */
+          .ytp-chrome-top, /* Top controls */
+          .ytp-show-cards-title, /* Cards */
+          .ytp-share-button, /* Share button */
+          .ytp-share-panel, /* Share panel */
+          .ytp-share-menu, /* Share menu */
+          .ytp-button[aria-label*="Share"], /* Share button */
+          .ytp-button[title*="Share"], /* Share button */
+          .ytp-menuitem[aria-label*="Share"], /* Share menu item */
+          [data-title-no-tooltip*="Share"], /* Share tooltip */
+          [data-tooltip-text*="Share"], /* Share tooltip */
+          .ytp-contextmenu, /* Context menu */
+          .ytp-popup, /* Popups */
+          .ytp-branding-logo, /* YouTube logo */
+          .ytp-branding-icon /* YouTube icon */
+          {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -109,41 +115,41 @@ const CustomVideoPlayer = ({ url }) => {
   return (
     <div ref={containerRef} className="video-container" onContextMenu={e => e.preventDefault()}>
       <div className="player-wrapper">
-        <ReactPlayer
-          ref={playerRef}
-          url={url}
-          width="100%"
-          height="100%"
-          playing={isPlaying}
-          volume={volume}
-          onProgress={handleProgress}
-          onDuration={handleDuration}
-          onReady={removeShareElements}
-          config={{
-            youtube: {
-              playerVars: {
-                controls: 0,
-                showinfo: 0,
-                rel: 0,
-                modestbranding: 1,
-                disablekb: 1,
-                iv_load_policy: 3,
-                fs: 0,
-                playsinline: 1,
-                enablejsapi: 1,
-                origin: window.location.origin
-              },
-              embedOptions: {
-                controls: 0,
-                disablekb: 1,
-                enablejsapi: 1,
-                iv_load_policy: 3,
-                modestbranding: 1
-              }
-            }
-          }}
-          style={{ position: 'absolute', top: 0, left: 0 }}
-        />
+      <ReactPlayer
+  ref={playerRef}
+  url={url}
+  width="100%"
+  height="100%"
+  playing={isPlaying}
+  volume={volume}
+  onProgress={handleProgress}
+  onDuration={handleDuration}
+  onReady={removeShareElements}
+  config={{
+    youtube: {
+      playerVars: {
+        controls: 0, // Disable YouTube controls
+        showinfo: 0, // Hide video title and uploader info
+        rel: 0, // Disable related videos at the end
+        modestbranding: 1, // Reduce YouTube branding
+        disablekb: 1, // Disable keyboard controls
+        iv_load_policy: 3, // Disable annotations
+        fs: 0, // Disable fullscreen button
+        playsinline: 1, // Play inline on mobile devices
+        enablejsapi: 1, // Enable JavaScript API
+        origin: window.location.origin // Set origin to prevent security issues
+      },
+      embedOptions: {
+        controls: 0,
+        disablekb: 1,
+        enablejsapi: 1,
+        iv_load_policy: 3,
+        modestbranding: 1
+      }
+    }
+  }}
+  style={{ position: 'absolute', top: 0, left: 0 }}
+/>
       </div>
 
       {/* Overlay to prevent clicking on YouTube controls */}
@@ -196,108 +202,113 @@ const CustomVideoPlayer = ({ url }) => {
       </div>
 
       <style jsx>{`
-        .video-container {
-          position: relative;
-          width: 100%;
-          padding-top: 56.25%;
-          background: #000;
-          overflow: hidden;
-        }
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+    overflow: hidden;
+  }
 
-        .player-wrapper {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
+  .player-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-        .click-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 48px;
-          z-index: 1;
-        }
+  .click-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 48px;
+    z-index: 1;
+  }
 
-        .controls {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: rgba(0, 0, 0, 0.7);
-          padding: 10px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          opacity: 0;
-          transition: opacity 0.3s;
-          z-index: 2;
-        }
+  .controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
 
-        .video-container:hover .controls {
-          opacity: 1;
-        }
+  .video-container:hover .controls {
+    opacity: 1;
+  }
 
-        .control-btn {
-          background: none;
-          border: none;
-          color: white;
-          cursor: pointer;
-          padding: 5px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+  .control-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-        .control-btn svg {
-          width: 24px;
-          height: 24px;
-        }
+  .control-btn svg {
+    width: 24px;
+    height: 24px;
+  }
 
-        .time-controls {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          color: white;
-          font-size: 14px;
-        }
+  .time-controls {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 14px;
+  }
 
-        .progress-bar {
-          flex: 1;
-        }
+  .progress-bar {
+    flex: 1;
+  }
 
-        .volume-controls {
-          width: 100px;
-        }
+  .volume-controls {
+    width: 100px;
+  }
 
-        input[type="range"] {
-          -webkit-appearance: none;
-          width: 100%;
-          height: 5px;
-          border-radius: 2px;
-          background: rgba(255, 255, 255, 0.3);
-        }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+  }
 
-        input[type="range"]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-        }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+  }
 
-        :global(.react-player) {
-          pointer-events: none !important;
-        }
-        
-        :global(.react-player iframe) {
-          pointer-events: none !important;
-        }
-      `}</style>
+  :global(.react-player) {
+    pointer-events: none !important;
+  }
+  
+  :global(.react-player iframe) {
+    pointer-events: none !important;
+  }
+
+  /* Add this rule to hide the YouTube icon */
+  :global(.ytp-watermark) {
+    display: none !important;
+  }
+`}</style>
     </div>
   );
 };

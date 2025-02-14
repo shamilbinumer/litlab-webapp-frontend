@@ -4,7 +4,7 @@ import { FaSearch } from 'react-icons/fa';
 import { BsMicFill } from 'react-icons/bs';
 import './FavoriteModuleDetail.scss';
 import SideNave from '../common/SideNav/SideNave';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import UserProfile from '../common/UserProfile/UserProfile';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
@@ -21,8 +21,8 @@ const FavoriteModuleDetail = () => {
             try {
                 const response = await axios.get(`${baseUrl}/api/fetch-module-details/${moduleId}`);
                 setModuleDetails(response.data.data);
-                console.log(response.data,'hjvjh');
-                
+                console.log(response.data, 'hjvjh');
+
             } catch (err) {
                 setError('Failed to fetch module details');
             } finally {
@@ -35,9 +35,7 @@ const FavoriteModuleDetail = () => {
         }
     }, [moduleId]);
 
-    const handleBackBtn = () => {
-        navigate('/');
-    };
+
 
     return (
         <div className="module-detail-container">
@@ -54,10 +52,12 @@ const FavoriteModuleDetail = () => {
 
                 {/* Header */}
                 <div className="header">
-                    <button onClick={handleBackBtn} className="back-button">
-                        <FaArrowLeft />
-                        <span>{moduleDetails?.title || 'Module'}</span>
-                    </button>
+                    {/* <Link to={`/paper-details/${moduleDetails?.title || moduleDetails?.paperTitle}/${moduleDetails?.id}`}> */}
+                        {/* <button className="back-button"> */}
+                            {/* <FaAr/rowLeft /> */}
+                            <span className='heading'>{moduleDetails?.title || 'Module'}</span>
+                        {/* </button> */}
+                    {/* </Link> */}
                 </div>
 
                 {/* Search Bar */}
@@ -83,7 +83,7 @@ const FavoriteModuleDetail = () => {
                             <div className="title-content">
                                 <div>
                                     <h2>{moduleDetails?.title || 'No Title'}</h2>
-                                    <p>{moduleDetails?.description || 'No Description Available'}</p>
+                                    {/* <p>{moduleDetails?.description || 'No Description Available'}</p> */}
                                 </div>
                                 <div className="book-icon">
                                     <img src="/Images/myfavDetalBook.png" alt="Book Icon" />
@@ -95,7 +95,7 @@ const FavoriteModuleDetail = () => {
                         <div className="summary-card">
                             <div className="summary-tag">Summary</div>
                             <p className="summary-content">
-                                {moduleDetails?.summary || 'No summary available'}
+                                {moduleDetails?.description || 'No summary available'}
                             </p>
                         </div>
                     </>

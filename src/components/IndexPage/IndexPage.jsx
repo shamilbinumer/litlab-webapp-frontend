@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoSearchOutline } from 'react-icons/io5';
+import { IoCartOutline, IoSearchOutline } from 'react-icons/io5';
 import SideNave from '../common/SideNav/SideNave';
 import './IndexPage.scss';
 import { IoIosHeartEmpty } from 'react-icons/io';
@@ -10,6 +10,8 @@ import UserProfile from '../common/UserProfile/UserProfile';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
+import MobileIndexPage from './MobileIndexPage/MobileIndexPage';
+import SeeAllContent from './SeeAllContent/SeeAllContent';
 
 const IndexPage = () => {
     const [activePaperType, setActivePaperType] = useState('major');
@@ -37,10 +39,10 @@ const IndexPage = () => {
 
             if (response.status === 200) {
                 console.log(response.data);
-                
+
                 setPapers(response.data);
-                setFilteredPapers(response.data); 
-                console.log(response.data,'this is paper response');
+                setFilteredPapers(response.data);
+                console.log(response.data, 'this is paper response');
                 // Initialize filtered papers with all fetched papers
             } else {
                 console.error("Error fetching major papers");
@@ -99,9 +101,9 @@ const IndexPage = () => {
 
             if (response.status === 200) {
                 setPapers(response.data); // Assuming the API returns an array of papers
-                console.log(response.data,'this is common paper response');
+                console.log(response.data, 'this is common paper response');
 
-                
+
                 setFilteredPapers(response.data);
             } else {
                 console.error("Error fetching common papers");
@@ -134,7 +136,7 @@ const IndexPage = () => {
                 }
             } catch (error) {
                 navigate('/login');
-            } 
+            }
         };
 
         checkUserAuthentication();
@@ -165,7 +167,8 @@ const IndexPage = () => {
 
     return (
         <div className="IndexPageMainWrapper">
-            <div className="home-main">
+           <div className="desktopVersion">
+           <div className="home-main">
                 <div className="home-left">
                     <SideNave />
                 </div>
@@ -176,7 +179,7 @@ const IndexPage = () => {
                     </h3>
                     <h1 className="main-heading">What you want to learn today?</h1>
                     <div className="search-bar">
-                       <div> <IoSearchOutline className="search-icon" /></div>
+                        <div> <IoSearchOutline className="search-icon" /></div>
                         <div><input
                             type="text"
                             placeholder="Search Live Classes, Recorded, Modules"
@@ -223,8 +226,8 @@ const IndexPage = () => {
                                 {filteredPapers.length > 0 ? (
                                     filteredPapers.map((paper) => (
                                         <div className="col-xl-4 col-lg-6 col-md-12 col-sm-12" key={paper.id}>
-                                                <div className="paper-card">
-                                                    <IoIosHeartEmpty className="heart-icon" />
+                                            <div className="paper-card">
+                                                {/* <IoIosHeartEmpty className="heart-icon" />
                                                     <img
                                                         src={paper.image || '/Images/Group 1000004522.png'}
                                                         alt=""
@@ -234,9 +237,28 @@ const IndexPage = () => {
                                                         {paper.courseTitle || paper.title}
                                                     </h1>
                                                     <p className="paper-description">{paper.description}</p>
-                                                    <Link to={`/paper-details/${paper.courseTitle || paper.title}/${paper.id}`}> <button>Learn Now</button></Link>
+                                                    <Link to={`/paper-details/${paper.courseTitle || paper.title}/${paper.id}`}> <button>Learn Now</button></Link> */}
+                                                     <Link to={`/paper-details/${paper.courseTitle || paper.title}/${paper.id}`}>
+                                                <div className="paper-image">
+                                                    <img src="/Images/image 6.png" alt="" />
                                                 </div>
-                                            
+                                                <div className="card-details">
+                                                    <h2> {paper.courseTitle || paper.title}</h2>
+                                                    <p>{paper.description || 'Description'}</p>
+                                                   
+                                                </div>
+                                                </Link>
+                                                <div className="buttons">
+                                                        <div>
+                                                            <button className='add-cart-btn'>Add to Cart <IoCartOutline /></button>
+                                                            <button className='buy-now-btn'>Buy Now</button>
+                                                        </div>
+                                                        <div>
+                                                        <IoIosHeartEmpty className='heart-icon' />
+                                                        </div>
+                                                    </div>
+                                            </div>
+
                                         </div>
                                     ))
                                 ) : (
@@ -247,6 +269,10 @@ const IndexPage = () => {
                     </div>
                 </div>
             </div>
+           </div>
+           <div className="mobileVersion">
+            <SeeAllContent/>
+           </div>
         </div>
     );
 };

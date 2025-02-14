@@ -3,10 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import './PlanDetailPage.scss'
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const PlanDetailPage = () => {
     const [searchParams] = useSearchParams();
     const [activePlan, setActivePlan] = useState('silver');
     const [activePeriod, setActivePeriod] = useState(1);
+    const [activeSlide, setActiveSlide] = useState(1);
 
     useEffect(() => {
         const planFromUrl = searchParams.get('plan');
@@ -14,6 +18,49 @@ const PlanDetailPage = () => {
             setActivePlan(planFromUrl);
         }
     }, [searchParams]);
+
+    const settings = {
+        className: "center",
+        dots: false,
+        infinite: true,
+        speed: 900,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        centerMode: true,
+        centerPadding: "0px",
+        initialSlide: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        beforeChange: (current, next) => {
+            setActiveSlide(next);
+        },
+        responsive: [
+            {
+                breakpoint: 993,
+                settings: {
+                    slidesToShow: 1,
+                    centerMode: true,
+                    centerPadding: '60px',
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    centerMode: true,
+                    centerPadding: '40px',
+                }
+            },
+            {
+                breakpoint: 575,
+                settings: {
+                    slidesToShow: 1,
+                    centerMode: false,
+                    centerPadding: '0px',
+                }
+            }
+        ]
+    };
 
     const plans = {
         silver: [
@@ -123,80 +170,90 @@ const PlanDetailPage = () => {
         ]
     };
 
+    // const getOrderedCards = () => {
+    //     const currentPlanCards = plans[activePlan];
+    //     const result = [...currentPlanCards];
+
+    //     if (activePeriod !== 1) {
+    //         const temp = result[1];
+    //         result[1] = result[activePeriod];
+    //         result[activePeriod] = temp;
+    //     }
+
+    //     return result;
+    // };
     const getOrderedCards = () => {
         const currentPlanCards = plans[activePlan];
-        const result = [...currentPlanCards];
-
-        if (activePeriod !== 1) {
-            const temp = result[1];
-            result[1] = result[activePeriod];
-            result[activePeriod] = temp;
-        }
-
-        return result;
+        return [...currentPlanCards];
     };
 
     return (
         <div className="plan-detail-page">
-            <div className="left-side">
-                <SideNave />
+        <div className="left-side">
+            <SideNave />
+        </div>
+        <div className="right-side">
+            <div className="userprofile">
+                <UserProfile />
             </div>
-            <div className="right-side">
-                <div className="userprofile">
-                    <UserProfile />
+            <div className="plan-detail-wrapper">
+                <h1>{activePlan.charAt(0).toUpperCase() + activePlan.slice(1)} Plans</h1>
+
+                <div className="plan-tabs">
+                    <button
+                        className={`tab ${activePlan === 'silver' ? 'active' : ''}`}
+                        onClick={() => setActivePlan('silver')}
+                    >
+                        Silver
+                    </button>
+                    <button
+                        className={`tab ${activePlan === 'gold' ? 'active' : ''}`}
+                        onClick={() => setActivePlan('gold')}
+                    >
+                        Gold
+                    </button>
+                    <button
+                        className={`tab ${activePlan === 'diamond' ? 'active' : ''}`}
+                        onClick={() => setActivePlan('diamond')}
+                    >
+                        Diamond
+                    </button>
                 </div>
-                <div className="plan-detail-wrapper">
-                    <h1>{activePlan.charAt(0).toUpperCase() + activePlan.slice(1)} Plans</h1>
 
-                    <div className="plan-tabs">
-                        <button
-                            className={`tab ${activePlan === 'silver' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('silver')}
-                        >
-                            Silver
-                        </button>
-                        <button
-                            className={`tab ${activePlan === 'gold' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('gold')}
-                        >
-                            Gold
-                        </button>
-                        <button
-                            className={`tab ${activePlan === 'diamond' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('diamond')}
-                        >
-                            Diamond
-                        </button>
-                    </div>
-
-                    <div className="plan-cards">
+                <div className="plan-cards">
+                    <Slider {...settings}>
                         {getOrderedCards().map((plan, index) => (
-                            <div
-                                key={plan.id}
-                                className={`plan-card ${plan.id === activePeriod ? 'active' : ''}`}
-                                onClick={() => setActivePeriod(plan.id)}
-                            >
-                                <div className="price">
-                                    <span className="currency">₹</span>
-                                    {plan.price}
-                                    <span className="period">/{plan.period}</span>
-                                </div>
+                            <div key={plan.id} className="slide-wrapper">
+                                <div
+                                    className='plan-card'
+                                        //  ${index === activeSlide ? 'active' : ''}
+                                         
+                                        
+                                >
+                                    <div className="price">
+                                        <span className="currency">₹</span>
+                                        {plan.price}
+                                        <span className="period">/{plan.period}</span>
+                                    </div>
 
-                                <div className="features">
-                                    {plan.features.map((feature, idx) => (
-                                        <div key={idx} className="feature">
-                                            <span className="bullet">•</span> <span>{feature}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                                    <div className="features">
+                                        {plan.features.map((feature, idx) => (
+                                            <div key={idx} className="feature">
+                                                <span className="bullet">•</span> 
+                                                <span>{feature}</span>
+                                            </div>
+                                        ))}
+                                    </div>
 
-                                <button className="buy-now">Buy Now</button>
+                                    <button className="buy-now">Buy Now</button>
+                                </div>
                             </div>
                         ))}
-                    </div>
+                    </Slider>
                 </div>
             </div>
         </div>
+    </div>
     );
 };
 

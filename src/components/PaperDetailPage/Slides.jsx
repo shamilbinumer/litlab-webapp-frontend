@@ -71,8 +71,7 @@ const Slides = ({ paperId ,paperTitle}) => {
             {videoClasses.map((video, index) => (
               // <Link to={`/lectures/${video.id}`} key={video.id || index}>
                 <div className="vedio-item row" key={video.id || index}>
-                  <div className="col-lg-5 col-md-5 col-sm-12 col-12">
-                   {/* <Link to={`/lectures/${paperTitle}/${paperId}/${video.id}`}> */}
+                  {/* <div className="col-lg-5 col-md-5 col-sm-12 col-12">
                    <div className="vedio-item-left">
                       <div className="thumbnile">
                         <img 
@@ -83,13 +82,13 @@ const Slides = ({ paperId ,paperTitle}) => {
                         <IoPlayCircleSharp className="play-icon" />
                       </div>
                     </div>
-                   {/* </Link> */}
-                  </div>
-                  <div className="col-lg-7 col-md-7 col-sm-12 col-12">
-                    <div className="vedio-item-right">
-                      <h1>{video.title}</h1>
-                      <div className="teacer-name">Module : {video.Module}</div>
-                      <p className="vedio-description">{video.description}</p>
+                  </div> */}
+                  <div >
+                    <div className="vedio-item-right" style={{backgroundColor:'#6BCCE5',padding:'1rem',borderRadius:'10px',display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                     <div> <h1>{video.title}</h1>
+                      <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
+                      {/* <p className="vedio-description" style={{width:"50%"}}>{video.description}</p> */}
+                      </div>
                       <div className="button-icon">
                        <a href={video.fileUrl} target='_blank'> <button>View Slide <LuEye /></button></a>
                       </div>

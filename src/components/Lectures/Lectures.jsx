@@ -115,7 +115,9 @@ const Lectures = () => {
           <SideNave />
         </div>
         <div className="right-side">
-          <UserProfile />
+         <div className="user-pro">
+         <UserProfile />
+         </div>
           <div></div>
           <Link to={`/paper-details/${paperTitle}/${paperId}`}>
             <div className="back-btn-container">
@@ -129,13 +131,13 @@ const Lectures = () => {
               <div className="row">
                 <div className="col-lg-7 main-content-left">
                   <div className="search-bar">
-                    <IoSearchOutline className='search-icon' />
-                    <input
+                   <div> <IoSearchOutline className='search-icon' /></div>
+                  <div>  <input
                       type="text"
                       placeholder='Search Live Classes, Recorded, Modules'
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                    /></div>
                   </div>
                   {videoDetails && videoDetails.tutorial && (
                     <div className="vedio-card">
@@ -143,8 +145,8 @@ const Lectures = () => {
                         <div className="vedio-wrapper">
                           <CustomVideoPlayer url={videoDetails.tutorial} />
                         </div>
-
-                        <div className="vedio-details">
+                      </div>
+                      <div className="vedio-details">
                           <div>
                             <h1>{videoDetails.title}</h1>
                             <p>Description: {videoDetails.description}</p>
@@ -153,7 +155,6 @@ const Lectures = () => {
                             <LuHeart className="fav-icon" />
                           </div>
                         </div>
-                      </div>
                     </div>
                   )}
                 </div>

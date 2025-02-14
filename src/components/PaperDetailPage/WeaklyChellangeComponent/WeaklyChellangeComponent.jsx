@@ -4,6 +4,8 @@ import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { LuArrowLeft } from 'react-icons/lu';
 import axios from 'axios';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const WeeklyChallenge = ({ paperId, userDetails }) => {
   const navigate = useNavigate();
@@ -323,9 +325,9 @@ const WeeklyChallenge = ({ paperId, userDetails }) => {
   };
 
   if (loading) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Loading modules...</div>
-    </div>;
+    return <div style={{textAlign:"center"}}>     <Box sx={{ width: '100%' }}>
+    <LinearProgress />
+  </Box></div>;
   }
 
   if (error) {
@@ -408,9 +410,7 @@ const WeeklyChallenge = ({ paperId, userDetails }) => {
   }
 
   if (!questions || questions.length === 0) {
-    return <div className="quiz-container">
-      <div className="quiz-content">No questions available</div>
-    </div>;
+    return <div style={{textAlign:"center"}}>No questions available</div>;
   }
 
   const currentQuestion = questions[currentQuestionIndex];

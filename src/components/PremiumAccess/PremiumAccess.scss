@@ -47,18 +47,25 @@
         }
 
         .pricing-cards {
-            display: flex;
+            // display: flex;
             justify-content: center;
             align-items: center;
             gap: 2rem;
             margin: 0 auto;
-            max-width: 1200px;
+            width: 100% !important;
+            .slick-track{
+                // background-color: red;
+                height: 450px;
+                padding-top: 3rem;
+            }
+           
 
             .card {
                 position: relative;
                 width: 300px;
-                // height: 256px;
+                height: 356px;
                 padding: 2rem;
+                margin: auto;
                 border-radius: 12px;
                 display: flex !important;
                 flex-direction: column !important;
@@ -69,20 +76,20 @@
                 transition: all 0.3s ease;
                 border: 1px solid #0000007D;
 
-                &.active {
-                    transform: scale(1.09);
-                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-                    z-index: 2;
-                    height: 330px;
-                    border: 2px solid #6BCCE5;
-                    background: #DEF8FF;
+                // &.active {
+                //     transform: scale(1.09);
+                //     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                //     z-index: 2;
+                //     height: 330px;
+                //     border: 2px solid #6BCCE5;
+                //     background: #DEF8FF;
 
-                }
+                // }
 
-                &:not(.active) {
-                    transform: scale(0.85);
-                    // opacity: 0.8;
-                }
+                // &:not(.active) {
+                //     transform: scale(0.85);
+                //     // opacity: 0.8;
+                // }
 
                 .discount-badge {
                     position: absolute;
@@ -201,6 +208,21 @@
                     }
                 }
             }
+            .slick-slide.slick-active:not(.slick-center):not(.slick-current) {
+                // transform: scale(1.09);
+                z-index: 10;
+                
+                .card {
+                    transform: scale(1.2);
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                    z-index: 2;
+                    height: 330px;
+                    border: 2px solid #6BCCE5;
+                    background: #DEF8FF;
+                }
+            }
+          
+
 
         }
 
@@ -233,13 +255,14 @@
     }
 
     @media(max-width:575px) {
-        .right-side{
+        .right-side {
             height: auto !important;
             width: 100% !important;
             margin: 0 !important;
             margin-bottom: 2rem !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
 
@@ -262,10 +285,40 @@
             max-width: auto !important;
             align-items: normal !important;
             gap: 10px !important;
+            // Add arrows styling
+        .slick-prev, .slick-next {
+            z-index: 1;
+            width: 30px;
+            height: 30px;
+            &:before {
+                color: #6BCCE5;
+                font-size: 30px;
+            }
+        }
+
+        .slick-prev {
+            left: -30px !important;
+        }
+
+        .slick-next {
+            right: -30px;
+        }
+
+
         }
 
         .card {
-            width: 100% !important;
+            width: 90% !important;
+            height: auto !important;
+            h2 {
+                font-family: Montserrat;
+                font-weight: 700;
+                font-size: 24.47px;
+                padding-bottom: 2rem;
+                line-height: 15.56px;
+                letter-spacing: -0.74px;
+                text-align: center;
+            }
 
             &.active {
                 transform: scale(1.01) !important;
@@ -273,25 +326,27 @@
             }
         }
 
-  
 
-    .continue-btn{
-        margin-top: 10px !important;
-        padding: 10px 35px !important;
-        font-size: 17px !important;
-    }
+
+        .continue-btn {
+            margin-top: 10px !important;
+            padding: 10px 35px !important;
+            font-size: 17px !important;
+        }
     }
 
     @media (min-width:576px) and (max-width:768px) {
-        .right-side{
+        .right-side {
             height: auto !important;
             width: 100% !important;
             margin: 0 !important;
             margin-bottom: 2rem !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
+
         .header {
             margin: 10px !important;
 
@@ -324,25 +379,27 @@
             }
         }
 
-  
 
-    .continue-btn{
-        margin-top: 20px !important;
-        padding: 10px 35px !important;
-        font-size: 17px !important;
-    }
+
+        .continue-btn {
+            margin-top: 20px !important;
+            padding: 10px 35px !important;
+            font-size: 17px !important;
+        }
     }
 
     @media (min-width:769px) and (max-width:993px) {
-        .right-side{
+        .right-side {
             height: auto !important;
             width: 100% !important;
             margin: 0 !important;
             margin-bottom: 2rem !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
+
         .header {
             margin: 10px !important;
 
@@ -375,18 +432,18 @@
             }
         }
 
-  
 
-    .continue-btn{
-        margin-top: 20px !important;
-        padding: 10px 35px !important;
-        font-size: 17px !important;
-    }
+
+        .continue-btn {
+            margin-top: 20px !important;
+            padding: 10px 35px !important;
+            font-size: 17px !important;
+        }
     }
 
     @media (min-width:994px) and (max-width:1200px) {
 
-      
+
 
         .pricing-cards {
             // flex-direction: column !important;
@@ -406,13 +463,13 @@
             }
         }
 
-  
 
-    .continue-btn{
-        margin-top: 20px !important;
-        padding: 10px 35px !important;
-        font-size: 17px !important;
-    }
+
+        .continue-btn {
+            margin-top: 20px !important;
+            padding: 10px 35px !important;
+            font-size: 17px !important;
+        }
     }
 
 
