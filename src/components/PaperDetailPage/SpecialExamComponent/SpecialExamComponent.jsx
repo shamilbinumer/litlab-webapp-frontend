@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
-import { LuArrowLeft } from 'react-icons/lu';
+import { LuArrowLeft, LuLock } from 'react-icons/lu';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
+import PurchasePopup from '../../common/Alerts/PurchasePopup/PurchasePopup';
 
-const SpecialExam = ({ paperId, userDetails }) => {
+const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) => {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState(null);
@@ -23,8 +24,12 @@ const SpecialExam = ({ paperId, userDetails }) => {
   const [totalTime, setTotalTime] = useState(0);
   const [questionTimes, setQuestionTimes] = useState([]);
   const [paperDetails, setPaperDetails] = useState(null);
+  const [purchasePopupIsOpen, setPurchasePopupIsOpen] = useState(false);
 
-  // Fetch modules first
+  const isModuleAccessible = (index) => {
+    return isAccessible || index < 2;
+  };
+
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -56,10 +61,8 @@ const SpecialExam = ({ paperId, userDetails }) => {
     fetchModules();
   }, [paperId]);
 
-  // Fetch questions when a module is selected
   useEffect(() => {
     if (!selectedModule) return;
-    console.log('Selected Module ID:', selectedModule.id);
 
     const fetchSpecialExam = async () => {
       try {
@@ -80,13 +83,11 @@ const SpecialExam = ({ paperId, userDetails }) => {
         }
 
         const data = await response.json();
-        console.log('API Response:', data);
         
         if (Array.isArray(data) && data.length > 0) {
           setPaperDetails(data[0]);
           const questionsList = data[0]?.questions || [];
           const validQuestions = questionsList.filter(q => !q.delete);
-          console.log('Valid Questions:', validQuestions);
           setQuestions(validQuestions);
           setTotalTimeLeft(validQuestions.length * 60);
         } else {
@@ -128,11 +129,12 @@ const SpecialExam = ({ paperId, userDetails }) => {
     return () => clearInterval(timer);
   }, [selectedModule, questions, currentQuestionIndex]);
 
-  const handleModuleSelect = (module) => {
-    console.log(module, 'module');
-    console.log(userDetails?.mockTestResult, 'mockTestResult');
-    
-    // Check if this module has already been submitted
+  const handleModuleSelect = (module, index) => {
+    if (!isModuleAccessible(index)) {
+      setPurchasePopupIsOpen(true);
+      return;
+    }
+
     const isModuleSubmitted = userDetails?.mockTestResult?.some(
       result => 
         result.module === module.module && 
@@ -259,7 +261,6 @@ const SpecialExam = ({ paperId, userDetails }) => {
       (answeredQuestions.length || 1)
     );
   
-    // Call API to add mock test before navigating
     const addMockTest = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
@@ -325,23 +326,30 @@ const SpecialExam = ({ paperId, userDetails }) => {
   };
 
   if (loading) {
-    return <div style={{textAlign:"center"}}>     <Box sx={{ width: '100%' }}>
-    <LinearProgress />
-  </Box></div>;
+    return (
+      <div style={{textAlign: "center"}}>
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+        </Box>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Error: {error}</div>
-    </div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-content">Error: {error}</div>
+      </div>
+    );
   }
+
+  const currentQuestion = questions[currentQuestionIndex];
 
   if (!selectedModule) {
     return (
       <div className="modules-container">
         <div className="modules-grid">
-          {modules.map((module) => {
-            // Check if this module is already completed
+          {modules.map((module, index) => {
             const isCompleted = userDetails?.mockTestResult?.some(
               result => 
                 result.module === module.module && 
@@ -356,28 +364,19 @@ const SpecialExam = ({ paperId, userDetails }) => {
                 result.isSubmitted === true
             )?.marks || 0;
 
+            const moduleAccessible = isModuleAccessible(index);
+
             return (
               <div
                 key={module.id}
-                className={`module-card ${isCompleted ? 'completed' : ''}`}
+                className={`module-card ${isCompleted ? 'completed' : ''} ${!moduleAccessible ? 'locked' : ''}`}
                 style={{
-                  opacity: isCompleted ? 0.8 : 1,
+                  opacity: isCompleted || !moduleAccessible ? 0.8 : 1,
                   position: 'relative'
                 }}
               >
                 {isCompleted && (
-                  <div 
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      background: '#4CAF50',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '12px'
-                    }}
-                  >
+                  <div className="completion-badge">
                     Completed (Score: {completedScore})
                   </div>
                 )}
@@ -385,17 +384,27 @@ const SpecialExam = ({ paperId, userDetails }) => {
                   <h3>Module {module.module} : {module.title}</h3>
                   {module.description && <p>{module.description}</p>}
                   <div className="button-heart">
-                    <button 
-                      onClick={() => handleModuleSelect(module)}
-                      style={{
-                        backgroundColor: isCompleted ? '#e0e0e0' : '',
-                        cursor: isCompleted ? 'not-allowed' : 'pointer'
-                      }}
-                      disabled={isCompleted}
-                    >
-                      {isCompleted ? 'Already Completed' : 'Start Exam'} 
-                      <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
-                    </button>
+                    {moduleAccessible ? (
+                      <button 
+                        onClick={() => handleModuleSelect(module, index)}
+                        style={{
+                          backgroundColor: isCompleted ? '#e0e0e0' : '',
+                          cursor: isCompleted ? 'not-allowed' : 'pointer'
+                        }}
+                        disabled={isCompleted}
+                      >
+                        {isCompleted ? 'Already Completed' : 'Start Exam'} 
+                        <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
+                      </button>
+                    ) : (
+                      <button 
+                        className="locked-button"
+                        onClick={() => setPurchasePopupIsOpen(true)}
+                      >
+                        <LuLock className="lock-icon" />
+                        Purchase to Unlock
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className="module-card-right">
@@ -405,29 +414,36 @@ const SpecialExam = ({ paperId, userDetails }) => {
             );
           })}
         </div>
+        {purchasePopupIsOpen && (
+          <PurchasePopup onClose={() => setPurchasePopupIsOpen(false)} />
+        )}
       </div>
     );
   }
 
   if (!questions || questions.length === 0) {
-    return <div className="quiz-container">
-      <div className="quiz-content">No questions available for this module</div>
-    </div>;
+    return <div style={{textAlign: "center"}}>No questions available</div>;
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
   if (!currentQuestion) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Question not found</div>
-    </div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-content">Question not found</div>
+      </div>
+    );
   }
 
   return (
     <div className="quiz-container">
       <div className="quiz-header">
-        <LuArrowLeft onClick={handleModuleBack} style={{fontSize:'30px',cursor:'pointer',marginTop:'-1rem'}} />
+        <LuArrowLeft 
+          onClick={handleModuleBack} 
+          style={{fontSize:'30px', cursor:'pointer', marginTop:'-1rem'}} 
+        />
         <div className="paper-info">
-          <h2 className='moduleTitle' style={{fontSize:'25px',fontFamily:'Montserrat',fontWeight:'600'}}>{selectedModule.module} : {selectedModule.title}</h2>
+          <h2 className='moduleTitle' style={{fontSize:'25px', fontFamily:'Montserrat', fontWeight:'600'}}>
+            {selectedModule.module} : {selectedModule.title}
+          </h2>
           {paperDetails && (
             <p>{paperDetails.course} - Semester {paperDetails.semester}</p>
           )}

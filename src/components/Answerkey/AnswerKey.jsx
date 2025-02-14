@@ -6,6 +6,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import baseUrl from '../../baseUrl';
 
 const AnswerKey = () => {
     const [searchParams] = useSearchParams();
@@ -29,8 +30,8 @@ const AnswerKey = () => {
     
                 // Determine API endpoint based on exam type
                 const apiEndpoint = examType === 'weekly' 
-                    ? `http://localhost:8000/api/fetch-weakly-chellange/${paperId}/${module}`
-                    : `http://localhost:8000/api/fetch-special-exam/${paperId}/${module}`;
+                    ? `${baseUrl}/api/fetch-weakly-chellange/${paperId}/${module}`
+                    : `${baseUrl}/api/fetch-special-exam/${paperId}/${module}`;
     
                 const response = await axios.get(
                     apiEndpoint,

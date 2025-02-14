@@ -14,7 +14,7 @@ const SideNave = () => {
     useEffect(() => {
         const pathToTab = {
             '/': 'home',
-            '/premium-access': 'premium',
+            '/premium-plans': 'premium',
             '/my-course-details': 'courses',
             '/my-profile': 'profile'
         };
@@ -23,7 +23,7 @@ const SideNave = () => {
 
     const navItems = [
         { id: 'home', icon: <ImHome3 />, label: 'Home', path: '/' },
-        { id: 'premium', icon: <GrDiamond />, label: 'Get Premium', path: '/premium-access' },
+        { id: 'premium', icon: <GrDiamond />, label: 'Get Premium', path: '/premium-plans' },
         { id: 'courses', icon: <TbBook2 />, label: 'My courses', path: '/my-course-details' },
         { id: 'profile', icon: <LuUserRound />, label: 'Profile', path: '/my-profile' }
     ];
@@ -52,7 +52,7 @@ const SideNave = () => {
                                     <img src="/Images/Group 1000004528.png" alt="" />
                                 </div>
                             </Link>
-                            <Link to='/premium-access'>
+                            <Link to='/premium-plans'>
                                 <div className={`nav-item ${activeTab === 'premium' ? 'active' : ''}`}>
                                     <img src="/Images/Vector (1).png" alt="" />
                                 </div>

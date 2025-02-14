@@ -1,0 +1,45 @@
+.video-card {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    align-items: center;
+
+    .video-thumbnail {
+        width: 30%;
+        overflow: hidden;
+        height: 100px;
+        border-radius: 7px;
+
+        img {
+            width: 100%;
+            height: 100%;
+
+        }
+    }
+
+    .video-info {
+        width: 70%;
+
+        h4 {
+            font-family: Montserrat;
+            font-weight: 700;
+            font-size: 16.18px;
+            line-height: 19.73px;
+            letter-spacing: -2%;
+
+        }
+
+        button {
+            background-color: #FBD63C;
+            border: none;
+            padding: 9px 13px;
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 13.51px;
+            line-height: 11.59px;
+            letter-spacing: 0%;
+            border-radius: 6px;
+        }
+    }
+}

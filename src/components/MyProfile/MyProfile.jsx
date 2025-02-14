@@ -253,7 +253,7 @@ const MyProfile = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-6">
-                                   <Link to='/premium-access'>
+                                   <Link to='/premium-plans'>
                                    <div className="four-card">
                                         <div className="card-content">
                                             <div className="icon-wrapper">

@@ -1,5 +1,5 @@
 import { FaArrowLeft } from 'react-icons/fa';
-import { LuHeart } from 'react-icons/lu';
+import { LuHeart, LuLock } from 'react-icons/lu';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ import Slides from './Slides';
 import AssessmentTest from './AssistmentTest/AssistmentTest';
 import axios from 'axios';
 import ModalQuestanPaper from './ModalQuestanPaper';
+import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -25,12 +26,12 @@ const PaperDetailPage = () => {
     const [error, setError] = useState(null);
     const { paperId, paperTitle } = useParams();
     const navigate = useNavigate();
-    const [userDetails,setUserDetails]=useState(null)
+    const [userDetails, setUserDetails] = useState(null);
+    const [hasPurchased, setHasPurchased] = useState(false);
+    const [showPurchasePopup, setShowPurchasePopup] = useState(false);
 
-    // Function to handle "Next" button click
     useEffect(() => {
         const checkUserAuthentication = async () => {
-
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
@@ -43,19 +44,22 @@ const PaperDetailPage = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setUserDetails(response.data.user)
-                
-                if (response.status !== 200) {
-                    navigate('/login');
-                }
+
+                setUserDetails(response.data.user);
+
+                // Check if user has purchased the paper
+                const isPurchased = response.data.user?.purchases?.some(
+                    purchase => purchase.paperId === paperId
+                );
+                setHasPurchased(isPurchased);
+
             } catch (error) {
                 navigate('/login');
             }
         };
 
         checkUserAuthentication();
-    }, [navigate]);
-    console.log(userDetails);
+    }, [navigate, paperId]);
 
     useEffect(() => {
         const fetchModules = async () => {
@@ -77,7 +81,6 @@ const PaperDetailPage = () => {
                 }
 
                 const data = await response.json();
-                console.log(data)
                 setModules(data);
                 setLoading(false);
             } catch (err) {
@@ -87,25 +90,75 @@ const PaperDetailPage = () => {
         };
 
         fetchModules();
-    }, []);
+    }, [paperId]);
 
-    if (modules.message == 'No modules found for this paper in your semester and course.' || modules.message == 'No modules found.') {
-        return <div >
-            No modules found for this paper in your semester and course.
-        </div>
+    const isModuleAccessible = (index) => {
+        return hasPurchased || index < 2;
+    };
+
+    if (modules.message === 'No modules found for this paper in your semester and course.' ||
+        modules.message === 'No modules found.') {
+        return (
+            <div className="no-modules-message">
+                No modules found for this paper in your semester and course.
+            </div>
+        );
     }
+
     if (loading) {
-        return <div>
-            <Box sx={{ width: '100%' }}>
-                <LinearProgress />
-            </Box>
-        </div>;
+        return (
+            <div>
+                <Box sx={{ width: '100%' }}>
+                    <LinearProgress />
+                </Box>
+            </div>
+        );
     }
 
     if (error) {
-        return <div>Error loading modules: {error}</div>;
+        return <div className="error-message">Error loading modules: {error}</div>;
     }
 
+    const ModuleCard = ({ module, index }) => {
+        const isAccessible = isModuleAccessible(index);
+        let formattedDate = "22nd September 2024";
+
+        if (module.createTime?._seconds) {
+            const date = new Date(module.createTime._seconds * 1000);
+            formattedDate = format(date, "do MMMM yyyy");
+        }
+
+        return (
+            <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
+                {showPurchasePopup && (
+                    <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
+                )}
+
+                <div className="module-card-left">
+                    <h4 className="module-title">
+                        Module {module.module} : {module.title}
+                    </h4>
+                    <p>{formattedDate}</p>
+                    <div className="button-heart">
+                        {isAccessible ? (
+                            <Link to={`/module-summery/${module.id}`}>
+                                <button>Read Summary</button>
+                            </Link>
+                        ) : (
+                            <button className="locked-content" onClick={()=>setShowPurchasePopup(true)}>
+                                <LuLock className="lock-icon" />
+                                <span>Purchase to unlock</span>
+                            </button>
+                        )}
+                        <LuHeart className="heart-icon" />
+                    </div>
+                </div>
+                <div className="module-card-right">
+                    <img src="/Images/Module-icon.png" alt="" />
+                </div>
+            </div>
+        );
+    };
 
     return (
         <div className="PaperDetailPageMainWrapper">
@@ -114,7 +167,9 @@ const PaperDetailPage = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
-                    <div className='user-profilee'><UserProfile /></div>
+                    <div className='user-profilee'>
+                        <UserProfile />
+                    </div>
                     <Link to="/">
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
@@ -129,56 +184,37 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                        <Slides paperId={paperId} paperTitle={paperTitle} />
+                                        <Slides paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased}/>
                                     </div>
                                 ) : (
-                                    <VideoClasses paperId={paperId} paperTitle={paperTitle} />
+                                    <VideoClasses paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased} />
                                 )
                             ) : activeCategory === 'Study Notes' ? (
                                 activeSubCategory === 'Study Notes' ? (
-                                    modules?.map((module, index) => {
-                                        // Convert Firestore timestamp manually
-                                        let formattedDate = "22nd September 2024"; // Default fallback date
-
-                                        if (module.createTime?._seconds) {
-                                            const date = new Date(module.createTime._seconds * 1000); // Convert seconds to milliseconds
-                                            formattedDate = format(date, "do MMMM yyyy"); // Format the date
-                                        }
-
-
-                                        return (
-                                            <div className="module-card" key={module.id || index}>
-                                                <div className="module-card-left">
-                                                    <h4 className="module-title">
-                                                        Module {module.module} : {module.title}
-                                                    </h4>
-                                                    <p>{formattedDate}</p>
-                                                    <div className="button-heart">
-                                                        <Link to={`/module-summery/${module.id}`}><button>Read Summary</button></Link>
-                                                        <LuHeart className="hear-icon" />
-                                                    </div>
-                                                </div>
-                                                <div className="module-card-right">
-                                                    <img src="/Images/Module-icon.png" alt="" />
-                                                </div>
-                                            </div>
-                                        );
-                                    })
+                                    modules?.map((module, index) => (
+                                        <ModuleCard
+                                            key={module.id || index}
+                                            module={module}
+                                            index={index}
+                                        />
+                                    ))
                                 ) : activeSubCategory === 'Model Question Paper' ? (
                                     <div>
-                                        <ModalQuestanPaper paperId={paperId}/>
+                                        <ModalQuestanPaper paperId={paperId}  isAccessible={hasPurchased} />
                                     </div>
                                 ) : (
-                                    <div style={{textAlign:"center"}}>No Sample Questian Paper Available</div>
+                                    <div style={{ textAlign: "center" }}>
+                                        No Sample Question Paper Available
+                                    </div>
                                 )
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                        <WeeklyChallenge paperId={paperId} userDetails={userDetails} />
+                                        <WeeklyChallenge paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        <SpecialExam paperId={paperId} userDetails={userDetails}/>
+                                        <SpecialExam paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
                                     ) : activeSubCategory === 'Assessment Test' ? (
-                                        <AssessmentTest paperId={paperId} userDetails={userDetails}/>
+                                        <AssessmentTest paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
                                     ) : (
                                         <div>Select a Mock Test type</div>
                                     )}
