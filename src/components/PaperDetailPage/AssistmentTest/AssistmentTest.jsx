@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
-import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import { MdOutlineRemoveRedEye, MdPlayCircle } from 'react-icons/md';
 
 const AssessmentTest = ({ paperId }) => {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,6 +20,7 @@ const AssessmentTest = ({ paperId }) => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [totalTime, setTotalTime] = useState(0);
   const [questionTimes, setQuestionTimes] = useState([]);
+  const [showVideos, setShowVideos] = useState(true);
 
   // Fetch modules first
   useEffect(() => {
@@ -84,7 +88,7 @@ const AssessmentTest = ({ paperId }) => {
 
   // Timer effect
   useEffect(() => {
-    if (!selectedModule || !questions.length) return;
+    if (!selectedModule || !questions.length || showVideos) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prevTime => {
@@ -94,21 +98,62 @@ const AssessmentTest = ({ paperId }) => {
         }
         return prevTime - 1;
       });
-      
+
       setTotalTime(prev => prev + 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [selectedModule, questions, currentQuestionIndex]);
+  }, [selectedModule, questions, currentQuestionIndex, showVideos]);
 
-  const handleModuleSelect = (module) => {
+  const handleModuleSelect = async (module) => {
     setSelectedModule(module);
+    setShowVideos(true);
     resetQuizState();
+
+    try {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        throw new Error('No authentication token found');
+      }
+
+      // Fetch videos
+      const videoResponse = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}/${module.id}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!videoResponse.ok) {
+        throw new Error('Failed to fetch videos');
+      }
+
+      const videoData = await videoResponse.json();
+      setVideos(videoData || []);
+
+      // Fetch questions
+      const questionResponse = await fetch(`${baseUrl}/api/fetch-assessment-test/${module.id}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!questionResponse.ok) {
+        throw new Error('Failed to fetch assessment test');
+      }
+
+      const questionData = await questionResponse.json();
+      setQuestions(questionData || []);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleModuleBack = () => {
     setSelectedModule(null);
     resetQuizState();
+    setShowVideos(true);
   };
 
   const resetQuizState = () => {
@@ -162,7 +207,7 @@ const AssessmentTest = ({ paperId }) => {
     };
     setAnswers(newAnswers);
     setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
-    
+
     if (currentQuestionIndex < questions.length - 1) {
       moveToNextQuestion();
     } else {
@@ -195,7 +240,7 @@ const AssessmentTest = ({ paperId }) => {
     const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
     const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
     const avgTimePerQuestion = Math.round(
-      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
+      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
       answeredQuestions.length
     );
 
@@ -206,9 +251,9 @@ const AssessmentTest = ({ paperId }) => {
 
   const getOptionStyle = (optionText) => {
     if (selectedOption === null) return {};
-    
+
     const isCorrect = optionText === currentQuestion.correctAnswer;
-    
+
     if (selectedOption === optionText) {
       return {
         backgroundColor: isCorrect ? '#e6ffe6' : '#ffe6e6',
@@ -216,7 +261,7 @@ const AssessmentTest = ({ paperId }) => {
         color: isCorrect ? '#006600' : '#cc0000'
       };
     }
-    
+
     if (isCorrect) {
       return {
         backgroundColor: '#e6ffe6',
@@ -224,59 +269,123 @@ const AssessmentTest = ({ paperId }) => {
         color: '#006600'
       };
     }
-    
+
     return {};
   };
 
+  const handleVideoClick = (video) => {
+    // Handle video playback here
+    console.log('Playing video:', video);
+  };
+
   if (loading) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Loading Assessment Test Modules...</div>
-    </div>;
+    return (
+      <div style={{ textAlign: "center" }}>
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+        </Box>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Error: {error}</div>
-    </div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-content">Error: {error}</div>
+      </div>
+    );
   }
 
   if (!selectedModule) {
     return (
-     <div className="modules-container">
-          <div className="modules-grid">
-            {modules.map((module) => (
-              <div
-                key={module.id}
-                className="module-card"
-                onClick={() => handleModuleSelect(module)}
+      <div className="modules-container">
+        <div className="modules-grid">
+          {modules.map((module) => (
+            <div
+              key={module.id}
+              className="module-card"
+              onClick={() => handleModuleSelect(module)}
+            >
+              <div>
+                <h3>{module.title}</h3>
+                {module.description && <p>{module.description}</p>}
+                <div className="button-heart">
+                  <button>
+                    Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
+                  </button>
+                </div>
+              </div>
+              <div className="module-card-right">
+                <img src="/Images/Module-icon.png" alt="" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (showVideos) {
+    return (
+      <div className="quiz-container">
+        <div className="quiz-header">
+          <button onClick={handleModuleBack} className="back-button">
+            ← Back to Modules
+          </button>
+          <h2>{selectedModule.title}</h2>
+        </div>
+        
+        <div className="videos-container">
+          <div className="videos-header">
+            <h3>Module Videos</h3>
+            <button 
+              className="start-assessment-btn"
+              onClick={() => setShowVideos(false)}
+            >
+              Start Assessment
+            </button>
+          </div>
+          
+          <div className="videos-grid">
+            {videos.map((video, index) => (
+              <div 
+                key={video.id || index} 
+                className="video-card"
+                onClick={() => handleVideoClick(video)}
               >
-                <div>
-                  <h3>{module.title}</h3>
-                  {module.description && <p>{module.description}</p>}
-                  <div className="button-heart">
-                    <button>
-                      Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
-                    </button>
+                <div className="video-thumbnail">
+                  <img 
+                    src={video.thumbnail || "/Images/video-placeholder.png"} 
+                    alt={video.title}
+                  />
+                  <div className="play-icon">
+                    <MdPlayCircle size={40} />
                   </div>
-               
                 </div>
-                <div>
-  
+                <div className="video-info">
+                  <h4>{video.title}</h4>
+                  {video.duration && <span>{video.duration}</span>}
                 </div>
-                <div className="module-card-right">
-                    <img src="/Images/Module-icon.png" alt="" />
-                  </div> </div>
+              </div>
             ))}
+            {videos.length === 0 && (
+              <div className="no-videos">
+                No videos available for this module
+              </div>
+            )}
           </div>
         </div>
+      </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
   if (!currentQuestion) {
-    return <div className="quiz-container">
-      <div className="quiz-content">No questions available for this module</div>
-    </div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-content">No questions available for this module</div>
+      </div>
+    );
   }
 
   return (
@@ -287,6 +396,7 @@ const AssessmentTest = ({ paperId }) => {
         </button>
         <h2>{selectedModule.title}</h2>
       </div>
+      
       <div className="quiz-content">
         <div className="quiz-header">
           <span>{currentQuestionIndex + 1}/{questions.length}</span>
@@ -316,10 +426,10 @@ const AssessmentTest = ({ paperId }) => {
           </div>
         </div>
         <div className="buttons">
-          <button 
-            className="ignore" 
+          <button
+            className="ignore"
             onClick={handleIgnore}
-            style={{ 
+            style={{
               cursor: 'pointer',
               opacity: selectedOption ? 0.5 : 1,
               pointerEvents: selectedOption ? 'none' : 'auto'
@@ -327,12 +437,12 @@ const AssessmentTest = ({ paperId }) => {
           >
             Ignore
           </button>
-          <button 
-            className="next" 
+          <button
+            className="next"
             onClick={handleNextQuestion}
-            style={{ 
-              opacity: selectedOption ? 1 : 0.5, 
-              cursor: selectedOption ? 'pointer' : 'not-allowed' 
+            style={{
+              opacity: selectedOption ? 1 : 0.5,
+              cursor: selectedOption ? 'pointer' : 'not-allowed'
             }}
           >
             {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}

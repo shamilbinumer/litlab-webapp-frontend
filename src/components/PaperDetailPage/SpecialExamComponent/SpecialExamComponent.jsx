@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
-import { IoArrowBack } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
 import axios from 'axios';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const SpecialExam = ({ paperId, userDetails }) => {
   const navigate = useNavigate();
@@ -324,9 +325,9 @@ const SpecialExam = ({ paperId, userDetails }) => {
   };
 
   if (loading) {
-    return <div className="quiz-container">
-      <div className="quiz-content">Loading Special Exam Modules...</div>
-    </div>;
+    return <div style={{textAlign:"center"}}>     <Box sx={{ width: '100%' }}>
+    <LinearProgress />
+  </Box></div>;
   }
 
   if (error) {
@@ -392,7 +393,7 @@ const SpecialExam = ({ paperId, userDetails }) => {
                       }}
                       disabled={isCompleted}
                     >
-                      {isCompleted ? 'Already Completed' : 'Start Assessment'} 
+                      {isCompleted ? 'Already Completed' : 'Start Exam'} 
                       <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
                     </button>
                   </div>

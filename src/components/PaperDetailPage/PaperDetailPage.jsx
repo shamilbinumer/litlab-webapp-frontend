@@ -169,7 +169,7 @@ const PaperDetailPage = () => {
                                         <ModalQuestanPaper paperId={paperId}/>
                                     </div>
                                 ) : (
-                                    <div>Sample Question Paper Content</div>
+                                    <div style={{textAlign:"center"}}>No Sample Questian Paper Available</div>
                                 )
                             ) : (
                                 <div>

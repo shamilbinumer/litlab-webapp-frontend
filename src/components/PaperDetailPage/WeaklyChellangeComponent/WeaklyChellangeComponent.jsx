@@ -393,7 +393,7 @@ const WeeklyChallenge = ({ paperId, userDetails }) => {
                       }}
                       disabled={isCompleted}
                     >
-                      {isCompleted ? 'Already Completed' : 'Start Assessment'} 
+                      {isCompleted ? 'Already Completed' : 'Start Challenge'} 
                       <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
                     </button>
                   </div>

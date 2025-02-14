@@ -107,7 +107,7 @@ const UserLogin = () => {
       <div className="container-fluid main">
         <div className="row">
           <div className="col-lg-6 left">
-            <img src="/undraw_happy_announcement_re_tsm0 1.png" alt="" />
+            <img src="/Images/undraw_happy_announcement_re_tsm0 1 (1).png" alt="" />
           </div>
           <div className="col-lg-6 right">
             <div>
