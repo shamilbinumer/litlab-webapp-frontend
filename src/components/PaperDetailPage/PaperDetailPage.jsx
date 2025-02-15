@@ -49,7 +49,7 @@ const PaperDetailPage = () => {
 
                 // Check if user has purchased the paper
                 const isPurchased = response.data.user?.purchases?.some(
-                    purchase => purchase.paperId === paperId
+                    purchase => purchase.courseId === paperId
                 );
                 setHasPurchased(isPurchased);
 
@@ -95,15 +95,10 @@ const PaperDetailPage = () => {
     const isModuleAccessible = (index) => {
         return hasPurchased || index < 2;
     };
+    console.log('purchased',hasPurchased);
+    
 
-    if (modules.message === 'No modules found for this paper in your semester and course.' ||
-        modules.message === 'No modules found.') {
-        return (
-            <div className="no-modules-message">
-                No modules found for this paper in your semester and course.
-            </div>
-        );
-    }
+   
 
     if (loading) {
         return (
@@ -118,7 +113,35 @@ const PaperDetailPage = () => {
     if (error) {
         return <div className="error-message">Error loading modules: {error}</div>;
     }
-
+    if (modules.message === 'No modules found for this paper in your semester and course.' ||
+        modules.message === 'No modules found.') {
+        return (
+            <div className="PaperDetailPageMainWrapper">
+                <div className="detail-page-main">
+                    <div className="left-side">
+                        <SideNave />
+                    </div>
+                    <div className="right-side">
+                        <div className='user-profilee'>
+                            <UserProfile />
+                        </div>
+                        <Link to="/">
+                            <div className="back-btn-container">
+                                <FaArrowLeft className="back-btn" />
+                            </div>
+                        </Link>
+                        <h2 className="paper-title">{paperTitle}</h2>
+                        <div className="small-screen-banner">
+                            <img src="/Images/image 11.png" alt="" />
+                        </div>
+                        <div className="no-modules-message">
+                            No modules found for this paper in your semester and course.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     const ModuleCard = ({ module, index }) => {
         const isAccessible = isModuleAccessible(index);
         let formattedDate = "22nd September 2024";
@@ -130,9 +153,7 @@ const PaperDetailPage = () => {
 
         return (
             <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
-                {showPurchasePopup && (
-                    <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
-                )}
+              
 
                 <div className="module-card-left">
                     <h4 className="module-title">
@@ -156,6 +177,9 @@ const PaperDetailPage = () => {
                 <div className="module-card-right">
                     <img src="/Images/Module-icon.png" alt="" />
                 </div>
+                {showPurchasePopup && (
+                    <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
+                )}
             </div>
         );
     };

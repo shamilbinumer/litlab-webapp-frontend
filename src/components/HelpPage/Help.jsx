@@ -1,9 +1,38 @@
-import React from "react";
+import { useEffect } from "react";
 import "./Help.scss";
-import { FaArrowLeft, FaArrowRight, FaUpload } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SideNave from "../common/SideNav/SideNave";
+import axios from "axios";
+import baseUrl from "../../baseUrl";
+import { useNavigate } from "react-router-dom";
 
 const Help = () => {
+    const navigate = useNavigate()
+    useEffect(() => {
+        const checkUserAuthentication = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
     return (
         <div className="help-form-container">
             <div className="sub-wrapper">

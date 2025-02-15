@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import SideNave from '../common/SideNav/SideNave';
 import './Lectures.scss';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -10,6 +10,8 @@ import baseUrl from '../../baseUrl';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import CustomVideoPlayer from './CustomVideoPlayer';
+import ScrollTopMount from '../common/ScrollTopMount';
+import axios from 'axios';
 
 const Lectures = () => {
   const { videoId, paperId, paperTitle } = useParams();
@@ -18,7 +20,33 @@ const Lectures = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate()
+  useEffect(() => {
 
+      const checkUserAuthentication = async () => {
+          try {
+              const token = localStorage.getItem('authToken');
+              if (!token) {
+                  navigate('/login');
+                  return;
+              }
+
+              const response = await axios.get(`${baseUrl}/api/profile`, {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              });
+
+              if (response.status !== 200) {
+                  navigate('/login');
+              }
+          } catch (error) {
+              navigate('/login');
+          }
+      };
+
+      checkUserAuthentication();
+  }, [navigate]);
   useEffect(() => {
     const fetchVideoDetails = async () => {
       try {
@@ -110,6 +138,7 @@ const Lectures = () => {
 
   return (
     <div className='LecturesMainWrapper'>
+      <ScrollTopMount/>
       <div className="lecture-main">
         <div className="left-side">
           <SideNave />
@@ -130,7 +159,7 @@ const Lectures = () => {
             <div className="main-content">
               <div className="row">
                 <div className="col-lg-7 main-content-left">
-                  <div className="search-bar">
+                  <div className="search-bar desktop-search-bar">
                    <div> <IoSearchOutline className='search-icon' /></div>
                   <div>  <input
                       type="text"
@@ -157,6 +186,7 @@ const Lectures = () => {
                         </div>
                     </div>
                   )}
+                  
                 </div>
                 <div className="col-lg-5 main-content-right">
                   <h3>

@@ -1,0 +1,119 @@
+// ConfirmationAlert.scss
+.confirmation-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+
+    .confirmation-alert {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        transform-origin: center;
+        animation: slideIn 0.3s ease-out;
+
+        .alert-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            color: #f59e0b;
+            animation: pulse 2s infinite;
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .alert-content {
+            text-align: center;
+
+            .alert-message {
+                font-size: 1.1rem;
+                color: #374151;
+                margin-bottom: 24px;
+                line-height: 1.5;
+            }
+
+            .alert-buttons {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+
+                button {
+                    padding: 10px 24px;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    transition: all 0.2s ease;
+                    min-width: 120px;
+
+                    &.cancel-button {
+                        background-color: #f3f4f6;
+                        color: #4b5563;
+                        border: 1px solid #e5e7eb;
+
+                        &:hover {
+                            background-color: #e5e7eb;
+                        }
+                    }
+
+                    &.confirm-button {
+                        background-color: #6BCCE5;
+                        color: white;
+                        border: none;
+
+                        &:hover {
+                            background-color: #26bee4;
+                        }
+                    }
+
+                    &:active {
+                        transform: scale(0.98);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

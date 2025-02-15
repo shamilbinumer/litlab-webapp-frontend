@@ -1,9 +1,39 @@
-import React from 'react'
+import { useEffect } from 'react'
 import SideNave from '../common/SideNav/SideNave'
 import './Instructions.scss'
 import { FaArrowLeft } from 'react-icons/fa6'
+import axios from 'axios'
+import baseUrl from '../../baseUrl'
+import { useNavigate } from 'react-router-dom'
 
 const Instructions = () => {
+    const navigate = useNavigate()
+    useEffect(() => {
+
+        const checkUserAuthentication = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
     return (
         <div className='InstructionMainWrapper'>
             <div className="InstructionSubWrapper">

@@ -1,0 +1,120 @@
+.AddedTocartAlertMainWrapper {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    overflow: hidden;
+    animation: slideIn 0.5s ease forwards;
+    z-index: 1000;
+
+    .alert-content {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .icon-section {
+            position: relative;
+            width: 40px;
+            height: 40px;
+
+            .check-icon {
+                position: absolute;
+                top: 0;
+                left: 0;
+                color: #4CAF50;
+                font-size: 40px;
+                animation: scaleIn 0.5s ease forwards;
+            }
+
+            .cart-icon {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 40px;
+                color: #6C5FBC;
+                animation: cartBounce 0.5s ease forwards;
+                opacity: 0;
+            }
+        }
+
+        .message-section {
+            flex: 1;
+
+            h3 {
+                margin: 0;
+                color: #2c2c2c;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            p {
+                margin: 5px 0 0;
+                color: #666;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .progress-bar {
+        height: 3px;
+        background: #6C5FBC;
+        width: 100%;
+        animation: progress 3s linear forwards;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes cartBounce {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes progress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}

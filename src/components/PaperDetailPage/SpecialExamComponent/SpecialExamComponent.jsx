@@ -376,9 +376,9 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
                 }}
               >
                 {isCompleted && (
-                  <div className="completion-badge">
-                    Completed (Score: {completedScore})
-                  </div>
+                 <div className="completion-badge" style={{position:'absolute',right:'1rem',top:'10px',backgroundColor:'green',color:"white",padding:"5px 10px",borderRadius:'8px',fontFamily:'Montserrat',fontSize:'13px'}}>
+                 Completed (Score: {completedScore})
+               </div>
                 )}
                 <div>
                   <h3>Module {module.module} : {module.title}</h3>

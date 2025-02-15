@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { IoPlayCircleSharp } from 'react-icons/io5';
-import { LuHeart, LuEye } from 'react-icons/lu';
+import { LuEye, LuLock } from 'react-icons/lu';
 import baseUrl from '../../baseUrl';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
-// import './VideoClass.scss'
-// ✅ Add PropTypes validation
+import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
 
-const Slides = ({ paperId ,paperTitle}) => {
+const Slides = ({ paperId, paperTitle, isAccessible }) => {
   const [videoClasses, setVideoClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPurchasePopup, setShowPurchasePopup] = useState(false);
 
   useEffect(() => {
     const fetchVideoClasses = async () => {
@@ -45,6 +43,10 @@ const Slides = ({ paperId ,paperTitle}) => {
     fetchVideoClasses();
   }, [paperId]);
 
+  const handleLockedClick = () => {
+    setShowPurchasePopup(true);
+  };
+
   if (loading) {
     return (
       <div>
@@ -68,45 +70,79 @@ const Slides = ({ paperId ,paperTitle}) => {
       <div className="video-content-wrapper">
         <div className="main-content-right">
           <div className="vedio-list-wrapper">
-            {videoClasses.map((video, index) => (
-              // <Link to={`/lectures/${video.id}`} key={video.id || index}>
+            {videoClasses.map((video, index) => {
+              const isLocked = !isAccessible && index > 1;
+              
+              return (
                 <div className="vedio-item row" key={video.id || index}>
-                  {/* <div className="col-lg-5 col-md-5 col-sm-12 col-12">
-                   <div className="vedio-item-left">
-                      <div className="thumbnile">
-                        <img 
-                          src={video.thumbnail || "/Images/teacher.jpg"} 
-                          className="thumbnile-image" 
-                          alt={video.title} 
-                        />
-                        <IoPlayCircleSharp className="play-icon" />
-                      </div>
-                    </div>
-                  </div> */}
-                  <div >
-                    <div className="vedio-item-right" style={{backgroundColor:'#6BCCE5',padding:'1rem',borderRadius:'10px',display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                     <div> <h1>{video.title}</h1>
-                      <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
-                      {/* <p className="vedio-description" style={{width:"50%"}}>{video.description}</p> */}
+                  <div>
+                    <div 
+                      className={`vedio-item-right ${isLocked ? 'locked' : ''}`} 
+                      style={{
+                        backgroundColor: isLocked ? '#e0e0e0' : '#6BCCE5',
+                        padding: '1rem',
+                        borderRadius: '10px',
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        opacity: isLocked ? 0.8 : 1,
+                        cursor: isLocked ? 'pointer' : 'default'
+                      }}
+                      onClick={isLocked ? handleLockedClick : undefined}
+                    >
+                      <div>
+                        <h1>{video.title}</h1>
+                        <div className="teacer-name" style={{marginBottom:"1rem"}}>
+                          Module : {video.Module}
+                        </div>
                       </div>
                       <div className="button-icon">
-                       <a href={video.fileUrl} target='_blank'> <button>View Slide <LuEye /></button></a>
+                        {isLocked ? (
+                          <button 
+                            className="locked-button"
+                            onClick={handleLockedClick}
+                            style={{
+                              backgroundColor: '#999',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '8px'
+                            }}
+                          >
+                            Locked <LuLock />
+                          </button>
+                        ) : (
+                          <a href={video.fileUrl} target='_blank' rel="noopener noreferrer">
+                            <button style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '8px'
+                            }}>
+                              View Slide <LuEye />
+                            </button>
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-              // </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
+
+      {showPurchasePopup && (
+        <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
+      )}
     </div>
   );
 };
 
 Slides.propTypes = {
-  paperId: PropTypes.string.isRequired,  // or number, depending on your data
+  paperId: PropTypes.string.isRequired,
   paperTitle: PropTypes.string.isRequired,
+  isAccessible: PropTypes.bool.isRequired,
 };
 
 export default Slides;

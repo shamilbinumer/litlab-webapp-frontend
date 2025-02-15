@@ -38,7 +38,7 @@ function App() {
           <Route path="/premium-plans" Component={PremiumAccess} />
           <Route path="/plan-detail-page" Component={PlanDetailPage} />
           <Route path="/answer-key" Component={AnswerKey} />
-          <Route path="/cart-page" Component={Cart} />
+          <Route path="/cart/:category/:amount/:paperCount" Component={Cart} />
           <Route path="/instructions" Component={Instructions} />
           <Route path="/Your-Favorites" Component={YourFavorite} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />

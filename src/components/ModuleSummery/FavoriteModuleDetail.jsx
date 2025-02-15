@@ -15,7 +15,32 @@ const FavoriteModuleDetail = () => {
     const [moduleDetails, setModuleDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    useEffect(() => {
+  
+        const checkUserAuthentication = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+  
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+  
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+  
+        checkUserAuthentication();
+    }, [navigate]);
     useEffect(() => {
         const fetchModuleDetails = async () => {
             try {
@@ -52,12 +77,7 @@ const FavoriteModuleDetail = () => {
 
                 {/* Header */}
                 <div className="header">
-                    {/* <Link to={`/paper-details/${moduleDetails?.title || moduleDetails?.paperTitle}/${moduleDetails?.id}`}> */}
-                        {/* <button className="back-button"> */}
-                            {/* <FaAr/rowLeft /> */}
                             <span className='heading'>{moduleDetails?.title || 'Module'}</span>
-                        {/* </button> */}
-                    {/* </Link> */}
                 </div>
 
                 {/* Search Bar */}

@@ -1,36 +1,27 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { IoPlayCircleSharp } from 'react-icons/io5';
+import { LuHeart, LuEye, LuLock } from 'react-icons/lu';
 import baseUrl from '../../../baseUrl';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { MdPlayCircle } from 'react-icons/md';
-import { LuLock } from 'react-icons/lu';
+import PropTypes from 'prop-types';
 import PurchasePopup from '../../common/Alerts/PurchasePopup/PurchasePopup';
-import { FaCirclePlay } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
-
 const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [modules, setModules] = useState([]);
-  const [videos, setVideos] = useState([]);
+  const [videoClasses, setVideoClasses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [videoLoading, setVideoLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [purchasePopupIsOpen, setPurchasePopupIsOpen] = useState(false);
-
-  const isModuleAccessible = (index) => {
-    return isAccessible || index < 2;
-  };
+  const [showPurchasePopup, setShowPurchasePopup] = useState(false);
 
   useEffect(() => {
-    const fetchModules = async () => {
+    const fetchVideoClasses = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
           throw new Error('No authentication token found');
         }
 
-        const response = await fetch(`${baseUrl}/api/fetch-modules/${paperId}`, {
+        const response = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
@@ -38,11 +29,11 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch modules');
+          throw new Error('Failed to fetch video classes');
         }
 
         const data = await response.json();
-        setModules(data || []);
+        setVideoClasses(data || []);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -50,67 +41,75 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
       }
     };
 
-    fetchModules();
+    fetchVideoClasses();
   }, [paperId]);
 
-  useEffect(() => {
-    if (!selectedModule) return;
+  const handleLockedClick = () => {
+    setShowPurchasePopup(true);
+  };
 
-    const fetchVideos = async () => {
-      setVideoLoading(true);
-      try {
-        const authToken = localStorage.getItem('authToken');
-        if (!authToken) {
-          throw new Error('No authentication token found');
-        }
-
-        const response = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}/${selectedModule.module}`, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch videos');
-        }
-
-        const data = await response.json();
-        setVideos(data || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setVideoLoading(false);
-      }
+  const renderVideoItem = (video, index) => {
+    const isLocked = !isAccessible && index > 1;
+    const VideoWrapper = isLocked ? 'div' : Link;
+    const wrapperProps = isLocked ? {
+      onClick: handleLockedClick,
+      style: { cursor: 'pointer' }
+    } : {
+      to: `/lectures/${paperTitle}/${paperId}/${video.id}`
     };
 
-    fetchVideos();
-  }, [selectedModule, paperId]);
-
-  const handleModuleSelect = (module, index) => {
-    if (!isModuleAccessible(index)) {
-      setPurchasePopupIsOpen(true);
-      return;
-    }
-    setSelectedModule(module);
-    setSelectedVideo(null);
-  };
-
-  const handleVideoSelect = (video) => {
-    setSelectedVideo(video);
-  };
-
-  const handleBack = () => {
-    if (selectedVideo) {
-      setSelectedVideo(null);
-    } else {
-      setSelectedModule(null);
-    }
+    return (
+      <div className={`vedio-item row ${isLocked ? 'locked' : ''}`} key={video.id || index}>
+        <div className="col-lg-5 col-md-5 col-sm-12 col-12">
+          <VideoWrapper {...wrapperProps}>
+            <div className="vedio-item-left">
+              <div className="thumbnile">
+                <img 
+                  src={video.thumbnail || "/Images/teacher.jpg"} 
+                  className="thumbnile-image" 
+                  alt={video.title} 
+                />
+                {isLocked ? (
+                  <div className="lock-overlay">
+                    <LuLock className="lock-icon" />
+                    <span>Purchase to unlock</span>
+                  </div>
+                ) : (
+                  <IoPlayCircleSharp className="play-icon" />
+                )}
+              </div>
+            </div>
+          </VideoWrapper>
+        </div>
+        <div className="col-lg-7 col-md-7 col-sm-12 col-12">
+          <div className="vedio-item-right">
+            <h1>{video.title}</h1>
+            <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
+            <div className="button-icon">
+              {isLocked ? (
+                <button 
+                style={{backgroundColor:'gray',border:'1px solid gray',color:'white',cursor:'not-allowed'}}
+                  className="disabled"
+                  onClick={handleLockedClick}
+                >
+                  Locked <LuLock />
+                </button>
+              ) : (
+                <VideoWrapper {...wrapperProps}>
+                  <button>Watch now <LuEye /></button>
+                </VideoWrapper>
+              )}
+              <LuHeart className="heart-icon" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div>
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
         </Box>
@@ -119,140 +118,34 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
   }
 
   if (error) {
-    return <div className="error-message">Error: {error}</div>;
+    return <div>Error loading video classes: {error}</div>;
   }
 
-  if (!selectedModule) {
-    return (
-      <div className="modules-container">
-        <div className="modules-grid">
-          {modules.map((module, index) => {
-            const moduleAccessible = isModuleAccessible(index);
-
-            return (
-              <div
-                key={module.id}
-                className={`module-card ${!moduleAccessible ? 'locked' : ''}`}
-                style={{
-                  opacity: !moduleAccessible ? 0.8 : 1,
-                  position: 'relative'
-                }}
-              >
-                <div>
-                  <h3>Module {module.module} : {module.title}</h3>
-                  {module.description && <p>{module.description}</p>}
-                  <div className="button-heart">
-                    {moduleAccessible ? (
-                      <button 
-                        onClick={() => handleModuleSelect(module, index)}
-                      >
-                        View Videos <MdPlayCircle style={{ fontSize: '14px', marginLeft: '5px' }} />
-                      </button>
-                    ) : (
-                      <button 
-                        className="locked-button"
-                        onClick={() => setPurchasePopupIsOpen(true)}
-                      >
-                        <LuLock className="lock-icon" />
-                        Purchase to Unlock
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div className="module-card-right">
-                  <img src="/Images/Module-icon.png" alt="" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        {purchasePopupIsOpen && (
-          <PurchasePopup onClose={() => setPurchasePopupIsOpen(false)} />
-        )}
-      </div>
-    );
-  }
-
-  if (!selectedVideo) {
-    return (
-      <div className="video-container">
-        <div className="module-header">
-          <button onClick={handleBack} className="back-button">
-            ← Back to Modules
-          </button>
-          <h2>{selectedModule.title} Videos</h2>
-        </div>
-
-        {videoLoading ? (
-          <div className="loading">
-            <Box sx={{ width: '100%' }}>
-              <LinearProgress />
-            </Box>
-          </div>
-        ) : (
-          <div className="videos-grid">
-            {videos.map((video, index) => (
-              <div 
-                key={video.id || index} 
-                className="video-card"
-                onClick={() => handleVideoSelect(video)}
-              >
-                <div className="video-thumbnail">
-                  <img 
-                    src={video.thumbnail || "/Images/video-placeholder.png"} 
-                    alt={video.title} 
-                  />
-                  <div className="play-button">
-                    <MdPlayCircle />
-                  </div>
-                </div>
-                <div className="video-info">
-                  <h4>{video.title}</h4>
-                <Link to={`/lectures/${paperTitle}/${paperId}/${video.id}`}><button>Play The Vedio <FaCirclePlay /></button></Link>
-                </div>
-              </div>
-            ))}
-            {!videoLoading && videos.length === 0 && (
-              <div className="no-videos">
-                No videos available for this module
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
+  if (!videoClasses.length) {
+    return <div>No video classes available for this paper.</div>;
   }
 
   return (
-    <div className="video-player-container">
-      <div className="video-header">
-        <button onClick={handleBack} className="back-button">
-          ← Back to Videos
-        </button>
-        <h2>{selectedVideo.title}</h2>
-      </div>
-      <div className="video-wrapper">
-        {selectedVideo.videoUrl ? (
-          <video 
-            controls 
-            className="video-player"
-            poster={selectedVideo.thumbnail}
-          >
-            <source src={selectedVideo.videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <div className="video-error">
-            Video URL not available
+    <div className="videoMainWrapper">
+      <div className="video-content-wrapper">
+        <div className="main-content-right">
+          <div className="vedio-list-wrapper">
+            {videoClasses.map((video, index) => renderVideoItem(video, index))}
           </div>
-        )}
+        </div>
       </div>
-      <div className="video-description">
-        <h3>Description</h3>
-        <p>{selectedVideo.description || 'No description available'}</p>
-      </div>
+
+      {showPurchasePopup && (
+        <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
+      )}
     </div>
   );
+};
+
+VideoClasses.propTypes = {
+  paperId: PropTypes.string.isRequired,
+  paperTitle: PropTypes.string.isRequired,
+  isAccessible: PropTypes.bool.isRequired,
 };
 
 export default VideoClasses;

@@ -19,11 +19,12 @@ const PremiumAccess = () => {
         slidesToShow: 3,
         slidesToScroll: 1,
         centerMode: true,
+        Autoplay:false,
         centerPadding: '0',
-        beforeChange: (current, next) => {
-            const cardId = cards[next] ? cards[next].id : '';
-            setActiveCard(cardId);
-        },
+        // beforeChange: (current, next) => {
+        //     const cardId = cards[next] ? cards[next].id : '';
+        //     setActiveCard(cardId);
+        // },
         responsive: [
             {
                 breakpoint: 993,

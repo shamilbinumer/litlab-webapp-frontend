@@ -4,7 +4,7 @@ import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
 import { FaArrowLeft } from 'react-icons/fa';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
 
@@ -15,7 +15,32 @@ const AnswerKey = () => {
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const navigate = useNavigate()
+    useEffect(() => {
+        const checkUserAuthentication = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
 
+                const response = await axios.get(`${baseUrl}/api/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status !== 200) {
+                    navigate('/login');
+                }
+            } catch (error) {
+                navigate('/login');
+            }
+        };
+
+        checkUserAuthentication();
+    }, [navigate]);
     useEffect(() => {
         const fetchData = async () => {
             try {
