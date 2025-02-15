@@ -309,6 +309,7 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           module: selectedModule?.module || 0,
           moduleTitle: selectedModule?.title || "",
           paperTitle: selectedVideo?.title || "",
+          paperType:selectedModule?.paperType || ""
         };
     
         const response = await axios.post(
@@ -472,13 +473,13 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           ) : (
             <div className="videos-grid">
               {videos?.map((video, index) => (
-                <div key={video.id || index} className="video-card" onClick={() => handleVideoSelect(video)}>
-                  <div className="video-thumbnail">
-                    <img src={video.thumbnail || "/Images/video-placeholder.png"} alt={video.title} />
+                <div key={video.id || index} className="video-card" style={{display:'flex',marginBottom:'1rem',gap:'1rem',alignItems:"center"}} onClick={() => handleVideoSelect(video)}>
+                  <div className="video-thumbnail" style={{width:"30%",height:'100px',overflow:"hidden",borderRadius:'9px'}}>
+                    <img src={video.thumbnail || "/Images/video-placeholder.png"} alt={video.title} style={{width:"100%",height:"100%",objectFit:'cover'}} />
                   </div>
-                  <div className="video-info">
-                    <h4>{video.title}</h4>
-                    <button>Start Assessment</button>
+                  <div className="video-info" style={{width:'70%'}}>
+                    <h4 style={{fontFamily:'Montserrat',fontSize:'20px',fontWeight:'700'}}>{video.title}</h4>
+                    <button style={{backgroundColor:'#FBD63C',border:'none',fontFamily:"Montserrat",fontWeight:'600',fontSize:'14px',padding:'5px 20px',borderRadius:'8px'}}>Start Assessment</button>
                   </div>
                 </div>
               ))}

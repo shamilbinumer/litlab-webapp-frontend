@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom"
 import UserRegister from "./components/UserRegister/UserRegister"
 import UserLogin from "./components/UserLogin/UserLogin"
 import IndexPage from "./components/IndexPage/IndexPage"
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" Component={IndexPage} />
           <Route path="/signup" Component={UserRegister} />
@@ -43,7 +43,7 @@ function App() {
           <Route path="/Your-Favorites" Component={YourFavorite} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   )
 }

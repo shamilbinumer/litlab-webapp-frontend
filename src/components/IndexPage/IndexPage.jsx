@@ -314,10 +314,6 @@ const IndexPage = () => {
                                                             {isInCart(paper.id) ? (
                                                                 <button
                                                                     className='add-cart-btn'
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        navigate('/cart');
-                                                                    }}
                                                                 >
                                                                     Item In Cart <TbShoppingCartCopy />
                                                                 </button>

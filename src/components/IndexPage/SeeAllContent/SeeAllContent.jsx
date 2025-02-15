@@ -8,6 +8,7 @@ import './SeeAllContent.scss';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import AddedToCart from '../../common/Alerts/AddedTocart/AddedToCart';
+import SideNave from '../../common/SideNav/SideNave';
 
 const SeeAllContent = () => {
     const navigate = useNavigate();
@@ -142,6 +143,7 @@ const SeeAllContent = () => {
 
     return (
         <div className="SeeAllIndexDataMainWrapper">
+            <SideNave/>
             <AddedToCart
                 isVisible={showCartAlert}
                 itemName={addedItemName}
