@@ -38,6 +38,9 @@ const MyMockDetails = () => {
     const [paperError, setPaperError] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
     const [quizLoading, setQuizLoading] = useState(false); 
+    const [videos, setVideos] = useState([]); // To store videos for the selected module
+    const [selectedVideo, setSelectedVideo] = useState(null); // To track the selected video
+    const [videoLoading, setVideoLoading] = useState(false); // To handle video loading state
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -91,6 +94,34 @@ const MyMockDetails = () => {
             return () => clearInterval(timer);
         }
     }, [quizData, startTime]);
+
+
+    // fetchAssesment
+
+    
+    const fetchVideos = async (paperId, moduleNumber) => {
+        setVideoLoading(true);
+        try {
+          const authToken = localStorage.getItem('authToken');
+          if (!authToken) throw new Error('No authentication token found');
+      
+          const response = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}/${moduleNumber}`, {
+            headers: {
+              'Authorization': `Bearer ${authToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+      
+          if (!response.ok) throw new Error('Failed to fetch videos');
+          const data = await response.json();
+          setVideos(data || []);
+        } catch (err) {
+          console.error('Error fetching videos:', err);
+        } finally {
+          setVideoLoading(false);
+        }
+      };
+      
 
     // Fetch purchased papers
     useEffect(() => {
@@ -199,30 +230,29 @@ const MyMockDetails = () => {
         }
     };
 
-    const fetchAssessmentQuestions = async (paperId, moduleNumber) => {
+    const fetchAssessmentQuestions = async (paperId, moduleNumber, videoTitle) => {
         setLoading(true);
         try {
-            const authToken = localStorage.getItem('authToken');
-            if (!authToken) throw new Error('No authentication token found');
-
-            const response = await fetch(`${baseUrl}/api/fetch-assessment/${paperId}/${moduleNumber}`, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error('Failed to fetch questions');
-            const data = await response.json();
-            return data;
+          const authToken = localStorage.getItem('authToken');
+          if (!authToken) throw new Error('No authentication token found');
+      
+          const response = await fetch(`${baseUrl}/api/fetch-video-assessment/${paperId}/${videoTitle}`, {
+            headers: {
+              'Authorization': `Bearer ${authToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+      
+          if (!response.ok) throw new Error('Failed to fetch questions');
+          const data = await response.json();
+          const questions = data.data[0]?.questions || [];
+          setQuizData(questions);
         } catch (err) {
-            console.error('Error fetching questions:', err);
-            throw err;
+          console.error('Error fetching questions:', err);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
-
+      };
     const handleWeeklyChallengeSelect = async (paper) => {
         setSelectedWeeklyChallenge(paper.id);
         await fetchModules(paper.id);
@@ -449,21 +479,58 @@ const MyMockDetails = () => {
             `&wrong=${wrongCount}` +
             `&ignored=${ignoredCount}` +
             `&avgTime=${avgTimePerQuestion}` +
-            `&examType=${examType}`  // Added exam type parameter
+            `&examType=${examType}`  
         );
     };
     const handleAssessmentModuleSelect = async (module) => {
         try {
-            setSelectedAssessmentModule(module);
-            const moduleNumber = module.module;
-            const questions = await fetchAssessmentQuestions(selectedAssessment, moduleNumber);
-            if (questions && questions.length > 0) {
-                setQuizData(questions[0].questions);
-            }
+          setSelectedAssessmentModule(module);
+          await fetchVideos(selectedAssessment, module.module); // Fetch videos for the selected module
         } catch (err) {
-            console.error('Error loading assessment questions:', err);
+          console.error('Error loading assessment module:', err);
         }
-    };
+      };
+      
+
+      const renderVideos = () => (
+        <div className="videos-container">
+          <div className="videos-header">
+            <h3>Module Videos</h3>
+          </div>
+          {videoLoading ? (
+            <div>Loading videos...</div>
+          ) : videos.length > 0 ? (
+            <div className="videos-grid">
+              {videos.map((video, index) => (
+                <div
+                  key={video.id || index}
+                  className="video-card"
+                  style={{ display: 'flex', marginBottom: '1rem', gap: '1rem', alignItems: "center" }}
+                  onClick={() => setSelectedVideo(video)}
+                >
+                  <div className="video-thumbnail" style={{ width: "30%", height: '100px', overflow: "hidden", borderRadius: '9px' }}>
+                    <img src={video.thumbnail || "/Images/video-placeholder.png"} alt={video.title} style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
+                  </div>
+                  <div className="video-info" style={{ width: '70%' }}>
+                    <h4 style={{ fontFamily: 'Montserrat', fontSize: '20px', fontWeight: '700' }}>{video.title}</h4>
+                    <button
+                      style={{ backgroundColor: '#FBD63C', border: 'none', fontFamily: "Montserrat", fontWeight: '600', fontSize: '14px', padding: '5px 20px', borderRadius: '8px' }}
+                      onClick={() => {
+                        setSelectedVideo(video);
+                        fetchAssessmentQuestions(selectedAssessment, selectedAssessmentModule.module, video.title);
+                      }}
+                    >
+                      Start Assessment
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div>No videos available for this module.</div>
+          )}
+        </div>
+      );
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < quizData.length - 1) {
@@ -786,94 +853,116 @@ const MyMockDetails = () => {
                                         )
                                     ) : activeSubCategory === 'Assessment Test' ? (
                                         selectedAssessment ? (
-                                            <div>
-                                                {selectedAssessmentModule && quizData ? (
-                                                    <>
-                                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
-                                                            <div className="">
-                                                                <FaArrowLeft
-                                                                    className="back-btn"
-                                                                    onClick={() => {
-                                                                        setSelectedAssessmentModule(null);
-                                                                        setQuizData([]);
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <h4 style={{ margin: '0', padding: '0' }}>{selectedAssessmentModule.title}</h4>
-                                                        </div>
-                                                        {renderQuiz()}
-                                                    </>
+                                          <div>
+                                            {selectedAssessmentModule ? (
+                                              selectedVideo ? (
+                                                quizData.length > 0 ? (
+                                                  <>
+                                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
+                                                      <div className="">
+                                                        <FaArrowLeft
+                                                          className="back-btn"
+                                                          onClick={() => {
+                                                            setSelectedVideo(null);
+                                                            setQuizData([]);
+                                                          }}
+                                                        />
+                                                      </div>
+                                                      <h4 style={{ margin: '0', padding: '0' }}>{selectedVideo.title}</h4>
+                                                    </div>
+                                                    {renderQuiz()}
+                                                  </>
                                                 ) : (
-                                                    <>
-                                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
-                                                            <div className="">
-                                                                <FaArrowLeft
-                                                                    className="back-btn"
-                                                                    onClick={() => setSelectedAssessment(null)}
-                                                                />
-                                                            </div>
-                                                            <h4 style={{ margin: '0', padding: '0' }}>Assessment Modules</h4>
-                                                        </div>
-                                                        {loadingModules ? (
-                                                            <div>Loading modules...</div>
-                                                        ) : moduleError ? (
-                                                            <div>Error loading modules: {moduleError}</div>
-                                                        ) : paperModules.length > 0 ? (
-                                                            paperModules.map((module, index) => (
-                                                                <div
-                                                                    className="module-card"
-                                                                    id='submoduleCard'
-                                                                    key={module.id || index}
-                                                                    onClick={() => handleAssessmentModuleSelect(module)}
-                                                                >
-                                                                    <div className="module-card-left">
-                                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
-                                                                        <p>{module.course} - {module.department}</p>
-                                                                    </div>
-                                                                    <div className="module-card-right">
-                                                                        <img src="/Images/Module-icon.png" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        ) : (
-                                                            <div>No modules available for this paper.</div>
-                                                        )}
-                                                    </>
+                                                  <div>No questions available for this video.</div>
+                                                )
+                                              ) : (
+                                                <>
+                                                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
+                                                    <div className="">
+                                                      <FaArrowLeft
+                                                        className="back-btn"
+                                                        onClick={() => {
+                                                          setSelectedAssessmentModule(null);
+                                                          setVideos([]);
+                                                        }}
+                                                      />
+                                                    </div>
+                                                    <h4 style={{ margin: '0', padding: '0' }}>{selectedAssessmentModule.title}</h4>
+                                                  </div>
+                                                  {renderVideos()}
+                                                </>
+                                              )
+                                            ) : (
+                                              <>
+                                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px', gap: '10px' }}>
+                                                  <div className="">
+                                                    <FaArrowLeft
+                                                      className="back-btn"
+                                                      onClick={() => setSelectedAssessment(null)}
+                                                    />
+                                                  </div>
+                                                  <h4 style={{ margin: '0', padding: '0' }}>Assessment Modules</h4>
+                                                </div>
+                                                {loadingModules ? (
+                                                  <div>Loading modules...</div>
+                                                ) : moduleError ? (
+                                                  <div>Error loading modules: {moduleError}</div>
+                                                ) : paperModules.length > 0 ? (
+                                                  paperModules.map((module, index) => (
+                                                    <div
+                                                      className="module-card"
+                                                      id='submoduleCard'
+                                                      key={module.id || index}
+                                                      onClick={() => handleAssessmentModuleSelect(module)}
+                                                    >
+                                                      <div className="module-card-left">
+                                                        <h4 className="module-title">Module {index + 1} : {module.title}</h4>
+                                                        <p>{module.course} - {module.department}</p>
+                                                      </div>
+                                                      <div className="module-card-right">
+                                                        <img src="/Images/Module-icon.png" alt="" />
+                                                      </div>
+                                                    </div>
+                                                  ))
+                                                ) : (
+                                                  <div>No modules available for this paper.</div>
                                                 )}
-                                            </div>
+                                              </>
+                                            )}
+                                          </div>
                                         ) : (
-                                            <div>
-                                                {loadingPapers ? (
-                                                    <div>Loading papers...</div>
-                                                ) : paperError ? (
-                                                    <div>Error loading papers: {paperError}</div>
-                                                ) : purchasedPapers.length > 0 ? (
-                                                    purchasedPapers.map((paper) => (
-                                                        <div
-                                                            className="module-card"
-                                                            key={paper.id}
-                                                            onClick={() => handleAssessmentSelect(paper)}
-                                                        >
-                                                            <div className="module-card-left">
-                                                                <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
-                                                                <p>Assessment Test</p>
-                                                                <div className="button-heart">
-                                                                    <button>
-                                                                        Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <div className="module-card-right">
-                                                                <img src="/Images/Module-icon.png" alt="" />
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div>No purchased papers available.</div>
-                                                )}
-                                            </div>
+                                          <div>
+                                            {loadingPapers ? (
+                                              <div>Loading papers...</div>
+                                            ) : paperError ? (
+                                              <div>Error loading papers: {paperError}</div>
+                                            ) : purchasedPapers.length > 0 ? (
+                                              purchasedPapers.map((paper) => (
+                                                <div
+                                                  className="module-card"
+                                                  key={paper.id}
+                                                  onClick={() => handleAssessmentSelect(paper)}
+                                                >
+                                                  <div className="module-card-left">
+                                                    <h4 className="module-title">{paper.title || paper.paperTitle}</h4>
+                                                    <p>Assessment Test</p>
+                                                    <div className="button-heart">
+                                                      <button>
+                                                        Start Assessment <MdOutlineRemoveRedEye style={{ fontSize: '14px' }} />
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                  <div className="module-card-right">
+                                                    <img src="/Images/Module-icon.png" alt="" />
+                                                  </div>
+                                                </div>
+                                              ))
+                                            ) : (
+                                              <div>No purchased papers available.</div>
+                                            )}
+                                          </div>
                                         )
-                                    ) : null}
+                                      ) : null}
                                 </div>
                             )}
                         </div>

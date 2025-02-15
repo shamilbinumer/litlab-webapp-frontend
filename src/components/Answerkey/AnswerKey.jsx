@@ -47,30 +47,50 @@ const AnswerKey = () => {
                 const paperId = searchParams.get('paperId');
                 const module = searchParams.get('module');
                 const examType = searchParams.get('examType');
-    
+                const tutorialTitle = searchParams.get('tutorialTitle');
+
                 if (!paperId || !module) throw new Error('Missing parameters');
-    
+
                 const authToken = localStorage.getItem('authToken');
                 if (!authToken) throw new Error('No authentication token found');
-    
+
                 // Determine API endpoint based on exam type
-                const apiEndpoint = examType === 'weekly' 
-                    ? `${baseUrl}/api/fetch-weakly-chellange/${paperId}/${module}`
-                    : `${baseUrl}/api/fetch-special-exam/${paperId}/${module}`;
-    
+                const apiEndpoint =
+                    examType === 'weekly'
+                        ? `${baseUrl}/api/fetch-weakly-chellange/${paperId}/${module}`
+                        : examType === 'special'
+                            ? `${baseUrl}/api/fetch-special-exam/${paperId}/${module}`
+                            : examType === 'assessment'
+                                ? `${baseUrl}/api/fetch-video-assessment/${paperId}/${tutorialTitle}`
+                                : null;
+
+                if (!apiEndpoint) throw new Error('Invalid exam type');
+
                 const response = await axios.get(
                     apiEndpoint,
                     { headers: { 'Authorization': `Bearer ${authToken}` } }
                 );
-    
-                const data = response.data;
-                console.log('API Response:', data);
-    
-                if (Array.isArray(data) && data.length > 0) {
-                    const validQuestions = (data[0]?.questions || []).filter(q => !q.delete);
-                    console.log('Valid Questions:', validQuestions);
+
+                const responseData = response.data;
+                console.log('API Response:', responseData);
+
+                // Handle the response data based on exam type
+                let fetchedQuestions = [];
+                if (examType === 'assessment') {
+                    // For assessment type, questions are nested in the first object of the data array
+                    fetchedQuestions = responseData.data[0]?.questions || [];
+                } else if (examType === 'weekly' || examType === 'special') {
+                    // For weekly and special types, check if questions are nested in `data` or directly in the response
+                    fetchedQuestions = responseData.data?.questions || responseData.questions || [];
+                }
+
+                // Filter out deleted questions
+                const validQuestions = fetchedQuestions.filter(q => !q.delete);
+                console.log('Valid Questions:', validQuestions);
+
+                if (validQuestions.length > 0) {
                     setQuestions(validQuestions);
-                    setData(data);
+                    setData(responseData);
                 } else {
                     setQuestions([]);
                 }
@@ -81,10 +101,9 @@ const AnswerKey = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchData();
     }, [searchParams]);
-
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -146,23 +165,23 @@ const AnswerKey = () => {
                                         ))}
                                     </div>
                                 </div>
-                               
+
 
                             </div>
                             <div className="navigation-buttons">
-                                    <button
-                                        onClick={handlePrevQuestion}
-                                        disabled={currentQuestionIndex === 0}
-                                    >
-                                        Prev
-                                    </button>
-                                    <button
-                                        onClick={handleNextQuestion}
-                                        disabled={currentQuestionIndex === questions.length - 1}
-                                    >
-                                        Next
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={handlePrevQuestion}
+                                    disabled={currentQuestionIndex === 0}
+                                >
+                                    Prev
+                                </button>
+                                <button
+                                    onClick={handleNextQuestion}
+                                    disabled={currentQuestionIndex === questions.length - 1}
+                                >
+                                    Next
+                                </button>
+                            </div>
 
                         </div>
 

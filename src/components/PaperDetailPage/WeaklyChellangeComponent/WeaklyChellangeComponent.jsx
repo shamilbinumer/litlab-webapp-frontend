@@ -264,6 +264,7 @@ const WeeklyChallenge = ({ paperId, userDetails, isAccessible, onPurchaseClick }
       answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
       (answeredQuestions.length || 1)
     );
+    const examType ='weekly'
   
     const addMockTest = async () => {
       try {
@@ -302,7 +303,7 @@ const WeeklyChallenge = ({ paperId, userDetails, isAccessible, onPurchaseClick }
     };
     addMockTest();
   
-    navigate(`/quiz-analysis?paperId=${paperId}&moduleId=${selectedModule.id}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
+    navigate(`/quiz-analysis?paperId=${paperId}&moduleId=${selectedModule.id}&module=${selectedModule?.module}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}&examType=${examType}`);
   };
 
   const getOptionStyle = (optionText) => {

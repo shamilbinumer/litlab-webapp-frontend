@@ -83,7 +83,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
         }
 
         const data = await response.json();
-        
+
         if (Array.isArray(data) && data.length > 0) {
           setPaperDetails(data[0]);
           const questionsList = data[0]?.questions || [];
@@ -136,8 +136,8 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
     }
 
     const isModuleSubmitted = userDetails?.mockTestResult?.some(
-      result => 
-        result.module === module.module && 
+      result =>
+        result.module === module.module &&
         result.category === "Special Exam" &&
         result.isSubmitted === true
     );
@@ -223,7 +223,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
     };
     setAnswers(newAnswers);
     setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
-    
+
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
@@ -255,19 +255,19 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
     const answeredQuestions = answers.filter(answer => !answer?.ignored);
     const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
     const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
-  
+
     const avgTimePerQuestion = Math.round(
-      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
+      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
       (answeredQuestions.length || 1)
     );
-  
+    const examType = 'special';
     const addMockTest = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
         if (!authToken) {
           throw new Error("No authentication token found");
         }
-    
+
         const mockTestData = {
           category: "Special Exam",
           isSubmitted: true,
@@ -277,9 +277,9 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           paperTitle: paperDetails?.paperTitle || "", // Default to empty string if undefined
           paperType: paperDetails?.paperType || "", // Default to empty string if undefined
         };
-    
+
         console.log("Mock test data:", mockTestData); // Log the data for debugging
-    
+
         const response = await axios.post(
           `${baseUrl}/api/add-mock-test`,
           mockTestData,
@@ -290,7 +290,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
             },
           }
         );
-    
+
         console.log("Mock test added successfully:", response.data);
         alert("Mock test submitted successfully!");
       } catch (error) {
@@ -299,15 +299,15 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
       }
     };
     addMockTest();
-  
-    navigate(`/quiz-analysis?paperId=${paperId}&moduleId=${selectedModule.id}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
+
+    navigate(`/quiz-analysis?paperId=${paperId}&moduleId=${selectedModule.id}&module=${selectedModule?.module}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}&examType=${examType}`);
   };
 
   const getOptionStyle = (optionText) => {
     if (!currentQuestion || selectedOption === null) return {};
-    
+
     const isCorrect = optionText === currentQuestion.correctAnswer;
-    
+
     if (selectedOption === optionText) {
       return {
         backgroundColor: isCorrect ? '#e6ffe6' : '#ffe6e6',
@@ -315,7 +315,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
         color: isCorrect ? '#006600' : '#cc0000'
       };
     }
-    
+
     if (isCorrect) {
       return {
         backgroundColor: '#e6ffe6',
@@ -323,13 +323,13 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
         color: '#006600'
       };
     }
-    
+
     return {};
   };
 
   if (loading) {
     return (
-      <div style={{textAlign: "center"}}>
+      <div style={{ textAlign: "center" }}>
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
         </Box>
@@ -353,15 +353,15 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
         <div className="modules-grid">
           {modules.map((module, index) => {
             const isCompleted = userDetails?.mockTestResult?.some(
-              result => 
-                result.module === module.module && 
+              result =>
+                result.module === module.module &&
                 result.category === "Special Exam" &&
                 result.isSubmitted === true
             );
 
             const completedScore = userDetails?.mockTestResult?.find(
-              result => 
-                result.module === module.module && 
+              result =>
+                result.module === module.module &&
                 result.category === "Special Exam" &&
                 result.isSubmitted === true
             )?.marks || 0;
@@ -378,16 +378,16 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
                 }}
               >
                 {isCompleted && (
-                 <div className="completion-badge" style={{position:'absolute',right:'1rem',top:'10px',backgroundColor:'green',color:"white",padding:"5px 10px",borderRadius:'8px',fontFamily:'Montserrat',fontSize:'13px'}}>
-                 Completed (Score: {completedScore})
-               </div>
+                  <div className="completion-badge" style={{ position: 'absolute', right: '1rem', top: '10px', backgroundColor: 'green', color: "white", padding: "5px 10px", borderRadius: '8px', fontFamily: 'Montserrat', fontSize: '13px' }}>
+                    Completed (Score: {completedScore})
+                  </div>
                 )}
                 <div>
                   <h3>Module {module.module} : {module.title}</h3>
                   {module.description && <p>{module.description}</p>}
                   <div className="button-heart">
                     {moduleAccessible ? (
-                      <button 
+                      <button
                         onClick={() => handleModuleSelect(module, index)}
                         style={{
                           backgroundColor: isCompleted ? '#e0e0e0' : '',
@@ -395,11 +395,11 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
                         }}
                         disabled={isCompleted}
                       >
-                        {isCompleted ? 'Already Completed' : 'Start Exam'} 
+                        {isCompleted ? 'Already Completed' : 'Start Exam'}
                         <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
                       </button>
                     ) : (
-                      <button 
+                      <button
                         className="locked-button"
                         onClick={() => setPurchasePopupIsOpen(true)}
                       >
@@ -424,7 +424,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
   }
 
   if (!questions || questions.length === 0) {
-    return <div style={{textAlign: "center"}}>No questions available</div>;
+    return <div style={{ textAlign: "center" }}>No questions available</div>;
   }
 
   if (!currentQuestion) {
@@ -438,12 +438,12 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
   return (
     <div className="quiz-container">
       <div className="quiz-header">
-        <LuArrowLeft 
-          onClick={handleModuleBack} 
-          style={{fontSize:'30px', cursor:'pointer', marginTop:'-1rem'}} 
+        <LuArrowLeft
+          onClick={handleModuleBack}
+          style={{ fontSize: '30px', cursor: 'pointer', marginTop: '-1rem' }}
         />
         <div className="paper-info">
-          <h2 className='moduleTitle' style={{fontSize:'25px', fontFamily:'Montserrat', fontWeight:'600'}}>
+          <h2 className='moduleTitle' style={{ fontSize: '25px', fontFamily: 'Montserrat', fontWeight: '600' }}>
             {selectedModule.module} : {selectedModule.title}
           </h2>
           {paperDetails && (
