@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { LuArrowLeft, LuLock } from 'react-icons/lu';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { MdOutlineRemoveRedEye, MdPlayCircle } from 'react-icons/md';
-import { FaArrowLeft } from 'react-icons/fa';
-import { LuLock } from 'react-icons/lu';
-import './AssesmentTest.scss';
-import Question from '../Question';
 import PurchasePopup from '../../common/Alerts/PurchasePopup/PurchasePopup';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick }) => {
   const navigate = useNavigate();
@@ -24,12 +23,12 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   const [answers, setAnswers] = useState([]);
   const [ignoredQuestions, setIgnoredQuestions] = useState([]);
   const [timeLeft, setTimeLeft] = useState(60);
+  const [totalTimeLeft, setTotalTimeLeft] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [questionTimes, setQuestionTimes] = useState([]);
   const [videoLoading, setVideoLoading] = useState(false);
   const [purchasePopupIsOpen, setPurchasePopupIsOpen] = useState(false);
 
-  // Helper function to check if a module is accessible
   const isModuleAccessible = (index) => {
     return isAccessible || index < 2;
   };
@@ -67,37 +66,41 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
 
   useEffect(() => {
     if (!selectedVideo) return;
-
+  
     const fetchVideoAssessment = async () => {
       try {
         const authToken = localStorage.getItem('authToken');
         if (!authToken) {
           throw new Error('No authentication token found');
         }
-
+    
         const response = await fetch(`${baseUrl}/api/fetch-video-assessment/${paperId}/${selectedVideo.title}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
             'Content-Type': 'application/json'
           }
         });
-
+    
         if (!response.ok) {
           throw new Error('Failed to fetch video assessment');
         }
-
+    
         const data = await response.json();
-        setQuestions(data.data || []);
+        console.log("Fetched video assessment data:", data); // Log the response
+    
+        // Access the questions array from the first object in the data array
+        const questions = data.data[0]?.questions || [];
+        setQuestions(questions);
+        setTotalTimeLeft(questions.length * 60);
       } catch (err) {
         setError(err.message);
       }
     };
-
     fetchVideoAssessment();
   }, [selectedVideo, paperId]);
 
   useEffect(() => {
-    if (!selectedVideo || !questions.length) return;
+    if (!selectedVideo || !questions || questions.length === 0) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prevTime => {
@@ -108,17 +111,19 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         return prevTime - 1;
       });
 
+      setTotalTimeLeft(prevTotal => {
+        if (prevTotal <= 1) {
+          handleFinish();
+          return 0;
+        }
+        return prevTotal - 1;
+      });
+
       setTotalTime(prev => prev + 1);
     }, 1000);
 
     return () => clearInterval(timer);
   }, [selectedVideo, questions, currentQuestionIndex]);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  };
 
   const handleModuleSelect = async (module, index) => {
     if (!isModuleAccessible(index)) {
@@ -126,7 +131,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
       return;
     }
 
-    // Check if module is already completed
     const isModuleSubmitted = userDetails?.mockTestResult?.some(
       result => 
         result.module === module.module && 
@@ -141,7 +145,14 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
 
     setSelectedModule(module);
     setSelectedVideo(null);
-    resetQuizState();
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setAnswers([]);
+    setIgnoredQuestions([]);
+    setTimeLeft(60);
+    setTotalTime(0);
+    setTotalTimeLeft(0);
+    setQuestionTimes([]);
     setVideoLoading(true);
 
     try {
@@ -150,18 +161,19 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         throw new Error('No authentication token found');
       }
 
-      const videoResponse = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}/${module.module}`, {
+      const response = await fetch(`${baseUrl}/api/fetch-vedio-classes/${paperId}/${module.module}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         }
       });
 
-      if (!videoResponse.ok) {
+      if (!response.ok) {
         throw new Error('Failed to fetch videos');
       }
-      const videoData = await videoResponse.json();
-      setVideos(videoData || []);
+
+      const data = await response.json();
+      setVideos(data || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -169,23 +181,17 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     }
   };
 
-  const handleVideoSelect = async (video) => {
+  const handleVideoSelect = (video) => {
+    if (!video || !video.title) {
+      console.error("Invalid video object:", video);
+      return;
+    }
     setSelectedVideo(video);
-    resetQuizState();
   };
 
   const handleModuleBack = () => {
     setSelectedModule(null);
     setSelectedVideo(null);
-    resetQuizState();
-  };
-
-  const handleVideoBack = () => {
-    setSelectedVideo(null);
-    resetQuizState();
-  };
-
-  const resetQuizState = () => {
     setQuestions([]);
     setCurrentQuestionIndex(0);
     setSelectedOption(null);
@@ -193,10 +199,23 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     setIgnoredQuestions([]);
     setTimeLeft(60);
     setTotalTime(0);
+    setTotalTimeLeft(0);
     setQuestionTimes([]);
   };
 
+  const handleVideoBack = () => {
+    setSelectedVideo(null);
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
   const handleTimesUp = () => {
+    if (!currentQuestion) return;
+
     const newQuestionTimes = [...questionTimes];
     newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
     setQuestionTimes(newQuestionTimes);
@@ -209,48 +228,56 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   };
 
   const handleOptionSelect = (selectedOptionText) => {
+    if (!currentQuestion) return;
+
     setSelectedOption(selectedOptionText);
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = {
+      questionId: currentQuestion.id,
       selected: selectedOptionText,
-      correct: selectedOptionText === currentQuestion?.correctAnswer,
+      correct: selectedOptionText === currentQuestion.correctAnswer,
       ignored: false,
-      timeTaken: 60 - timeLeft
+      timeTaken: 60 - timeLeft,
+      moduleNumber: selectedModule.id
     };
     setAnswers(newAnswers);
   };
 
   const handleIgnore = () => {
+    if (!currentQuestion) return;
+
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = {
+      questionId: currentQuestion.id,
       selected: null,
       correct: false,
       ignored: true,
-      timeTaken: 60 - timeLeft
+      timeTaken: 60 - timeLeft,
+      moduleNumber: selectedModule.id
     };
     setAnswers(newAnswers);
     setIgnoredQuestions([...ignoredQuestions, currentQuestionIndex]);
-
+    
     if (currentQuestionIndex < questions.length - 1) {
-      moveToNextQuestion();
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedOption(null);
+      setTimeLeft(60);
     } else {
       handleFinish();
     }
   };
 
-  const moveToNextQuestion = () => {
-    setCurrentQuestionIndex(prev => prev + 1);
-    setSelectedOption(null);
-    setTimeLeft(60);
-  };
-
   const handleNextQuestion = () => {
+    if (!currentQuestion) return;
+
     const newQuestionTimes = [...questionTimes];
     newQuestionTimes[currentQuestionIndex] = 60 - timeLeft;
     setQuestionTimes(newQuestionTimes);
 
     if (currentQuestionIndex < questions.length - 1) {
-      moveToNextQuestion();
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedOption(null);
+      setTimeLeft(60);
     } else {
       handleFinish();
     }
@@ -262,12 +289,12 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     const answeredQuestions = answers.filter(answer => !answer?.ignored);
     const correctCount = answeredQuestions.filter(answer => answer?.correct).length;
     const wrongCount = answeredQuestions.filter(answer => answer?.correct === false).length;
+  
     const avgTimePerQuestion = Math.round(
-      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) /
+      answeredQuestions.reduce((acc, curr) => acc + (curr?.timeTaken || 0), 0) / 
       (answeredQuestions.length || 1)
     );
-
-    // Add mock test result
+  
     const addMockTest = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
@@ -303,15 +330,15 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
       }
     };
     addMockTest();
-
-    navigate(`/quiz-analysis?paperId=${paperId}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
+  
+    navigate(`/quiz-analysis?paperId=${paperId}&moduleId=${selectedModule.id}&total=${totalQuestions}&correct=${correctCount}&wrong=${wrongCount}&ignored=${ignoredCount}&totalTime=${totalTime}&avgTime=${avgTimePerQuestion}`);
   };
 
   const getOptionStyle = (optionText) => {
-    if (selectedOption === null) return {};
-
-    const isCorrect = optionText === currentQuestion?.correctAnswer;
-
+    if (!currentQuestion || selectedOption === null) return {};
+    
+    const isCorrect = optionText === currentQuestion.correctAnswer;
+    
     if (selectedOption === optionText) {
       return {
         backgroundColor: isCorrect ? '#e6ffe6' : '#ffe6e6',
@@ -319,7 +346,7 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         color: isCorrect ? '#006600' : '#cc0000'
       };
     }
-
+    
     if (isCorrect) {
       return {
         backgroundColor: '#e6ffe6',
@@ -327,13 +354,13 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         color: '#006600'
       };
     }
-
+    
     return {};
   };
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div style={{textAlign: "center"}}>
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
         </Box>
@@ -380,9 +407,9 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
                 }}
               >
                 {isCompleted && (
-                  <div className="completion-badge">
-                    Completed (Score: {completedScore})
-                  </div>
+                 <div className="completion-badge" style={{position:'absolute',right:'1rem',top:'10px',backgroundColor:'green',color:"white",padding:"5px 10px",borderRadius:'8px',fontFamily:'Montserrat',fontSize:'13px'}}>
+                 Completed (Score: {completedScore})
+               </div>
                 )}
                 <div>
                   <h3>Module {module.module} : {module.title}</h3>
@@ -432,12 +459,10 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           <FaArrowLeft onClick={handleModuleBack} style={{cursor:"pointer",fontSize:"25px"}}/>
           <h2 style={{fontFamily:'Montserrat',fontSize:"25px",fontWeight:'600'}}>{selectedModule.title}</h2>
         </div>
-            
         <div className="videos-container">
           <div className="videos-header">
             <h3 style={{fontFamily:'Montserrat',fontSize:"25px"}}>Module Videos</h3>
           </div>
-                
           {videoLoading ? (
             <div>
               <Box sx={{ width: '100%' }}>
@@ -447,16 +472,9 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           ) : (
             <div className="videos-grid">
               {videos?.map((video, index) => (
-                <div 
-                  key={video.id || index} 
-                  className="video-card"
-                  onClick={() => handleVideoSelect(video)}
-                >
+                <div key={video.id || index} className="video-card" onClick={() => handleVideoSelect(video)}>
                   <div className="video-thumbnail">
-                  <img 
-                      src={video.thumbnail || "/Images/video-placeholder.png"} 
-                      alt={video.title}
-                    />
+                    <img src={video.thumbnail || "/Images/video-placeholder.png"} alt={video.title} />
                   </div>
                   <div className="video-info">
                     <h4>{video.title}</h4>
@@ -465,9 +483,7 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
                 </div>
               ))}
               {!videoLoading && videos.length === 0 && (
-                <div className="no-videos">
-                  No videos available for this module
-                </div>
+                <div className="no-videos">No videos available for this module</div>
               )}
             </div>
           )}
@@ -476,15 +492,11 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
-  
   if (!questions || questions.length === 0) {
-    return (
-      <div className="quiz-container">
-        <div className="quiz-content">No questions available for this video</div>
-      </div>
-    );
+    return <div style={{textAlign: "center"}}>No questions available</div>;
   }
+  
+  const currentQuestion = questions[currentQuestionIndex];
 
   if (!currentQuestion) {
     return (
@@ -497,22 +509,72 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   return (
     <div className="quiz-container">
       <div className="quiz-header">
-        <button onClick={handleVideoBack} className="back-button">
-          ← Back to Videos
-        </button>
-        <h2>{selectedVideo.title} - Assessment</h2>
+        <LuArrowLeft 
+          onClick={handleVideoBack} 
+          style={{fontSize:'30px', cursor:'pointer', marginTop:'-1rem'}} 
+        />
+        <div className="paper-info">
+          <h2 className='moduleTitle' style={{fontSize:'25px', fontFamily:'Montserrat', fontWeight:'600'}}>
+            {selectedVideo.title}
+          </h2>
+        </div>
       </div>
-      
-      <Question 
-        currentQuestion={currentQuestion}
-        currentQuestionIndex={currentQuestionIndex}
-        totalQuestions={questions.length}
-        timeLeft={timeLeft}
-        selectedOption={selectedOption}
-        onOptionSelect={handleOptionSelect}
-        onIgnore={handleIgnore}
-        onNext={handleNextQuestion}
-      />
+      <div className="quiz-content">
+        <div className="quiz-header">
+          <div className="timer-container">
+            <div className="total-timer">
+              Total Time: {formatTime(totalTime)}
+            </div>
+          </div>
+          <span>{currentQuestionIndex + 1}/{questions.length}</span>
+        </div>
+        <div className="question">
+          <h3>
+            <span>Qs {currentQuestionIndex + 1} : </span>
+            <p>{currentQuestion.question}</p>
+          </h3>
+          <div className="options">
+            {currentQuestion.options.map((option, index) => (
+              <div
+                key={index}
+                onClick={() => handleOptionSelect(option)}
+                className="option"
+                style={{
+                  cursor: selectedOption ? 'default' : 'pointer',
+                  transition: 'all 0.3s ease',
+                  ...getOptionStyle(option)
+                }}
+              >
+                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                <span>{option}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="buttons">
+          <button
+            className="ignore"
+            onClick={handleIgnore}
+            style={{
+              cursor: 'pointer',
+              opacity: selectedOption ? 0.5 : 1,
+              pointerEvents: selectedOption ? 'none' : 'auto'
+            }}
+          >
+            Ignore
+          </button>
+          <button
+            className="next"
+            onClick={handleNextQuestion}
+            style={{
+              opacity: selectedOption ? 1 : 0.5,
+              cursor: selectedOption ? 'pointer' : 'not-allowed'
+            }}
+          >
+            {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

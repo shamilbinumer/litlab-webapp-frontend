@@ -272,11 +272,13 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           category: "Special Exam",
           isSubmitted: true,
           marks: correctCount,
-          module: selectedModule?.module || 0,
-          moduleTitle: selectedModule?.title || "",
-          paperTitle: paperDetails?.paperTitle || "",
-          paperType: paperDetails?.paperType || "",
+          module: selectedModule?.module || 0, // Default to 0 if undefined
+          moduleTitle: selectedModule?.title || "", // Default to empty string if undefined
+          paperTitle: paperDetails?.paperTitle || "", // Default to empty string if undefined
+          paperType: paperDetails?.paperType || "", // Default to empty string if undefined
         };
+    
+        console.log("Mock test data:", mockTestData); // Log the data for debugging
     
         const response = await axios.post(
           `${baseUrl}/api/add-mock-test`,

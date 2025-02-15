@@ -154,6 +154,9 @@ const MyProfile = () => {
                 accept="image/*"
             />
             <div className="my-profile-main">
+                <div className="mobile-background-img">
+                    <img src="/Images/Ellipse 70.png" alt="img" />
+                </div>
                 <div className="my-profile-left"><SideNave /></div>
                 <div className="my-profile-right">
                     <div className="row right-main">

@@ -40,7 +40,9 @@ const Help = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
-
+                    <div className="mobile-round-image">
+                        <img src="/Images/backgroundRond.png" alt="" />
+                    </div>
                     <div className="help-wrapper">
                         <button className="back-button">
                             <FaArrowLeft />
@@ -56,17 +58,17 @@ const Help = () => {
                             <option>Other</option>
                         </select>
 
-
+                        <label>Description</label>
                         <textarea placeholder="Describe your issue..."></textarea>
 
-
+                        <label>Upload files </label>
                         <div className="upload-box">
                             <p>upload File</p>  <img src="/Images/upload.png" alt="" />
                             <input type="file" />
                         </div>
 
                         <button type="submit" className="submit-button">
-                            Submit  <FaArrowRight/>
+                            Submit  <FaArrowRight />
                         </button>
                     </form>
                 </div>
