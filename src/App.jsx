@@ -17,6 +17,7 @@ import Cart from "./components/Cart/Cart"
 import Instructions from "./components/Instructions/Instructions"
 import YourFavorite from "./components/YourFavorites/YourFavorite"
 import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetail"
+import MobileIndexPage from "./components/IndexPage/MobileIndexPage/MobileIndexPage"
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="/instructions" Component={Instructions} />
           <Route path="/Your-Favorites" Component={YourFavorite} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
+          <Route path="/mobile-indexpage" Component={MobileIndexPage} />
         </Routes>
       </HashRouter>
     </>
