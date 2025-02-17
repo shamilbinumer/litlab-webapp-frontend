@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import './Cart.scss';
+import './SeparateCart.scss';
 import { FaArrowLeft } from 'react-icons/fa6';
 import { FiEye } from 'react-icons/fi';
-import SideNave from '../common/SideNav/SideNave';
-import baseUrl from '../../baseUrl';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { RiDeleteBinLine } from 'react-icons/ri';
-import ConfirmationAlert from '../common/Alerts/ConformationAlert/ConformationAlert';
-import PaperCountAlert from '../common/Alerts/PaperCountAlert/PaperCountAlert';
-import OrderPlacedAlert from '../common/Alerts/OrderPlacedAlert/OrderPlacedAlert';
+import ConfirmationAlert from '../..//common/Alerts/ConformationAlert/ConformationAlert';
+import PaperCountAlert from '../../common/Alerts/PaperCountAlert/PaperCountAlert';
+import OrderPlacedAlert from '../../common/Alerts/OrderPlacedAlert/OrderPlacedAlert';
 import axios from 'axios';
-import PreLoader from '../common/PreLoader/PreLoader';
+import SideNave from '../../common/SideNav/SideNave';
+import baseUrl from '../../../baseUrl';
+import PreLoader from '../../common/PreLoader/PreLoader';
 
-const Cart = () => {
+const SeparateCart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -289,8 +289,8 @@ const Cart = () => {
     }
 
     return (
-       <div className="cartMainWrapper">
-         <div className="cart-container">
+        <div className="sepparateCartContainer">
+            <div className="cart-container">
             <div className="left-side">
                 <SideNave />
             </div>
@@ -352,13 +352,7 @@ const Cart = () => {
                     <div className="checkout-section">
                       
                         <div className="checkout-button">
-                            <button 
-                                onClick={handleCheckout}
-                                disabled={checkoutLoading || paymentProcessing}
-                                className={`${checkoutLoading || paymentProcessing ? 'loading' : ''}`}
-                            >
-                                {checkoutLoading || paymentProcessing ? 'Processing...' : 'Check out'}
-                            </button>
+                          <Link to='/premium-plans'><button>Check out</button></Link>
                         </div>
                     </div>
                 )}
@@ -392,8 +386,8 @@ const Cart = () => {
                 onClose={handleOrderSuccessClose}
             />
         </div>
-       </div>
+        </div>
     );
 };
 
-export default Cart;
+export default SeparateCart;

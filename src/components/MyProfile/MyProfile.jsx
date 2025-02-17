@@ -19,6 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const MyProfile = () => {
     const [user, setUser] = useState(null);
@@ -30,11 +31,54 @@ const MyProfile = () => {
     });
     const [updateLoading, setUpdateLoading] = useState(false);
     const [updateError, setUpdateError] = useState(null);
+    const [imageUploadLoading, setImageUploadLoading] = useState(false);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
+
     const handleCameraClick = () => {
         fileInputRef.current.click();
     };
+
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setImageUploadLoading(true);
+        setError(null);
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                throw new Error('Authentication token not found');
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const response = await axios.put(
+                `${baseUrl}/api/edit-user-image`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                setUser(prev => ({
+                    ...prev,
+                    image: response.data.imageUrl
+                }));
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to upload image');
+        } finally {
+            setImageUploadLoading(false);
+        }
+    };
+
     useEffect(() => {
         checkUserAuthentication();
     }, [navigate]);
@@ -116,7 +160,6 @@ const MyProfile = () => {
                     ...editFormData
                 }));
                 handleCloseModal();
-                // Refresh user data
                 checkUserAuthentication();
             }
         } catch (error) {
@@ -146,12 +189,12 @@ const MyProfile = () => {
 
     return (
         <div className='MyProfileMainWRapper'>
-              {/* Hidden file input */}
-              <input
+            <input
                 type="file"
                 ref={fileInputRef}
                 style={{ display: 'none' }}
                 accept="image/*"
+                onChange={handleImageUpload}
             />
             <div className="my-profile-main">
                 <div className="mobile-background-img">
@@ -162,9 +205,15 @@ const MyProfile = () => {
                     <div className="row right-main">
                         <div className="col-lg-6 profile-contanet-left">
                             <div className="profile-card">
-                            <div className="dp">
-                                    <div style={{ overflow: 'hidden', borderRadius: "50%" }}>
-                                        <img src={user?.image || '/Images/9385289.png'} alt="" />
+                                <div className="dp">
+                                    <div className='dpImage'>
+                                        {imageUploadLoading ? (
+                                            <div className="loading-spinner">
+                                                <CircularProgress />
+                                            </div>
+                                        ) : (
+                                            <img src={user?.image || '/Images/9385289.png'} alt="" />
+                                        )}
                                     </div>
                                     <div 
                                         className="camera-icon"
@@ -196,7 +245,6 @@ const MyProfile = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* Edit Profile Modal */}
                         <Dialog open={isEditModalOpen} onClose={handleCloseModal}>
                             <DialogTitle>Edit Profile</DialogTitle>
                             <form onSubmit={handleSubmit}>
@@ -216,7 +264,6 @@ const MyProfile = () => {
                                         value={editFormData.name}
                                         onChange={handleInputChange}
                                     />
-                               
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleCloseModal}>Cancel</Button>
@@ -256,20 +303,19 @@ const MyProfile = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6 col-6">
-                                   <Link to='/premium-plans'>
-                                   <div className="four-card">
-                                        <div className="card-content">
-                                            <div className="icon-wrapper">
-                                                <IoDiamondOutline className="card-icon" />
+                                    <Link to='/premium-plans'>
+                                        <div className="four-card">
+                                            <div className="card-content">
+                                                <div className="icon-wrapper">
+                                                    <IoDiamondOutline className="card-icon" />
+                                                </div>
+                                                <h3 className="card-title">Get Premium</h3>
                                             </div>
-                                            <h3 className="card-title">Get Premium</h3>
                                         </div>
-                                    </div>
-                                   </Link>
+                                    </Link>
                                 </div>
                                 <div className="col-lg-6 col-6">
                                     <Link to='/my-mock-details'>
-
                                         <div className="four-card">
                                             <div className="card-content">
                                                 <div className="icon-wrapper">

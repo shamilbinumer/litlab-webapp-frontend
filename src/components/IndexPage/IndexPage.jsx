@@ -14,9 +14,10 @@ import SeeAllContent from './SeeAllContent/SeeAllContent';
 import './IndexPage.scss';
 import { TbShoppingCartCopy } from 'react-icons/tb';
 import AddedToCart from '../common/Alerts/AddedTocart/AddedToCart';
+import PreLoader from '../common/PreLoader/PreLoader';
 
 const IndexPage = () => {
-    const [activePaperType, setActivePaperType] = useState('major');
+    const [activePaperType, setActivePaperType] = useState('minor');
     const [loadingPapers, setLoadingPapers] = useState(false);
     const [papers, setPapers] = useState([]);
     const [filteredPapers, setFilteredPapers] = useState([]);

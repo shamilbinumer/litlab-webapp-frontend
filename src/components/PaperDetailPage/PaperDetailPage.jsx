@@ -17,6 +17,7 @@ import AssessmentTest from './AssistmentTest/AssistmentTest';
 import axios from 'axios';
 import ModalQuestanPaper from './ModalQuestanPaper';
 import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
+import PreLoader from '../common/PreLoader/PreLoader';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -103,9 +104,8 @@ const PaperDetailPage = () => {
     if (loading) {
         return (
             <div>
-                <Box sx={{ width: '100%' }}>
-                    <LinearProgress />
-                </Box>
+                               <PreLoader/>
+
             </div>
         );
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
@@ -8,10 +8,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const PremiumAccess = () => {
-    const [activeCard, setActiveCard] = useState('diamond');
-    const [cardOrder, setCardOrder] = useState([]);
+    const [activeCard, setActiveCard] = useState('silver');
     const [isAnimating, setIsAnimating] = useState(false);
     const navigate = useNavigate();
+
     const settings = {
         dots: false,
         infinite: true,
@@ -19,12 +19,8 @@ const PremiumAccess = () => {
         slidesToShow: 3,
         slidesToScroll: 1,
         centerMode: true,
-        Autoplay:false,
+        Autoplay: false,
         centerPadding: '0',
-        // beforeChange: (current, next) => {
-        //     const cardId = cards[next] ? cards[next].id : '';
-        //     setActiveCard(cardId);
-        // },
         responsive: [
             {
                 breakpoint: 993,
@@ -55,6 +51,7 @@ const PremiumAccess = () => {
             }
         ]
     };
+
     const cards = [
         {
             id: 'silver',
@@ -62,6 +59,7 @@ const PremiumAccess = () => {
             features: ['Study Notes'],
             price: 369,
             originalPrice: 599,
+            isAvailable: true
         },
         {
             id: 'diamond',
@@ -69,7 +67,8 @@ const PremiumAccess = () => {
             features: ['Study Notes', 'Recorded & Audio Classes', 'Expert Mentorship'],
             price: 4999,
             originalPrice: 6999,
-            discount: 'For you 50% OFF',
+            discount: 'Launching Soon',
+            isAvailable: false
         },
         {
             id: 'gold',
@@ -77,47 +76,19 @@ const PremiumAccess = () => {
             features: ['Study Notes', 'Recorded Classes'],
             price: 999,
             originalPrice: 2000,
+            isAvailable: true
         },
     ];
 
-
-
-    const updateCardOrder = (newActiveId, isInitial = false) => {
-        if (!isInitial && isAnimating) return;
-
-        const currentIndex = cards.findIndex(card => card.id === newActiveId);
-        let newOrder = [];
-
-        // Calculate the new order based on the clicked card
-        for (let i = 0; i < cards.length; i++) {
-            const index = (currentIndex - 1 + i + cards.length) % cards.length;
-            newOrder.push(cards[index].id);
-        }
-
-        if (!isInitial) {
-            setIsAnimating(true);
-            setTimeout(() => {
-                setIsAnimating(false);
-            }, 600); // Match this with your CSS transition duration
-        }
-
-        setCardOrder(newOrder);
-    };
-
     const handleCardClick = (cardId) => {
-        if (cardId === activeCard || isAnimating) return;
-
+        if (cardId === 'diamond' || cardId === activeCard || isAnimating) return;
         setActiveCard(cardId);
-        updateCardOrder(cardId);
     };
 
-    const getCardPosition = (index) => {
-        const positions = ['left', 'center', 'right'];
-        return positions[index];
-    };
-
-    const handleContinue = () => {
-        navigate(`/plan-detail-page?plan=${activeCard}`);
+    const handleExploreMore = (card) => {
+        if (card.isAvailable) {
+            navigate(`/plan-detail-page?plan=${card.id}`);
+        }
     };
 
     return (
@@ -135,10 +106,10 @@ const PremiumAccess = () => {
                 </div>
                 <div className='pricing-cards'>
                     <Slider {...settings}>
-                        {cards.map((card, index) => (
+                        {cards.map((card) => (
                             <div key={card.id} className="slide-item">
                                 <div
-                                    className={`card ${card.id === activeCard ? 'active' : ''}`}
+                                    className={`card ${card.id === activeCard ? 'active' : ''} ${!card.isAvailable ? 'disabled' : ''}`}
                                     onClick={() => handleCardClick(card.id)}
                                 >
                                     {card.discount && (
@@ -161,13 +132,23 @@ const PremiumAccess = () => {
                                             <span className="strike">₹{card.originalPrice}/6 Papers</span>
                                         </div>
                                     </div>
-                                    <Link to="" className="explore-btn">Explore More</Link>
+                                    {card.isAvailable ? (
+                                        <div 
+                                            className="explore-btn"
+                                            onClick={() => handleExploreMore(card)}
+                                        >
+                                            Explore More
+                                        </div>
+                                    ) : (
+                                        <div className="explore-btn disabled">
+                                            Coming Soon
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </Slider>
                 </div>
-                <button className="continue-btn" onClick={handleContinue}>Continue</button>
             </div>
         </div>
     );

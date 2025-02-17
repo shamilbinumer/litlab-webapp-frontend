@@ -14,6 +14,7 @@ import PremiumAccess from "./components/PremiumAccess/PremiumAccess"
 import PlanDetailPage from "./components/PlanDetailPage/PlanDetailPage"
 import AnswerKey from "./components/Answerkey/AnswerKey"
 import Cart from "./components/Cart/Cart"
+import SeparateCart from "./components/Cart/SeparateCart/SeparateCart"
 import Instructions from "./components/Instructions/Instructions"
 import YourFavorite from "./components/YourFavorites/YourFavorite"
 import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetail"
@@ -40,6 +41,7 @@ function App() {
           <Route path="/plan-detail-page" Component={PlanDetailPage} />
           <Route path="/answer-key" Component={AnswerKey} />
           <Route path="/cart/:category/:amount/:paperCount" Component={Cart} />
+          <Route path="/cart" Component={SeparateCart} />
           <Route path="/instructions" Component={Instructions} />
           <Route path="/Your-Favorites" Component={YourFavorite} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />

@@ -1,4 +1,4 @@
-.cartMainWrapper{
+.sepparateCartContainer{
     .cart-container {
         margin: 0 auto;
         padding: 20px;
@@ -63,10 +63,7 @@
     
             .cart-icon {
                 position: relative;
-                font-size: 15px !important;
-                img{
-                    width: 50px;
-                }
+                font-size: 15px;
     
                 .cart-count {
                     position: absolute;
