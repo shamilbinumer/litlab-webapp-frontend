@@ -16,9 +16,9 @@ import AnswerKey from "./components/Answerkey/AnswerKey"
 import Cart from "./components/Cart/Cart"
 import SeparateCart from "./components/Cart/SeparateCart/SeparateCart"
 import Instructions from "./components/Instructions/Instructions"
-import YourFavorite from "./components/YourFavorites/YourFavorite"
 import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetail"
-import MobileIndexPage from "./components/IndexPage/MobileIndexPage/MobileIndexPage"
+import SeeAllContent from "./components/IndexPage/SeeAllContent/SeeAllContent"
+import MyFavorites from "./components/MyFavorites/MyFavorites"
 
 function App() {
 
@@ -36,6 +36,7 @@ function App() {
           <Route path="/quiz-analysis" Component={QuizAnalysis} />
           <Route path="/my-mock-details" Component={MyMockDetails} />
           <Route path="/my-course-details" Component={MyCourses} />
+          <Route path="/my-favourites" Component={MyFavorites} />
           <Route path="/help" Component={Help} />
           <Route path="/premium-plans" Component={PremiumAccess} />
           <Route path="/plan-detail-page" Component={PlanDetailPage} />
@@ -43,9 +44,8 @@ function App() {
           <Route path="/cart/:category/:amount/:paperCount" Component={Cart} />
           <Route path="/cart" Component={SeparateCart} />
           <Route path="/instructions" Component={Instructions} />
-          <Route path="/Your-Favorites" Component={YourFavorite} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
-          <Route path="/mobile-indexpage" Component={MobileIndexPage} />
+          <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
         </Routes>
       </HashRouter>
     </>

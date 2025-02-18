@@ -1,8 +1,8 @@
-.sepparateCartContainer{
+.sepparateCartContainer {
     .cart-container {
         margin: 0 auto;
         padding: 20px;
-    
+
         .left-side {
             width: 14%;
             position: fixed;
@@ -12,38 +12,42 @@
             overflow-y: auto;
             z-index: 1000;
         }
-    
+
         .right-side {
             padding: 1rem;
             position: relative;
             width: 86%;
             margin-left: 14%;
-    .empty-cart{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        p{
-            font-family: Montserrat;
-            font-weight: 500;
-            font-size: 20px;
-        }
-        button{
-            background-color: #6BCCE5;
-            border: 1px solid #6BCCE5;
-            font-family: Montserrat;
-            padding: 9px 20px;
-            font-weight: 600;
-            color: white;
-            border-radius: 10px;
-        }
-    }
+
+            .empty-cart {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                p {
+                    font-family: Montserrat;
+                    font-weight: 500;
+                    font-size: 20px;
+                }
+
+                button {
+                    background-color: #6BCCE5;
+                    border: 1px solid #6BCCE5;
+                    font-family: Montserrat;
+                    padding: 9px 20px;
+                    font-weight: 600;
+                    color: white;
+                    border-radius: 10px;
+                }
+            }
+
             .cart-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 30px;
+                margin-bottom: 10px;
             }
-    
+
             .back-button {
                 border: none;
                 background: none;
@@ -58,13 +62,17 @@
                 font-size: 30.05px;
                 line-height: 72.87px;
                 letter-spacing: -2.28px;
-    
+
             }
-    
+
             .cart-icon {
                 position: relative;
                 font-size: 15px;
-    
+
+                img {
+                    width: 30px;
+                }
+
                 .cart-count {
                     position: absolute;
                     top: -8px;
@@ -80,7 +88,7 @@
                     justify-content: center;
                 }
             }
-    
+
             .modules-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
@@ -89,7 +97,7 @@
                 margin: auto;
                 margin-bottom: 30px;
             }
-    
+
             .module-card {
                 background: #6BCCE5;
                 border-radius: 10px;
@@ -102,11 +110,11 @@
                 height: 190.69px;
                 transition: transform 0.2s;
                 position: relative;
-    
+
                 &:hover {
                     transform: translateY(-2px);
                 }
-    
+
                 .module-details {
                     span {
                         font-family: Montserrat;
@@ -117,14 +125,14 @@
                         color: black;
                     }
                 }
-    
+
                 .delete-btn {
                     font-size: 26px;
                     text-align: center;
                     margin: auto;
                     cursor: pointer;
                 }
-    
+
                 .read-more-btn button {
                     font-family: Montserrat;
                     font-weight: 700;
@@ -136,10 +144,10 @@
                     padding: 4px 8px;
                     border-radius: 5px;
                     background-color: #FBD63C;
-    
+
                 }
             }
-    
+
             .module-content {
                 display: flex;
                 justify-content: space-between;
@@ -147,11 +155,11 @@
                 padding: 0px 15px 0 0;
                 align-items: flex-start;
             }
-    
+
             .module-text {
                 flex: 1;
             }
-    
+
             .module-title {
                 font-family: Montserrat;
                 font-weight: 700;
@@ -161,7 +169,7 @@
                 color: black;
                 width: 90%;
             }
-    
+
             .module-subtitle {
                 font-family: Montserrat;
                 font-weight: 700;
@@ -170,7 +178,7 @@
                 letter-spacing: -0.4px;
                 color: black;
             }
-    
+
             .checklist-icon {
                 position: absolute;
                 right: 1rem;
@@ -181,7 +189,7 @@
                 align-items: center;
                 gap: 1rem;
             }
-    
+
             .checkout-button {
                 width: 20%;
                 padding: 15px;
@@ -195,10 +203,10 @@
                 font-size: 25.26px;
                 line-height: 23.23px;
                 letter-spacing: -0.73px;
-    
+
                 cursor: pointer;
                 transition: background-color 0.2s;
-    
+
                 button {
                     border: none;
                     background-color: transparent;
@@ -206,59 +214,59 @@
                     font-weight: 600;
                     font-size: 25.26px;
                     color: white;
-    
+
                     line-height: 23.23px;
                     letter-spacing: -0.73px;
                 }
-    
+
                 &:hover {
                     background-color: darken(#2ECC71, 10%);
                 }
             }
         }
-    
+
         @media (max-width: 575px) {
             .right-side {
                 width: 100% !important;
                 margin-left: 0 !important;
                 margin-bottom: 3rem;
             }
-    
+
             .modules-grid {
                 grid-template-columns: 1fr !important;
             }
-    
+
             .checkout-button {
                 width: 70% !important;
-    
+
                 button {
                     font-size: 20px !important;
                 }
             }
         }
-    
+
         @media (min-width: 575px) and (max-width: 993px) {
             .right-side {
                 width: 100% !important;
                 margin-left: 0 !important;
                 margin-bottom: 3rem;
             }
-    
+
             .checkout-button {
                 width: 70% !important;
-    
+
                 button {
                     font-size: 20px !important;
                 }
             }
         }
-    
+
         @media (min-width: 575px) and (max-width: 1200px) {
-    
-    
+
+
             .checkout-button {
                 width: 40% !important;
-    
+
                 button {
                     font-size: 20px !important;
                 }

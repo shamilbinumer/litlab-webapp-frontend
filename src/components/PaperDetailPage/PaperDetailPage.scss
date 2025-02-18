@@ -104,7 +104,7 @@
             justify-content: center;
             align-items: center;
             color: white;
-
+            z-index: 9999999999999999999999999;
         }
 
         .paper-title {
@@ -142,6 +142,7 @@
                         font-weight: 700;
                         line-height: 13.25px;
                         letter-spacing: -0.37582165002822876px;
+                        margin-bottom: 1rem;
                     }
 
                     p {
@@ -690,7 +691,7 @@
                                     }
 
                                     .heart-icon {
-                                        font-size: 25px;
+                                        font-size: 25px !important;
                                     }
                                 }
                             }
@@ -728,7 +729,7 @@
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-
+       
         .user-pro {
             display: none !important;
         }
@@ -853,6 +854,7 @@
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
+       
 
         .user-pro {
             display: none !important;

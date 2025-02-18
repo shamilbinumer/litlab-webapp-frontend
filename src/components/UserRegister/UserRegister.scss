@@ -1,5 +1,9 @@
 .UserRegisterMainWrapper {
     .main {
+        overflow-x: hidden;
+        .mobile-header{
+            display: none;
+        }
         .left-side {
             padding-left: 9rem;
             display: flex;
@@ -171,12 +175,26 @@
         }
     }
     @media(max-width:991px){
+        .mobile-header{
+            display: block !important;
+            position: relative;
+            height: 100px;
+            // overflow-x: hidden;
+            .mobile-navlogo{
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+            }
+            .vector-wrapper{
+                position: absolute;
+                right: -40px;
+                top: 1rem;
+            }
+        }
         .left-side {
             display: none !important;
             height: auto !important;
         }
-        // .input-wrapper {
-        //     width: 100% !important;
-        // }
+     
     }
 }

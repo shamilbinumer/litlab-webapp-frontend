@@ -1,7 +1,6 @@
 // ConfirmationAlert.jsx
 import { useEffect } from 'react';
 import './ConformationAlert.scss'
-import { PiWarningCircleLight } from 'react-icons/pi';
 
 const ConfirmationAlert = ({ 
     message = "Are you sure you want to proceed?",
@@ -27,10 +26,6 @@ const ConfirmationAlert = ({
     return (
         <div className="confirmation-alert-overlay">
             <div className="confirmation-alert">
-                {/* <div className="alert-icon">
-                    <PiWarningCircleLight />
-                </div> */}
-                
                 <div className="alert-content">
                     <p className="alert-message">{message}</p>
                     
@@ -44,9 +39,9 @@ const ConfirmationAlert = ({
                         <button 
                             className="confirm-button"
                             onClick={onConfirm}
+                            disabled={paymentProcessing}
                         >
                             {paymentProcessing?'Loading':'Yes, proceed'}
-                            {/* Yes, proceed */}
                         </button>
                     </div>
                 </div>

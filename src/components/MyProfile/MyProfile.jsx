@@ -293,7 +293,8 @@ const MyProfile = () => {
                                     </Link>
                                 </div>
                                 <div className="col-lg-6 col-6">
-                                    <div className="four-card">
+                                   <Link to='/my-favourites'>
+                                   <div className="four-card">
                                         <div className="card-content">
                                             <div className="icon-wrapper">
                                                 <AiOutlineHeart className="card-icon" />
@@ -301,6 +302,7 @@ const MyProfile = () => {
                                             <h3 className="card-title">Favourites</h3>
                                         </div>
                                     </div>
+                                   </Link>
                                 </div>
                                 <div className="col-lg-6 col-6">
                                     <Link to='/premium-plans'>

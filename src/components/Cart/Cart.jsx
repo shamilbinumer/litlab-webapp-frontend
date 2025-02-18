@@ -97,7 +97,7 @@ const Cart = () => {
         try {
             setPaymentProcessing(true);
             const { data } = await axios.post(`${baseUrl}/api/create-order`, {
-                amount: 1
+                amount: finalAmount
             });
 
             const options = {

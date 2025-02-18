@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoCartOutline, IoSearchOutline } from 'react-icons/io5';
-import { IoIosHeartEmpty } from 'react-icons/io';
+import { IoIosHeartEmpty, IoIosHeart } from 'react-icons/io';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -10,13 +11,13 @@ import baseUrl from '../../baseUrl';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
 import MobileIndexPage from './MobileIndexPage/MobileIndexPage';
-import SeeAllContent from './SeeAllContent/SeeAllContent';
 import './IndexPage.scss';
 import { TbShoppingCartCopy } from 'react-icons/tb';
 import AddedToCart from '../common/Alerts/AddedTocart/AddedToCart';
 import PreLoader from '../common/PreLoader/PreLoader';
 
 const IndexPage = () => {
+    const navigate = useNavigate();
     const [activePaperType, setActivePaperType] = useState('minor');
     const [loadingPapers, setLoadingPapers] = useState(false);
     const [papers, setPapers] = useState([]);
@@ -26,8 +27,109 @@ const IndexPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [showCartAlert, setShowCartAlert] = useState(false);
     const [addedItemName, setAddedItemName] = useState('');
-    const navigate = useNavigate();
+    const [wishlistItems, setWishlistItems] = useState([]);
+    const [loadingWishlist, setLoadingWishlist] = useState({});
+    const [wishlistAlert, setWishlistAlert] = useState({ show: false, message: '' });
 
+    const settings = {
+        dots: false,
+        speed: 500,
+        slidesToShow: 1.2,
+        slidesToScroll: 1
+    };
+
+    // Fetch Wishlist Items
+    const fetchWishlistItems = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            const response = await axios.get(`${baseUrl}/api/fetch-wishlist-items`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                setWishlistItems(response.data.wishlist);
+            }
+        } catch (error) {
+            console.error("Error fetching wishlist items:", error);
+        }
+    };
+
+    // Check if item is in wishlist
+    const isInWishlist = (paperId) => {
+        return wishlistItems.some(item => item.id === paperId);
+    };
+
+    // Handle Wishlist Toggle
+    const handleWishlist = async (paperId) => {
+        setLoadingWishlist(prev => ({ ...prev, [paperId]: true }));
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            if (isInWishlist(paperId)) {
+                // Remove from wishlist
+                const response = await axios.delete(`${baseUrl}/api/delete-wishlist-item/${paperId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status === 200) {
+                    await fetchWishlistItems();
+                    setWishlistAlert({
+                        show: true,
+                        message: 'Item removed from wishlist'
+                    });
+                }
+            } else {
+                // Add to wishlist
+                const response = await axios.post(
+                    `${baseUrl}/api/add-to-wishlist`,
+                    {
+                        id: paperId,
+                        category:'paper'
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status === 200) {
+                    await fetchWishlistItems();
+                    setWishlistAlert({
+                        show: true,
+                        message: 'Item added to wishlist'
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error updating wishlist:", error);
+            setWishlistAlert({
+                show: true,
+                message: 'Error updating wishlist'
+            });
+        } finally {
+            setLoadingWishlist(prev => ({ ...prev, [paperId]: false }));
+            setTimeout(() => {
+                setWishlistAlert({ show: false, message: '' });
+            }, 3000);
+        }
+    };
+
+    // Fetch Cart Items
     const fetchCartItems = async () => {
         try {
             const token = localStorage.getItem('authToken');
@@ -41,7 +143,6 @@ const IndexPage = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response.data);
 
             if (response.status === 200) {
                 setCartItems(response.data.cart);
@@ -55,9 +156,9 @@ const IndexPage = () => {
         return cartItems.some(item => item.id === paperId);
     };
 
-    const fetchMajorPapers = async () => {
+    // Fetch Papers based on type
+    const fetchPapers = async (type) => {
         setLoadingPapers(true);
-
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
@@ -65,38 +166,7 @@ const IndexPage = () => {
                 return;
             }
 
-            const response = await axios.get(`${baseUrl}/api/fetch-major-paper`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                console.log(response.data);
-                setPapers(response.data);
-                setFilteredPapers(response.data);
-                console.log(response.data, 'this is paper response');
-            } else {
-                console.error("Error fetching major papers");
-            }
-        } catch (error) {
-            console.error("Error fetching major papers:", error);
-        } finally {
-            setLoadingPapers(false);
-        }
-    };
-
-    const fetchMinorPapers = async () => {
-        setLoadingPapers(true);
-
-        try {
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
-
-            const response = await axios.get(`${baseUrl}/api/fetch-minor-paper`, {
+            const response = await axios.get(`${baseUrl}/api/fetch-${type}-paper`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -105,49 +175,17 @@ const IndexPage = () => {
             if (response.status === 200) {
                 setPapers(response.data);
                 setFilteredPapers(response.data);
-            } else {
-                console.error("Error fetching minor papers");
             }
         } catch (error) {
-            console.error("Error fetching minor papers:", error);
+            console.error(`Error fetching ${type} papers:`, error);
         } finally {
             setLoadingPapers(false);
         }
     };
 
-    const fetchCommonPapers = async () => {
-        setLoadingPapers(true);
-
-        try {
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
-
-            const response = await axios.get(`${baseUrl}/api/fetch-common-paper`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                setPapers(response.data);
-                console.log(response.data, 'this is common paper response');
-                setFilteredPapers(response.data);
-            } else {
-                console.error("Error fetching common papers");
-            }
-        } catch (error) {
-            console.error("Error fetching common papers:", error);
-        } finally {
-            setLoadingPapers(false);
-        }
-    };
-
+    // Handle Add to Cart
     const handleAddToCart = async (paperId) => {
         setLoadingCartItems(prev => ({ ...prev, [paperId]: true }));
-
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
@@ -155,7 +193,8 @@ const IndexPage = () => {
                 return;
             }
 
-            const response = await axios.post(`${baseUrl}/api/add-to-cart`,
+            const response = await axios.post(
+                `${baseUrl}/api/add-to-cart`,
                 { paperId },
                 {
                     headers: {
@@ -165,11 +204,8 @@ const IndexPage = () => {
             );
 
             if (response.status === 200) {
-                await fetchCartItems(); // Refresh cart items after successful addition
-                // setAddedItemName(paperName);
+                await fetchCartItems();
                 setShowCartAlert(true);
-            } else {
-                alert('Failed to add to cart. Please try again.');
             }
         } catch (error) {
             console.error("Error adding to cart:", error);
@@ -179,6 +215,7 @@ const IndexPage = () => {
         }
     };
 
+    // Initial Load Effects
     useEffect(() => {
         const checkUserAuthentication = async () => {
             try {
@@ -203,19 +240,16 @@ const IndexPage = () => {
         };
 
         checkUserAuthentication();
-        fetchCartItems(); // Fetch cart items when component mounts
+        fetchCartItems();
+        fetchWishlistItems();
     }, [navigate]);
 
+    // Effect for Paper Type Change
     useEffect(() => {
-        if (activePaperType === 'major') {
-            fetchMajorPapers();
-        } else if (activePaperType === 'minor') {
-            fetchMinorPapers();
-        } else if (activePaperType === 'common') {
-            fetchCommonPapers();
-        }
+        fetchPapers(activePaperType);
     }, [activePaperType]);
 
+    // Effect for Search
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setFilteredPapers(papers);
@@ -228,13 +262,26 @@ const IndexPage = () => {
         }
     }, [searchTerm, papers]);
 
+    if (loadingPapers) {
+        return <PreLoader />;
+    }
+
     return (
         <div className="IndexPageMainWrapper">
+            {/* Cart Alert */}
             <AddedToCart
                 isVisible={showCartAlert}
                 itemName={addedItemName}
                 onClose={() => setShowCartAlert(false)}
             />
+
+            {/* Wishlist Alert */}
+            {wishlistAlert.show && (
+                <div className="wishlist-alert">
+                    {wishlistAlert.message}
+                </div>
+            )}
+
             <div className="desktopVersion">
                 <div className="home-main">
                     <div className="home-left">
@@ -313,11 +360,11 @@ const IndexPage = () => {
                                                     <div className="buttons">
                                                         <div>
                                                             {isInCart(paper.id) ? (
-                                                                <button
-                                                                    className='add-cart-btn'
-                                                                >
-                                                                    Item In Cart <TbShoppingCartCopy />
-                                                                </button>
+                                                                <Link to='/cart'>
+                                                                    <button className='add-cart-btn'>
+                                                                        Go to cart <TbShoppingCartCopy />
+                                                                    </button>
+                                                                </Link>
                                                             ) : (
                                                                 <button
                                                                     className='add-cart-btn'
@@ -328,7 +375,7 @@ const IndexPage = () => {
                                                                     disabled={loadingCartItems[paper.id]}
                                                                 >
                                                                     {loadingCartItems[paper.id] ? (
-                                                                        <>Adding...</>
+                                                                        'Adding...'
                                                                     ) : (
                                                                         <>Add to Cart <IoCartOutline /></>
                                                                     )}
@@ -337,7 +384,27 @@ const IndexPage = () => {
                                                             <button className='buy-now-btn'>Buy Now</button>
                                                         </div>
                                                         <div>
-                                                            <IoIosHeartEmpty className='heart-icon' />
+                                                            <div
+                                                                className="wishlist-btn"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    handleWishlist(paper.id, activePaperType);
+                                                                }}
+                                                                disabled={loadingWishlist[paper.id]}
+                                                            >
+                                                                {loadingWishlist[paper.id] ? (
+                                                                   <span className="loading-wishlist">
+                                                                   <Box sx={{ display: 'flex' }}>
+                                                                       <CircularProgress size={22} /> 
+                                                                   </Box>
+                                                               </span>
+                                                               
+                                                                ) : isInWishlist(paper.id) ? (
+                                                                    <IoIosHeart className="heart-icon active" />
+                                                                ) : (
+                                                                    <IoIosHeartEmpty className="heart-icon" />
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -353,7 +420,7 @@ const IndexPage = () => {
                 </div>
             </div>
             <div className="mobileVersion">
-                <SeeAllContent />
+                <MobileIndexPage />
             </div>
         </div>
     );

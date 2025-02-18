@@ -1,5 +1,6 @@
 import { FaArrowLeft } from 'react-icons/fa';
 import { LuHeart, LuLock } from 'react-icons/lu';
+import { IoIosHeart } from 'react-icons/io';
 import SideNave from '../common/SideNav/SideNave';
 import UserProfile from '../common/UserProfile/UserProfile';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -7,8 +8,6 @@ import { useEffect, useState } from 'react';
 import './PaperDetailPage.scss';
 import baseUrl from '../../baseUrl';
 import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
-import { format } from "date-fns";
 import WeeklyChallenge from './WeaklyChellangeComponent/WeaklyChellangeComponent';
 import SpecialExam from './SpecialExamComponent/SpecialExamComponent';
 import VideoClasses from './VedioClass/VideoClass';
@@ -17,6 +16,8 @@ import AssessmentTest from './AssistmentTest/AssistmentTest';
 import axios from 'axios';
 import ModalQuestanPaper from './ModalQuestanPaper';
 import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import PreLoader from '../common/PreLoader/PreLoader';
 
 const PaperDetailPage = () => {
@@ -30,6 +31,103 @@ const PaperDetailPage = () => {
     const [userDetails, setUserDetails] = useState(null);
     const [hasPurchased, setHasPurchased] = useState(false);
     const [showPurchasePopup, setShowPurchasePopup] = useState(false);
+    const [wishlistItems, setWishlistItems] = useState([]);
+    const [loadingWishlist, setLoadingWishlist] = useState({});
+    const [wishlistAlert, setWishlistAlert] = useState({ show: false, message: '' });
+
+    // Fetch wishlist items
+    const fetchWishlistItems = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            const response = await axios.get(`${baseUrl}/api/fetch-wishlist-items`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                setWishlistItems(response.data.wishlist);
+            }
+        } catch (error) {
+            console.error("Error fetching wishlist items:", error);
+        }
+    };
+
+    // Check if module is in wishlist
+    const isInWishlist = (moduleId) => {
+        return wishlistItems.some(item => item.id === moduleId);
+    };
+
+    // Handle wishlist toggle
+    const handleWishlist = async (moduleId, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setLoadingWishlist(prev => ({ ...prev, [moduleId]: true }));
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
+            if (isInWishlist(moduleId)) {
+                // Remove from wishlist
+                const response = await axios.delete(`${baseUrl}/api/delete-wishlist-item/${moduleId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status === 200) {
+                    await fetchWishlistItems();
+                    setWishlistAlert({
+                        show: true,
+                        message: 'Module removed from wishlist'
+                    });
+                }
+            } else {
+                // Add to wishlist
+                const response = await axios.post(
+                    `${baseUrl}/api/add-to-wishlist`,
+                    {
+                        id: moduleId,
+                        category: 'module'
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status === 200) {
+                    await fetchWishlistItems();
+                    setWishlistAlert({
+                        show: true,
+                        message: 'Module added to wishlist'
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error updating wishlist:", error);
+            setWishlistAlert({
+                show: true,
+                message: 'Error updating wishlist'
+            });
+        } finally {
+            setLoadingWishlist(prev => ({ ...prev, [moduleId]: false }));
+            setTimeout(() => {
+                setWishlistAlert({ show: false, message: '' });
+            }, 3000);
+        }
+    };
 
     useEffect(() => {
         const checkUserAuthentication = async () => {
@@ -48,11 +146,11 @@ const PaperDetailPage = () => {
 
                 setUserDetails(response.data.user);
 
-                // Check if user has purchased the paper
                 const isPurchased = response.data.user?.purchases?.some(
                     purchase => purchase.courseId === paperId
                 );
                 setHasPurchased(isPurchased);
+                await fetchWishlistItems();
 
             } catch (error) {
                 navigate('/login');
@@ -96,23 +194,81 @@ const PaperDetailPage = () => {
     const isModuleAccessible = (index) => {
         return hasPurchased || index < 2;
     };
-    console.log('purchased',hasPurchased);
-    
 
-   
+    const ModuleCard = ({ module, index }) => {
+        const isAccessible = isModuleAccessible(index);
 
-    if (loading) {
         return (
-            <div>
-                               <PreLoader/>
-
+            <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
+                <div className="module-card-left">
+                    <h4 className="module-title">
+                        Module {module.module} : {module.title}
+                    </h4>
+                    <div className="button-heart">
+                        {isAccessible ? (
+                            <Link to={`/module-summery/${module.id}`}>
+                                <button>Read Summary</button>
+                            </Link>
+                        ) : (
+                            <button
+                                className="locked-content"
+                                onClick={() => setShowPurchasePopup(true)}
+                            >
+                                <LuLock className="lock-icon" />
+                                <span>Purchase to unlock</span>
+                            </button>
+                        )}
+                        <button
+                            className="wishlist-btn"
+                            onClick={(e) => handleWishlist(module.id, e)}
+                            disabled={loadingWishlist[module.id]}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                padding: 0,
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {loadingWishlist[module.id] ? (
+                                <span className="loading-wishlist" style={{ fontSize: '25px' }}><Box sx={{ display: 'flex' }}>
+                                <CircularProgress size={22} />
+                              </Box></span>
+                            ) : isInWishlist(module.id) ? (
+                                <IoIosHeart
+                                    className="heart-icon active"
+                                    style={{
+                                        fontSize: '25px',
+                                        color: '#ff0000',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                />
+                            ) : (
+                                <LuHeart
+                                    className="heart-icon"
+                                    style={{
+                                        fontSize: '25px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                />
+                            )}
+                        </button>
+                    </div>
+                </div>
+                <div className="module-card-right">
+                    <img src="/Images/Module-icon.png" alt="" />
+                </div>
             </div>
         );
+    };
+
+    if (loading) {
+        return <PreLoader />;
     }
 
     if (error) {
         return <div className="error-message">Error loading modules: {error}</div>;
     }
+
     if (modules.message === 'No modules found for this paper in your semester and course.' ||
         modules.message === 'No modules found.') {
         return (
@@ -142,50 +298,32 @@ const PaperDetailPage = () => {
             </div>
         );
     }
-    const ModuleCard = ({ module, index }) => {
-        const isAccessible = isModuleAccessible(index);
-        let formattedDate = "22nd September 2024";
-
-        if (module.createTime?._seconds) {
-            const date = new Date(module.createTime._seconds * 1000);
-            formattedDate = format(date, "do MMMM yyyy");
-        }
-
-        return (
-            <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
-              
-
-                <div className="module-card-left">
-                    <h4 className="module-title">
-                        Module {module.module} : {module.title}
-                    </h4>
-                    <p>{formattedDate}</p>
-                    <div className="button-heart">
-                        {isAccessible ? (
-                            <Link to={`/module-summery/${module.id}`}>
-                                <button>Read Summary</button>
-                            </Link>
-                        ) : (
-                            <button className="locked-content" onClick={()=>setShowPurchasePopup(true)}>
-                                <LuLock className="lock-icon" />
-                                <span>Purchase to unlock</span>
-                            </button>
-                        )}
-                        <LuHeart className="heart-icon" />
-                    </div>
-                </div>
-                <div className="module-card-right">
-                    <img src="/Images/Module-icon.png" alt="" />
-                </div>
-                {showPurchasePopup && (
-                    <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
-                )}
-            </div>
-        );
-    };
 
     return (
         <div className="PaperDetailPageMainWrapper">
+            {/* Wishlist Alert */}
+            {wishlistAlert.show && (
+                <div className="wishlist-alert"
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        padding: '10px 20px',
+                        backgroundColor: '#4CAF50',
+                        color: 'white',
+                        borderRadius: '4px',
+                        zIndex: 1000,
+                        animation: 'fadeIn 0.3s ease-in-out'
+                    }}
+                >
+                    {wishlistAlert.message}
+                </div>
+            )}
+
+            {showPurchasePopup && (
+                <PurchasePopup onClose={() => setShowPurchasePopup(false)} />
+            )}
+
             <div className="detail-page-main">
                 <div className="left-side">
                     <SideNave />
@@ -194,7 +332,7 @@ const PaperDetailPage = () => {
                     <div className='user-profilee'>
                         <UserProfile />
                     </div>
-                    <Link to="/">
+                    <Link onClick={() => navigate('/')}>
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
                         </div>
@@ -208,7 +346,7 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                        <Slides paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased}/>
+                                        <Slides paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased} />
                                     </div>
                                 ) : (
                                     <VideoClasses paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased} />
@@ -224,7 +362,7 @@ const PaperDetailPage = () => {
                                     ))
                                 ) : activeSubCategory === 'Model Question Paper' ? (
                                     <div>
-                                        <ModalQuestanPaper paperId={paperId}  isAccessible={hasPurchased} />
+                                        <ModalQuestanPaper paperId={paperId} isAccessible={hasPurchased} />
                                     </div>
                                 ) : (
                                     <div style={{ textAlign: "center" }}>
@@ -234,11 +372,11 @@ const PaperDetailPage = () => {
                             ) : (
                                 <div>
                                     {activeSubCategory === 'Weekly Challenge' ? (
-                                        <WeeklyChallenge paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
+                                        <WeeklyChallenge paperId={paperId} userDetails={userDetails} isAccessible={hasPurchased} />
                                     ) : activeSubCategory === 'Special Exam' ? (
-                                        <SpecialExam paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
+                                        <SpecialExam paperId={paperId} userDetails={userDetails} isAccessible={hasPurchased} />
                                     ) : activeSubCategory === 'Assessment Test' ? (
-                                        <AssessmentTest paperId={paperId} userDetails={userDetails}  isAccessible={hasPurchased}/>
+                                        <AssessmentTest paperId={paperId} userDetails={userDetails} isAccessible={hasPurchased} />
                                     ) : (
                                         <div>Select a Mock Test type</div>
                                     )}

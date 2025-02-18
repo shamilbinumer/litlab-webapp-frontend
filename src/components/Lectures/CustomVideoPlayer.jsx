@@ -208,6 +208,7 @@ const CustomVideoPlayer = ({ url }) => {
     padding-top: 56.25%;
     background: #000;
     overflow: hidden;
+    height:200px
   }
 
   .player-wrapper {

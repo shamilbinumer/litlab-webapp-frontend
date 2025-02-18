@@ -521,6 +521,13 @@ const UserRegister = () => {
     return (
         <div className='UserRegisterMainWrapper'>
             <div className="container-fluid main">
+                <div className="mobile-header">
+                    <div><img src="/Images/Logo P 7.png" alt="" className="mobile-navlogo" /></div>
+                    <div className='vector-wrapper'>
+                        <img src="/Images/welcompage-image.png" alt="" className="mobile-vector-image" />
+                        <img src="/Images/Union.png" alt="" className="mobile-vector-child-image" />
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-lg-6 left-side">
                         <div>

@@ -5,6 +5,7 @@
         padding: 16px 20px;
         background-color: #ffffff;
         min-height: 100vh;
+        padding-bottom: 7rem;
     }
 
     .header {
@@ -104,7 +105,6 @@
 
     .promo-card {
         background: #6BCCE5;
-
         border-radius: 16px;
         padding: 24px;
         position: relative;
@@ -190,11 +190,11 @@
         }
 
         .category-card {
-            width: 89%;
+            width: 95%;
             margin: auto !important;
 
             .category-img {
-                height: 200px;
+                height: 150px;
                 background-color: yellow;
                 width: 100%;
                 border-radius: 10px;

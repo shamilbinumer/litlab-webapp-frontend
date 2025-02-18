@@ -90,6 +90,23 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 8px 0;
             z-index: 1000;
+            .icon{
+                position: relative;
+                .mobile-count{
+                    position: absolute;
+                    background-color: red;
+                    right: -10px;
+                    top: 0px;
+                    color: white;
+                    font-size: 10px;
+                    height: 15px;
+                    width: 15px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
 
             &-container {
                 max-width: 100%;

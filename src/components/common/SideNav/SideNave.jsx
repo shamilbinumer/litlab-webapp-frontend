@@ -138,7 +138,7 @@ const SideNave = () => {
                                 <div className="icon">
                                     {item.icon}
                                     {item.id === 'cart' && !isLoading && cartItems.length > 0 && (
-                                        <span className="mobile-count">{cartItems.length}</span>
+                                        <div className="mobile-count">{cartItems.length}</div>
                                     )}
                                 </div>
                                 <span className="label">{item.label}</span>

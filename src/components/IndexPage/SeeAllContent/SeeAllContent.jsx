@@ -12,7 +12,7 @@ import SideNave from '../../common/SideNav/SideNave';
 
 const SeeAllContent = () => {
     const navigate = useNavigate();
-    const [activeCategory, setActiveCategory] = useState('Major');
+    const [activeCategory, setActiveCategory] = useState('Minor');
     const [searchTerm, setSearchTerm] = useState('');
     const [papers, setPapers] = useState([]);
     const [filteredPapers, setFilteredPapers] = useState([]);
