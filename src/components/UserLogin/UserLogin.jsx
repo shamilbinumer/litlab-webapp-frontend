@@ -3,6 +3,7 @@ import axios from 'axios';
 import './UserLogin.scss';
 import baseUrl from '../../baseUrl';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import MobileLogin from './MobileLogin/MobileLogin';
 
 const UserLogin = () => {
   const [mobile, setMobile] = useState('');
@@ -104,7 +105,8 @@ const UserLogin = () => {
 
   return (
     <div className="send-otp-page-main-wrapper">
-      <div className="container-fluid main">
+    <div className="desktop">
+    <div className="container-fluid main">
         <div className="row">
           <div className="col-lg-6 left">
             <img src="/Images/undraw_happy_announcement_re_tsm0 1 (1).png" alt="" />
@@ -192,6 +194,10 @@ const UserLogin = () => {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+      <div className="mobile-login-wrapper">
+              <MobileLogin/>
       </div>
     </div>
   );

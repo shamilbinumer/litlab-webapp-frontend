@@ -1,4 +1,7 @@
 .send-otp-page-main-wrapper{
+    .mobile-login-wrapper{
+        display: none;
+    }
     .left{
         height: 100vh;
         display: flex;
@@ -80,8 +83,11 @@
         }
     }
     @media(max-width:991px){
-        .left{
-           display: none !important;
-        }
+      .desktop{
+        display: none;
+      }
+      .mobile-login-wrapper{
+        display: block !important;
+      }
     }
 }

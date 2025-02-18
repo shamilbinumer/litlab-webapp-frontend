@@ -1,0 +1,146 @@
+.MobileLoginPageMainWrapper {
+    overflow-x: hidden;
+    height: 100vh;
+
+    .mobile-header {
+        display: block !important;
+        position: relative;
+        height: 100px;
+
+        .mobile-navlogo {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+        }
+
+        .vector-wrapper {
+            position: absolute;
+            right: -23px;
+            top: 1rem;
+
+            .mobile-vector-child-image {
+                position: absolute;
+                right: 40px;
+                top: 43px;
+            }
+        }
+
+    }
+
+    .baner-image {
+        width: 250px;
+        display: block;
+        margin: 0 auto;
+        // margin-top: 2rem;
+    }
+
+    .content {
+        .number {
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 20.84px;
+            letter-spacing: 0.15%;
+            text-align: center;
+            padding-top: 1rem;
+        }
+
+        h1 {
+            font-family: Inter;
+            font-weight: 700;
+            font-size: 25.84px;
+            letter-spacing: 0%;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        p {
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 15.88px;
+            letter-spacing: 0.15%;
+            text-align: center;
+        }
+
+        .input-section {
+            width: 300px;
+            margin: auto;
+            gap: 10px;
+            display: flex;
+            // justify-content: center;
+            padding: 4px;
+            align-items: center;
+            font-family: Inter;
+            font-weight: 400;
+            font-size: 20.84px;
+            letter-spacing: 0.15%;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.29);
+            border-radius: 6px;
+            overflow: hidden;
+
+            input {
+                border: none;
+            }
+
+            input:focus {
+                outline: none;
+            }
+
+        }
+
+        button {
+            padding: 6px 90px;
+            background-color: #6BCCE5;
+            border-radius: 8px;
+            border: none;
+            display: block;
+            margin: 0 auto;
+            margin-top: 1rem;
+            font-family: Poppins;
+            font-weight: 700;
+            font-size: 20.9px;
+            letter-spacing: 0.15%;
+            text-align: center;
+            color: white;
+        }
+
+        .timer {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .recent-otp {
+            font-family: poppins;
+            font-weight: 400;
+            font-size: 13.92px;
+            letter-spacing: 0%;
+            text-align: center;
+            margin-top: 10px;
+            span{
+                color: red;
+                font-weight: 600;
+            }
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            padding-top: 1rem;
+
+            .otp {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1.66px solid #6BCCE5;
+                font-family: poppins;
+                font-weight: 700;
+                font-size: 15.92px;
+                line-height: 70.46px;
+                letter-spacing: 0%;
+                text-align: center;
+
+            }
+        }
+    }
+}

@@ -179,7 +179,6 @@
             display: block !important;
             position: relative;
             height: 100px;
-            // overflow-x: hidden;
             .mobile-navlogo{
                 position: absolute;
                 top: 1rem;
@@ -189,11 +188,128 @@
                 position: absolute;
                 right: -40px;
                 top: 1rem;
+                .mobile-vector-child-image{
+                    position: absolute;
+                    right: 40px;
+                    top: 43px;
+                }
             }
+            
         }
         .left-side {
             display: none !important;
             height: auto !important;
+        }
+        .input-wrapper {
+            width: 300px !important;
+            label, input::placeholder, select {
+                font-family: Poppins;
+                font-size: 15.47px;
+                font-weight: 400;
+                line-height: 16.12px;
+                letter-spacing: -0.40287697315216064px;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                margin-top: 0 !important;
+                color: #0000007A;
+            }
+
+            label {
+                font-size: 12px !important;
+                padding-left: 2px;
+            }
+
+            input, select {
+                border: none;
+                width: 100%;
+                font-family: Poppins;
+                font-size: 15.47px;
+            }
+
+            input:focus, select:focus {
+                outline: none;
+            }
+
+            // New dropdown styles
+            .custom-dropdown {
+                position: relative;
+                width: 100%;
+
+                .college-search-input {
+                    border: none;
+                    width: 100%;
+                    font-family: Poppins;
+                    font-size: 15.47px;
+                    background: transparent;
+                    padding: 0;
+
+                    &::placeholder {
+                        font-family: Poppins;
+                        font-size: 15.47px;
+                        font-weight: 400;
+                        line-height: 16.12px;
+                        color: #0000007A;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                .college-dropdown {
+                    position: absolute;
+                    top: calc(100% + 5px);
+                    left: -6px; // Compensate for parent padding
+                    right: -6px;
+                    max-height: 200px;
+                    overflow-y: auto;
+                    background-color: white;
+                    border: 0.91px solid #000000;
+                    border-radius: 9px;
+                    z-index: 1000;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+                    .college-option {
+                        padding: 8px 12px;
+                        cursor: pointer;
+                        font-family: Poppins;
+                        font-size: 14px;
+                        color: #0000007A;
+
+                        &:hover {
+                            background-color: #6BCCE5;
+                            color: black;
+                        }
+                    }
+
+                    .no-results {
+                        padding: 10px;
+                        color: #0000007A;
+                        text-align: center;
+                        font-family: Poppins;
+                        font-size: 14px;
+                    }
+                }
+
+                // Scrollbar styling
+                .college-dropdown::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                .college-dropdown::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 3px;
+                }
+
+                .college-dropdown::-webkit-scrollbar-thumb {
+                    background: #6BCCE5;
+                    border-radius: 3px;
+                }
+
+                .college-dropdown::-webkit-scrollbar-thumb:hover {
+                    background: #5ab9d2;
+                }
+            }
         }
      
     }
