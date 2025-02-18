@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import './QuizAnalysis.scss';
 import UserProfile from '../common/UserProfile/UserProfile';
 import SideNave from '../common/SideNav/SideNave';
+import { BellIcon } from 'lucide-react';
 
 const QuizAnalysis = () => {
     const [showSolution, setShowSolution] = useState(false);
@@ -63,6 +64,7 @@ const QuizAnalysis = () => {
                 </div>
 
                 <div className="right-side">
+                    <BellIcon className='bell-icon'/>
                     <div className="heaing-section">
                         <Link to={`/paper-details/${paperId}`}>
                             <img src="/Images/arrow-back.png" alt="" />

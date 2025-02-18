@@ -9,68 +9,79 @@
         font-size: 1.1rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
-  .back-button{
-    background-color: #6BCCE5;
-    color: white;
-  }
-        .module-card {
-            margin-bottom: 25px;
-            border: 0.8px solid #000000;
-            width: 100%;
-            background-color: #6BCCE5 !important;
-            display: flex !important;
-            justify-content: space-between;
+
+    .back-button {
+        background-color: #6BCCE5;
+        color: white;
+    }
+
+    .module-card {
+        margin-bottom: 25px;
+        border: 0.8px solid #000000;
+        width: 100%;
+        background-color: #6BCCE5 !important;
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 1.5rem;
+        border-radius: 9px;
+
+        .module-card-right {
+            .download-icon {
+                display: none;
+
+            }
+        }
+
+        h3 {
+            font-family: Montserrat !important;
+            font-size: 18.34px;
+            font-weight: 700;
+            line-height: 23.25px;
+            letter-spacing: -0.37582165002822876px;
+        }
+
+        p {
+            font-family: Inter;
+            font-size: 12.17px;
+            font-weight: 400;
+            line-height: 7.32px;
+            margin-top: 10px;
+        }
+
+        .button-heart {
+            display: flex;
+            gap: 1rem;
             align-items: center;
 
-            padding: 1.5rem;
-            border-radius: 9px;
-
-            h3{
-                font-family: Montserrat !important;
-                font-size: 18.34px;
+            button {
+                background-color: #FBD63C;
+                border: 1px solid #FBD63C;
+                font-family: Montserrat;
+                border-radius: 7px;
+                font-size: 12.57px;
                 font-weight: 700;
-                line-height: 23.25px;
-                letter-spacing: -0.37582165002822876px;
+                line-height: 8.76px;
+                padding: 10px 20px;
             }
 
-            p {
-                font-family: Inter;
-                font-size: 12.17px;
-                font-weight: 400;
-                line-height: 7.32px;
-                margin-top: 10px;
+            .hear-icon {
+                font-size: 25px;
             }
+        }
 
-            .button-heart {
-                display: flex;
-                gap: 1rem;
-                align-items: center;
+        .locked-content {
+            cursor: not-allowed;
+            background-color: gray !important;
+            border: 1px solid gray !important;
+            color: white !important;
 
-                button {
-                    background-color: #FBD63C;
-                    border: 1px solid #FBD63C;
-                    font-family: Montserrat;
-                    border-radius: 7px;
-                    font-size: 12.57px;
-                    font-weight: 700;
-                    line-height: 8.76px;
-                    padding: 10px 20px;
-                }
-
-                .hear-icon {
-                    font-size: 25px;
-                }
+            span {
+                margin-left: 10px;
             }
-            .locked-content{
-                cursor: not-allowed;
-                background-color: gray !important;
-                border: 1px solid gray !important;
-                color: white !important;
-                span{
-                    margin-left: 10px;
-                }
-            }
-        
+        }
+
     }
 
     .detail-page-main {
@@ -92,7 +103,7 @@
         position: relative;
         width: 86%;
         margin-left: 14%;
-    
+
 
 
         .back-btn-container {
@@ -125,6 +136,7 @@
                 padding: 1rem;
                 min-height: 100vh;
                 border-right: 2px solid black;
+
                 // background-color: blue;
                 .module-card {
                     margin-bottom: 10px;
@@ -174,8 +186,9 @@
                         }
                     }
                 }
-                .questianPaper-card{
-                    h4{
+
+                .questianPaper-card {
+                    h4 {
                         margin-bottom: 1rem;
                     }
                 }
@@ -187,6 +200,7 @@
                 position: sticky;
                 top: 1rem;
                 height: 100vh;
+
                 .box {
                     width: 100%;
                     height: 45px;
@@ -692,6 +706,7 @@
 
                                     .heart-icon {
                                         font-size: 25px !important;
+
                                     }
                                 }
                             }
@@ -721,15 +736,20 @@
     }
 
     @media (max-width:575px) {
-        .user-profilee{
+        .user-profilee {
             display: none !important;
         }
+
+        .hear-icon {
+            display: none;
+        }
+
         .right-side {
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-       
+
         .user-pro {
             display: none !important;
         }
@@ -744,8 +764,8 @@
 
             display: block !important;
         }
-      
-          
+
+
         .content-right {
             position: static !important;
             height: auto !important;
@@ -784,10 +804,47 @@
             font-size: 10px !important;
         }
 
+        .module-card {
+            font-size: 10px !important;
+            padding: 1rem !important;
+            border: none !important;
+            border-radius: 5px !important;
+
+            .module-card-right {
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                img {
+                    width: 71% !important;
+                }
+
+                .download-icon {
+                    display: block !important;
+                    width: 17px;
+
+                }
+            }
+
+        }
+
         .button-heart button {
             padding: 3px 8px !important;
             font-size: 10px !important;
             font-weight: 500 !important;
+
+        }
+      
+        .button-heart {
+           
+
+            .eye-icon {
+                width: 10px !important;
+            }
+            .wishlist-btn{
+                font-size: 10px !important;
+            }
         }
 
         #submoduleCard {
@@ -854,7 +911,7 @@
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-       
+
 
         .user-pro {
             display: none !important;

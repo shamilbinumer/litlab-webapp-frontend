@@ -3,6 +3,7 @@ import { LuHeart } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../baseUrl";
+import { DownloadIcon, EyeIcon } from "lucide-react";
 
 const ModalQuestanPaper = ({ paperId }) => {
   const [questions, setQuestions] = useState([]);
@@ -45,13 +46,14 @@ console.log(questions);
           </h4>
           <div className="button-heart">
             <a target="_blank" href={questions[0]?.fileUrl}>
-              <button>View Question Paper</button>
+              <button>View Question Paper <EyeIcon className="eye-icon"/></button>
             </a>
             <LuHeart className="hear-icon" />
           </div>
         </div>
         <div className="module-card-right">
           <img src="/Images/Module-icon.png" alt="Module Icon" />
+          <DownloadIcon className="download-icon"/>
         </div>
       </div>
     </div>

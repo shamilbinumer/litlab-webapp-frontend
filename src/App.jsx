@@ -19,6 +19,7 @@ import Instructions from "./components/Instructions/Instructions"
 import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetail"
 import SeeAllContent from "./components/IndexPage/SeeAllContent/SeeAllContent"
 import MyFavorites from "./components/MyFavorites/MyFavorites"
+import TermsConditions from "./components/TermsConditions/TermsConditions"
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/instructions" Component={Instructions} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
           <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
+          <Route path="/terms-and-conditions" Component={TermsConditions} />
         </Routes>
       </HashRouter>
     </>
