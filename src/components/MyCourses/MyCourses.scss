@@ -18,22 +18,41 @@
             margin-left: 14%;
             padding: 1rem;
 
-            .back-btn-container {
-                background-color: #6BCCE5;
-                width: 40px;
+            .chat-expert {
+                position: fixed;
+                bottom: 13%;
+                right: 4%;
+                width: 150px;
                 height: 40px;
-                border-radius: 50%;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                color: white;
+                justify-content: center;
+                gap: 10px;
+                border-radius: 7px;
+                border-width: 2px;
+                font-size: 12px;
+                background: #6BCCE58F;
+                color: black;
+                font-weight: 600;
+                img{
+                    width: 20px;
+                }
 
             }
+
 
             .heading-section {
                 display: flex;
                 align-items: center;
                 gap: 1rem;
+                margin-bottom: 0 !important;
+                font-family: Montserrat;
+                font-size: 25.68px;
+                font-weight: 600;
+                letter-spacing: -1.622107744216919px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
 
                 h2 {
                     margin-bottom: 0 !important;
@@ -88,7 +107,7 @@
                     align-items: flex-start;
                     background-color: #6BCCE5;
                     padding: 0 !important;
-                    border:  none;
+                    border: none;
                 }
 
                 .module-title {
@@ -117,8 +136,8 @@
                     position: absolute;
                     bottom: 1.5rem;
                     left: 1.5rem;
-                  
-                    button{
+
+                    button {
                         background-color: #FBD63C;
                         font-family: Montserrat;
                         font-size: 14.05px;
@@ -142,17 +161,29 @@
             }
         }
     }
-    @media (max-width:993px){
+
+    @media (max-width:993px) {
         .cards-main-wrapper {
             width: 100% !important;
-           
+
         }
-        .right-side{
+
+        .heading-section {
+            font-size: 20px !important;
+
+            h2 {
+                font-size: 20px !important;
+
+            }
+        }
+
+        .right-side {
             width: 100% !important;
             padding-bottom: 90px !important;
             margin: 0 !important;
         }
-        .user-pro{
+
+        .user-pro {
             display: none !important;
         }
     }

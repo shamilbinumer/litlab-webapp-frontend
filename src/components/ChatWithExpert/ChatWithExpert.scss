@@ -1,0 +1,115 @@
+.chat-container {
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #6BCCE5;
+    position: relative;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    color: white;
+
+    .back-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+    .header-title {
+        margin-left: 1rem;
+        font-size: 1.1rem;
+    }
+}
+
+.messages-container {
+    flex: 1;
+    padding: 4rem 1rem;
+    overflow-y: auto;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 70px 70px 0px 0px;
+
+    gap: 1rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.8rem 1rem;
+    border-radius: 1rem;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12.43px;
+    letter-spacing: 0.42px;
+
+    &.expert-message {
+        align-self: flex-start;
+        background-color: #6BCCE5;
+        color: white;
+        border-bottom-left-radius: 0.25rem;
+    }
+
+    &.user-message {
+        align-self: flex-end;
+        background-color: #e9ecef;
+        color: #212529;
+        border-bottom-right-radius: 0.25rem;
+    }
+}
+
+.input-container {
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    gap: 0.5rem;
+    img{
+        width: 18px;
+    }
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #f8f9fa;
+        border-radius: 1.5rem;
+        padding: 0.5rem;
+        height: 45px;
+
+    }
+
+    input {
+        flex: 1;
+        border: none;
+        background: none;
+        height: 45px;
+
+        outline: none;
+        font-size: 1rem;
+
+        &::placeholder {
+            color: #6c757d;
+        }
+    }
+
+    button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

@@ -85,10 +85,14 @@ const MyCourses = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
+                    <Link to='/chat-with-expert'>  <div className="chat-expert">
+                        <div className="chat-title">Chat with Expert</div>
+                        <img src="/Images/chatexpert.png" alt="" />
+                    </div></Link>
                     <div className="heading-section">
                         <Link to="/my-profile">
-                            <div className="back-btn-container">
-                                <FaArrowLeft className="back-btn" />
+                            <div className="">
+                                <FaArrowLeft className="my-course-heading" />
                             </div>
                         </Link>
                         <h2 className='my-course-heading'>My Courses</h2>
@@ -112,19 +116,19 @@ const MyCourses = () => {
                                 {papers.length > 0 ? (
                                     papers.map((paper, index) => (
                                         <div className="col-lg-6" key={paper.id || index}>
-                                                <div className="card">
-                                                    <div className="card-header">
-                                                        <div>
-                                                            <p className="module-subtitle">
-                                                                {paper.title || paper.paperTitle}
-                                                            </p>
-                                                        </div>
-                                                        <img src="/Images/Module-icon.png" alt="Module icon" />
+                                            <div className="card">
+                                                <div className="card-header">
+                                                    <div>
+                                                        <p className="module-subtitle">
+                                                            {paper.title || paper.paperTitle}
+                                                        </p>
                                                     </div>
-                                                    <Link to={`/paper-details/${paper.title || paper.paperTitle}/${paper.id}`} className="summary-link">
-                                                        <button>Learn Now <LuEye /></button>
-                                                    </Link>
+                                                    <img src="/Images/Module-icon.png" alt="Module icon" />
                                                 </div>
+                                                <Link to={`/paper-details/${paper.title || paper.paperTitle}/${paper.id}`} className="summary-link">
+                                                    <button>Learn Now <LuEye /></button>
+                                                </Link>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (

@@ -8,6 +8,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import UserProfile from '../common/UserProfile/UserProfile';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
+import { ImArrowLeft2 } from 'react-icons/im';
 
 const FavoriteModuleDetail = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const FavoriteModuleDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
-  
+
         const checkUserAuthentication = async () => {
             try {
                 const token = localStorage.getItem('authToken');
@@ -24,13 +25,13 @@ const FavoriteModuleDetail = () => {
                     navigate('/login');
                     return;
                 }
-  
+
                 const response = await axios.get(`${baseUrl}/api/profile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-  
+
                 if (response.status !== 200) {
                     navigate('/login');
                 }
@@ -38,7 +39,7 @@ const FavoriteModuleDetail = () => {
                 navigate('/login');
             }
         };
-  
+
         checkUserAuthentication();
     }, [navigate]);
     useEffect(() => {
@@ -76,8 +77,10 @@ const FavoriteModuleDetail = () => {
                 </div>
 
                 {/* Header */}
-                <div className="header">
-                            <span className='heading'>{moduleDetails?.title || 'Module'}</span>
+                <div className="header" style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                    <ImArrowLeft2 className='heading' />
+
+                    <span className='heading'>{moduleDetails?.title || 'Module'}</span>
                 </div>
 
                 {/* Search Bar */}
@@ -101,7 +104,9 @@ const FavoriteModuleDetail = () => {
                         {/* Module Title Card */}
                         <div className="module-title-card">
                             <div className="title-content">
+
                                 <div>
+
                                     <h2>{moduleDetails?.title || 'No Title'}</h2>
                                     {/* <p>{moduleDetails?.description || 'No Description Available'}</p> */}
                                 </div>
