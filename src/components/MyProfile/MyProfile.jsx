@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import Dialog from '@mui/material/Dialog';
@@ -32,52 +34,17 @@ const MyProfile = () => {
     const [updateLoading, setUpdateLoading] = useState(false);
     const [updateError, setUpdateError] = useState(null);
     const [imageUploadLoading, setImageUploadLoading] = useState(false);
+    const [showCropModal, setShowCropModal] = useState(false);
+    const [cropImage, setCropImage] = useState(null);
+    const [crop, setCrop] = useState({ 
+        unit: '%',
+        width: 50,
+        aspect: 1 
+    });
+    const [completedCrop, setCompletedCrop] = useState(null);
+    const imgRef = useRef(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
-
-    const handleCameraClick = () => {
-        fileInputRef.current.click();
-    };
-
-    const handleImageUpload = async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        setImageUploadLoading(true);
-        setError(null);
-
-        try {
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                throw new Error('Authentication token not found');
-            }
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            const response = await axios.put(
-                `${baseUrl}/api/edit-user-image`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                setUser(prev => ({
-                    ...prev,
-                    image: response.data.imageUrl
-                }));
-            }
-        } catch (error) {
-            setError(error.response?.data?.message || 'Failed to upload image');
-        } finally {
-            setImageUploadLoading(false);
-        }
-    };
 
     useEffect(() => {
         checkUserAuthentication();
@@ -112,6 +79,87 @@ const MyProfile = () => {
             navigate('/login');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleCameraClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleImageSelect = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setCropImage(reader.result);
+            setShowCropModal(true);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const getCroppedImg = (image, crop) => {
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(
+            image,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            crop.width * scaleX,
+            crop.height * scaleY,
+            0,
+            0,
+            crop.width,
+            crop.height
+        );
+
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => {
+                resolve(blob);
+            }, 'image/jpeg', 1);
+        });
+    };
+
+    const handleCropComplete = async () => {
+        if (!completedCrop || !imgRef.current) return;
+
+        try {
+            setImageUploadLoading(true);
+            const croppedBlob = await getCroppedImg(imgRef.current, completedCrop);
+            const formData = new FormData();
+            formData.append('image', croppedBlob, 'cropped-image.jpg');
+
+            const token = localStorage.getItem('authToken');
+            if (!token) throw new Error('Authentication token not found');
+
+            const response = await axios.put(
+                `${baseUrl}/api/edit-user-image`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                setUser(prev => ({
+                    ...prev,
+                    image: response.data.imageUrl
+                }));
+                setShowCropModal(false);
+                setCropImage(null);
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to upload image');
+        } finally {
+            setImageUploadLoading(false);
         }
     };
 
@@ -194,8 +242,124 @@ const MyProfile = () => {
                 ref={fileInputRef}
                 style={{ display: 'none' }}
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleImageSelect}
             />
+            
+            {/* Image Crop Modal */}
+            <Dialog 
+                open={showCropModal} 
+                onClose={() => {
+                    setShowCropModal(false);
+                    setCropImage(null);
+                }}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{
+                    style: {
+                        height: 'auto',
+                        maxHeight: '80vh',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }
+                }}
+            >
+                <DialogTitle>Crop Profile Picture</DialogTitle>
+                <DialogContent sx={{ 
+                    flex: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    padding: '20px'
+                }}>
+                    {cropImage && (
+                        <div style={{ 
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <ReactCrop
+                                crop={crop}
+                                onChange={c => setCrop(c)}
+                                onComplete={c => setCompletedCrop(c)}
+                                aspect={1}
+                                circularCrop
+                                style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '50vh'
+                                }}
+                            >
+                                <img
+                                    ref={imgRef}
+                                    src={cropImage}
+                                    style={{ 
+                                        maxWidth: '100%',
+                                        maxHeight: '50vh',
+                                        objectFit: 'contain'
+                                    }}
+                                    alt="Crop"
+                                />
+                            </ReactCrop>
+                        </div>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button 
+                        onClick={() => {
+                            setShowCropModal(false);
+                            setCropImage(null);
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleCropComplete}
+                        variant="contained"
+                        color="primary"
+                        disabled={!completedCrop || imageUploadLoading}
+                    >
+                        {imageUploadLoading ? 'Uploading...' : 'Save'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Edit Profile Modal */}
+            <Dialog open={isEditModalOpen} onClose={handleCloseModal}>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <form onSubmit={handleSubmit}>
+                    <DialogContent>
+                        {updateError && (
+                            <div className="error-message mb-3 text-red-500">
+                                {updateError}
+                            </div>
+                        )}
+                        <TextField
+                            margin="dense"
+                            label="Name"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            name="name"
+                            value={editFormData.name}
+                            onChange={handleInputChange}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseModal}>Cancel</Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={updateLoading}
+                        >
+                            {updateLoading ? 'Saving...' : 'Save Changes'}
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+
             <div className="my-profile-main">
                 <div className="mobile-background-img">
                     <img src="/Images/Ellipse 70.png" alt="img" />
@@ -245,39 +409,6 @@ const MyProfile = () => {
                                 </div>
                             </div>
                         </div>
-                        <Dialog open={isEditModalOpen} onClose={handleCloseModal}>
-                            <DialogTitle>Edit Profile</DialogTitle>
-                            <form onSubmit={handleSubmit}>
-                                <DialogContent>
-                                    {updateError && (
-                                        <div className="error-message mb-3 text-red-500">
-                                            {updateError}
-                                        </div>
-                                    )}
-                                    <TextField
-                                        margin="dense"
-                                        label="Name"
-                                        type="text"
-                                        fullWidth
-                                        variant="outlined"
-                                        name="name"
-                                        value={editFormData.name}
-                                        onChange={handleInputChange}
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleCloseModal}>Cancel</Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        disabled={updateLoading}
-                                    >
-                                        {updateLoading ? 'Saving...' : 'Save Changes'}
-                                    </Button>
-                                </DialogActions>
-                            </form>
-                        </Dialog>
                         <div className="col-lg-6 profile-contanet-right">
                             <div className="row four-card-main">
                                 <div className="col-lg-6 col-6">
@@ -310,7 +441,7 @@ const MyProfile = () => {
                                             <div className="card-content">
                                                 <div className="icon-wrapper">
                                                     <IoDiamondOutline className="card-icon" />
-                                                </div>
+                                                    </div>
                                                 <h3 className="card-title">Get Premium</h3>
                                             </div>
                                         </div>
