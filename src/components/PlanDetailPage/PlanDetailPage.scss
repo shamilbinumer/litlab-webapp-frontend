@@ -74,15 +74,14 @@
             .tab {
                 width: 173px;
                 height: 41px;
-                top: 139px;
-                left: 880px;
                 border: none;
                 border-radius: 21.01px;
                 font-family: Montserrat;
                 font-weight: 600;
                 font-size: 14.58px;
-                line-height: 31.21px;
                 letter-spacing: -0.98px;
+                position: relative;
+
     
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -96,6 +95,19 @@
     
                 &:hover:not(.active) {
                     background: #e0e0e0;
+                }
+              
+                
+                .coming-soon-badge {
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    background: linear-gradient(90deg, #ff7676 0%, #ff4545 100%);
+                    color: white;
+                    font-size: 10px;
+                    padding: 3px 8px;
+                    border-radius: 10px;
+                    white-space: nowrap;
                 }
             }
         }
@@ -149,7 +161,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding-bottom: 1rem;
+                    padding-bottom: .5rem;
     
                     .currency {
                         font-size: 1.5rem;

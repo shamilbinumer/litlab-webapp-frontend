@@ -5,7 +5,7 @@ import baseUrl from '../../../baseUrl';
 import './MobileLogin.scss';
 
 const MobileLogin = () => {
-    const [otpPageIsVisible, setOtpPageIsVisible] = useState(true);
+    const [otpPageIsVisible, setOtpPageIsVisible] = useState(false);
     const [mobile, setMobile] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');

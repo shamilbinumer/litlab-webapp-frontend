@@ -10,13 +10,15 @@ import "slick-carousel/slick/slick-theme.css";
 const PlanDetailPage = () => {
     const [searchParams] = useSearchParams();
     const [activePlan, setActivePlan] = useState('silver');
-    const [activePeriod, setActivePeriod] = useState(1);
     const [activeSlide, setActiveSlide] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
         const planFromUrl = searchParams.get('plan');
-        if (planFromUrl) {
+        // If diamond is accessed directly via URL, redirect to silver
+        if (planFromUrl === 'diamond') {
+            setActivePlan('silver');
+        } else if (planFromUrl) {
             setActivePlan(planFromUrl);
         }
     }, [searchParams]);
@@ -84,6 +86,7 @@ const PlanDetailPage = () => {
             {
                 id: 0,
                 price: 99,
+                strikedprice:149,
                 period: '1 Paper',
                 features: [
                     'Access to High-Quality Notes',
@@ -93,8 +96,9 @@ const PlanDetailPage = () => {
             },
             {
                 id: 1,
-                price: 369,
-                period: '6 Paper',
+                price: 249,
+                strikedprice:449,
+                period: '4 Paper',
                 features: [
                     'Access to High-Quality Notes',
                     'Ideal for Exam Preparation',
@@ -104,6 +108,7 @@ const PlanDetailPage = () => {
             {
                 id: 2,
                 price: 129,
+                strikedprice:249,
                 period: '2 Paper',
                 features: [
                     'Access to High-Quality Notes',
@@ -115,7 +120,8 @@ const PlanDetailPage = () => {
         gold: [
             {
                 id: 0,
-                price: 199,
+                price: 159,
+                strikedprice:449,
                 period: '1 Paper',
                 features: [
                     'Access to High-Quality Notes',
@@ -126,8 +132,9 @@ const PlanDetailPage = () => {
             },
             {
                 id: 1,
-                price: 999,
-                period: '6 Paper',
+                price: 569,
+                strikedprice:1499,
+                period: '4 Paper',
                 features: [
                     'Access to High-Quality Notes',
                     'Live Classes Access',
@@ -137,7 +144,8 @@ const PlanDetailPage = () => {
             },
             {
                 id: 2,
-                price: 299,
+                price: 289,
+                strikedprice:799,
                 period: '2 Paper',
                 features: [
                     'Access to High-Quality Notes',
@@ -187,9 +195,21 @@ const PlanDetailPage = () => {
         ]
     };
 
+    // Check if a plan is available
+    const isPlanAvailable = (planType) => {
+        return planType !== 'diamond';
+    };
+
     const getOrderedCards = () => {
         const currentPlanCards = plans[activePlan];
         return [...currentPlanCards];
+    };
+
+    // Handle tab click with availability check
+    const handleTabClick = (planType) => {
+        if (isPlanAvailable(planType)) {
+            setActivePlan(planType);
+        }
     };
 
     return (
@@ -207,55 +227,81 @@ const PlanDetailPage = () => {
                     <div className="plan-tabs">
                         <button
                             className={`tab ${activePlan === 'silver' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('silver')}
+                            onClick={() => handleTabClick('silver')}
                         >
                             Silver
                         </button>
                         <button
                             className={`tab ${activePlan === 'gold' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('gold')}
+                            onClick={() => handleTabClick('gold')}
                         >
                             Gold
                         </button>
                         <button
-                            className={`tab ${activePlan === 'diamond' ? 'active' : ''}`}
-                            onClick={() => setActivePlan('diamond')}
+                            className={`tab ${activePlan === 'diamond' ? 'active' : ''} ${!isPlanAvailable('diamond') ? 'disabled' : ''}`}
+                            onClick={() => handleTabClick('diamond')}
                         >
                             Diamond
+                            {!isPlanAvailable('diamond') && <div className="coming-soon-badge">Coming Soon</div>}
                         </button>
                     </div>
 
-                    <div className="plan-cards">
-                        <Slider {...settings}>
-                            {getOrderedCards().map((plan, index) => (
-                                <div key={plan.id} className="slide-wrapper">
-                                    <div className='plan-card'>
-                                        <div className="price">
-                                            <span className="currency">₹</span>
-                                            {plan.price}
-                                            <span className="period">/{plan.period}</span>
-                                        </div>
+                    {activePlan !== 'diamond' ? (
+                        <div className="plan-cards">
+                            <Slider {...settings}>
+                                {getOrderedCards().map((plan, index) => (
+                                    <div key={plan.id} className="slide-wrapper">
+                                        <div className='plan-card'>
+                                            <div className="price">
+                                                <span className="currency">₹</span>
+                                                {plan.price}
+                                                <span className="period">/{plan.period}</span>
+                                            </div>
+                                            <div className="price" style={{fontSize:'15px'}}>
+                                                <span className="currency" style={{fontSize:'15px'}}>₹</span>
+                                               <strike style={{fontSize:'15px'}}> {plan.strikedprice}</strike>
+                                                <span className="period" style={{fontSize:'15px'}}>/{plan.period}</span>
+                                            </div>
 
-                                        <div className="features">
-                                            {plan.features.map((feature, idx) => (
-                                                <div key={idx} className="feature">
-                                                    <span className="bullet">•</span> 
-                                                    <span>{feature}</span>
-                                                </div>
-                                            ))}
-                                        </div>
+                                            <div className="features">
+                                                {plan.features.map((feature, idx) => (
+                                                    <div key={idx} className="feature">
+                                                        <span className="bullet">•</span> 
+                                                        <span>{feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
 
-                                        <button 
-                                            className="buy-now"
-                                            onClick={() => handleBuyNow(plan)}
-                                        >
-                                            Buy Now
-                                        </button>
+                                            <button 
+                                                className="buy-now"
+                                                onClick={() => handleBuyNow(plan)}
+                                            >
+                                                Buy Now
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </Slider>
-                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+                    ) : (
+                        <div className="coming-soon-message">
+                            <div className="message-wrapper">
+                                <h2>Diamond Plan Coming Soon!</h2>
+                                <p>We're working on something special. Our Diamond Plan will be available soon with premium features including:</p>
+                                <ul>
+                                    {plans.diamond[0].features.map((feature, idx) => (
+                                        <li key={idx}><span className="bullet">•</span> {feature}</li>
+                                    ))}
+                                </ul>
+                                <button 
+                                    className="return-btn"
+                                    onClick={() => setActivePlan('gold')}
+                                >
+                                    View Available Plans
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

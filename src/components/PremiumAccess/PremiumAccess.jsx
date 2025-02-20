@@ -57,8 +57,8 @@ const PremiumAccess = () => {
             id: 'silver',
             title: 'Silver',
             features: ['Study Notes'],
-            price: 369,
-            originalPrice: 599,
+            price: 249,
+            originalPrice: 449,
             isAvailable: true
         },
         {
@@ -74,8 +74,8 @@ const PremiumAccess = () => {
             id: 'gold',
             title: 'Gold',
             features: ['Study Notes', 'Recorded Classes'],
-            price: 999,
-            originalPrice: 2000,
+            price: 569,
+            originalPrice: 1499,
             isAvailable: true
         },
     ];
@@ -124,13 +124,17 @@ const PremiumAccess = () => {
                                         ))}
                                     </div>
                                     <div className="price-container">
-                                        <div className="price">
-                                            <span className="currency">₹</span>{card.price}
-                                            <span className="period">/6 Papers</span>
-                                        </div>
-                                        <div className="original-price">
-                                            <span className="strike">₹{card.originalPrice}/6 Papers</span>
-                                        </div>
+                                      {card.isAvailable?(
+                                         <>
+                                          <div className="price">
+                                          <span className="currency">₹</span>{card.price}
+                                          <span className="period">/4 Papers</span>
+                                      </div>
+                                      <div className="original-price">
+                                          <span className="strike">₹{card.originalPrice}/6 Papers</span>
+                                      </div>
+                                         </>
+                                      ):(<>Comming Soon</>)}
                                     </div>
                                     {card.isAvailable ? (
                                         <div 
