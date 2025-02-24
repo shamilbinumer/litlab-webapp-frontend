@@ -1,7 +1,7 @@
 import { IoCameraOutline, IoDiamondOutline } from 'react-icons/io5';
 import SideNave from '../common/SideNav/SideNave';
 import './MyProfile.scss';
-import { FaPencilAlt } from 'react-icons/fa';
+import { FaPencilAlt, FaPowerOff } from 'react-icons/fa';
 import { FiUser } from "react-icons/fi";
 import { MdOutlineEmail, MdOutlinePhoneAndroid } from 'react-icons/md';
 import { IoBookOutline } from "react-icons/io5";
@@ -22,6 +22,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import ConfirmationAlert from '../common/Alerts/ConformationAlert/ConformationAlert';
 
 const MyProfile = () => {
     const [user, setUser] = useState(null);
@@ -45,6 +46,22 @@ const MyProfile = () => {
     const imgRef = useRef(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
+    const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+
+
+    // Add new functions for logout handling
+    const handleLogoutClick = () => {
+        setShowLogoutAlert(true);
+    };
+
+    const handleLogoutConfirm = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+
+    const handleLogoutCancel = () => {
+        setShowLogoutAlert(false);
+    };
 
     useEffect(() => {
         checkUserAuthentication();
@@ -237,6 +254,15 @@ const MyProfile = () => {
 
     return (
         <div className='MyProfileMainWRapper'>
+            <div className="logout-button-wrapper">
+                <button onClick={handleLogoutClick}><FaPowerOff /></button>
+            </div>
+            <ConfirmationAlert 
+                isOpen={showLogoutAlert}
+                message="Are you sure you want to logout?"
+                onConfirm={handleLogoutConfirm}
+                onCancel={handleLogoutCancel}
+            />
             <input
                 type="file"
                 ref={fileInputRef}

@@ -6,21 +6,44 @@ import './PremiumAccess.scss';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const PremiumAccess = () => {
     const [activeCard, setActiveCard] = useState('silver');
     const [isAnimating, setIsAnimating] = useState(false);
     const navigate = useNavigate();
 
+    const NextArrow = ({ onClick }) => (
+        <button 
+            className="nav-button next" 
+            onClick={onClick}
+            aria-label="Next slide"
+        >
+            <ChevronRight className="nav-icon" />
+        </button>
+    );
+
+    const PrevArrow = ({ onClick }) => (
+        <button 
+            className="nav-button prev" 
+            onClick={onClick}
+            aria-label="Previous slide"
+        >
+            <ChevronLeft className="nav-icon" />
+        </button>
+    );
+
     const settings = {
         dots: false,
         infinite: true,
-        speed: 500,
+        speed: 900,
         slidesToShow: 3,
         slidesToScroll: 1,
         centerMode: true,
         Autoplay: false,
         centerPadding: '0',
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 993,
@@ -56,7 +79,7 @@ const PremiumAccess = () => {
         {
             id: 'silver',
             title: 'Silver',
-            features: ['Study Notes'],
+            features: ['Access to High Quality Notes'],
             price: 249,
             originalPrice: 449,
             isAvailable: true
@@ -64,7 +87,7 @@ const PremiumAccess = () => {
         {
             id: 'diamond',
             title: 'Diamond',
-            features: ['Study Notes', 'Recorded & Audio Classes', 'Expert Mentorship'],
+            features: ['Access to High Quality Notes', 'Video Classes', 'Practice Tests','Model Question Papers','Mentorship','AI Assistance'],
             price: 4999,
             originalPrice: 6999,
             discount: 'Launching Soon',
@@ -73,7 +96,7 @@ const PremiumAccess = () => {
         {
             id: 'gold',
             title: 'Gold',
-            features: ['Study Notes', 'Recorded Classes'],
+            features: ['Access to High Quality Notes', 'Video Classes','Practice Tests'],
             price: 569,
             originalPrice: 1499,
             isAvailable: true
@@ -124,7 +147,7 @@ const PremiumAccess = () => {
                                         ))}
                                     </div>
                                     <div className="price-container">
-                                      {card.isAvailable?(
+                                      {card.isAvailable ? (
                                          <>
                                           <div className="price">
                                           <span className="currency">₹</span>{card.price}
@@ -134,7 +157,7 @@ const PremiumAccess = () => {
                                           <span className="strike">₹{card.originalPrice}/6 Papers</span>
                                       </div>
                                          </>
-                                      ):(<>Comming Soon</>)}
+                                      ) : (<>Coming Soon</>)}
                                     </div>
                                     {card.isAvailable ? (
                                         <div 

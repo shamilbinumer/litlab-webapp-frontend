@@ -31,6 +31,11 @@ const Cart = () => {
     const { category, amount, paperCount } = useParams();
     const finalAmount = Number(amount);
 
+    // Calculate GST and total amount
+    const gstRate = 0.18; // 18% GST
+    const gstAmount = finalAmount * gstRate;
+    const totalAmount = finalAmount + gstAmount;
+
     useEffect(() => {
         fetchCartItems();
         checkUserAuthentication();
@@ -97,7 +102,7 @@ const Cart = () => {
         try {
             setPaymentProcessing(true);
             const { data } = await axios.post(`${baseUrl}/api/create-order`, {
-                amount: finalAmount
+                amount: totalAmount // Updated to include GST
             });
 
             const options = {
@@ -350,7 +355,20 @@ const Cart = () => {
                     </div>
                 ) : (
                     <div className="checkout-section">
-                      
+                        <div className="price-breakdown">
+                            <div className="price-item">
+                                <span>Base Price:</span>
+                                <span>₹{finalAmount.toFixed(2)}</span>
+                            </div>
+                            <div className="price-item gst">
+                                <span>GST (18%):</span>
+                                <span>₹{gstAmount.toFixed(2)}</span>
+                            </div>
+                            <div className="price-item total">
+                                <span>Total Amount:</span>
+                                <span>₹{totalAmount.toFixed(2)}</span>
+                            </div>
+                        </div>
                         <div className="checkout-button">
                             <button 
                                 onClick={handleCheckout}
@@ -373,7 +391,7 @@ const Cart = () => {
 
             <ConfirmationAlert 
                 isOpen={showCheckoutAlert}
-                message={`Proceed to payment for ${cartItems.length} papers (₹${finalAmount})?`}
+                message={`Proceed to payment for ${cartItems.length} papers (₹${totalAmount.toFixed(2)})?`}
                 onConfirm={handlePayment}
                 onCancel={() => setShowCheckoutAlert(false)}
                 paymentProcessing={paymentProcessing}

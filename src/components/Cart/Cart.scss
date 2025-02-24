@@ -219,7 +219,33 @@
                 }
             }
         }
-    
+        .price-breakdown {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        
+            .price-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+                color: #666;
+                font-size: 0.9rem;
+        
+                &.gst {
+                    padding-bottom: 0.5rem;
+                    border-bottom: 1px dashed #ddd;
+                }
+        
+                &.total {
+                    margin-top: 0.5rem;
+                    font-weight: bold;
+                    color: #333;
+                    font-size: 1.1rem;
+                }
+            }
+        }
         @media (max-width: 575px) {
             .right-side {
                 width: 100% !important;

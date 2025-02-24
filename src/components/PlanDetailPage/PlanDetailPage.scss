@@ -1,5 +1,5 @@
 .plan-detail-page {
-   
+
     .left-side {
         width: 14%;
         position: fixed;
@@ -9,360 +9,459 @@
         overflow-y: auto;
         z-index: 1000;
     }
-.right-side{
-    padding: 1rem;
-    position: relative;
-    width: 86%;
-    margin-left: 14%;
-    text-align: center;
-    // display: flex;
-    height: 90vh;
 
-    margin-bottom: 2rem;
-    .plan-detail-wrapper{
-        margin: 70px 100px;
-        padding: 20px 0px 50px;
-        border: 1px solid #00000059;
-        border-radius: 18px;
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-family: Montserrat;
-            font-weight: 600;
-            font-size: 24.9px;
-            line-height: 53.28px;
-            letter-spacing: -1.67px;
-            color: black;
-    
-        }
-        .slick-track{
-            // background-color: red;
-            height: 450px;
-            padding-top: 3rem;
-        }
-        .slick-slide.slick-active:not(.slick-center):not(.slick-current) {
-            // transform: scale(1.09);
-            z-index: 10;
-            
-            .plan-card {
-                transform: scale(1.09);
-                border: 1px solid #6BCCE5;
-                background: linear-gradient(180deg, #6BCCE5 0%, #3B717F 100%);
-                color: white;
-                opacity: 1;
-            }
-        }
-        .plan-tabs {
-            display: flex;
-            width: 534px;
-            height: 53px;
-            margin: auto;
-            top: 133px;
-            left: 525px;
-            border-radius: 21.01px;
-    
-            justify-content: center;
-            background: #EBEBEBB8;
-    
-            gap: 1rem;
-            padding: 0px 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-evenly;
-            margin-bottom: 3rem;
-    
-            .tab {
-                width: 173px;
-                height: 41px;
-                border: none;
-                border-radius: 21.01px;
+    .right-side {
+        padding: 1rem;
+        position: relative;
+        width: 86%;
+        margin-left: 14%;
+        text-align: center;
+        // height: 90vh;
+        // margin-bottom: 2rem;
+
+        .plan-detail-wrapper {
+            margin: 70px 100px;
+            padding: 20px 0px 50px;
+            border: 1px solid #00000059;
+            border-radius: 18px;
+            position: relative;
+
+            h1 {
+                text-align: center;
+                margin-bottom: 2rem;
                 font-family: Montserrat;
                 font-weight: 600;
-                font-size: 14.58px;
-                letter-spacing: -0.98px;
-                position: relative;
-
-    
-                cursor: pointer;
-                transition: all 0.3s ease;
-                background: #f5f5f5;
+                font-size: 24.9px;
+                line-height: 53.28px;
+                letter-spacing: -1.67px;
                 color: black;
-    
-                &.active {
-                    background: #67C5DD;
-                    color: white;
+            }
+
+            .slick-track {
+                height: 450px;
+                padding-top: 3rem;
+            }
+
+            .nav-button {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #fff;
+                border: 1px solid #e0e0e0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: #f5f5f5;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    transform: translateY(-50%) scale(1.05);
                 }
-    
-                &:hover:not(.active) {
-                    background: #e0e0e0;
+
+                &.prev {
+                    left: -20px;
                 }
-              
-                
-                .coming-soon-badge {
-                    position: absolute;
-                    top: -10px;
-                    right: -10px;
-                    background: linear-gradient(90deg, #ff7676 0%, #ff4545 100%);
-                    color: white;
-                    font-size: 10px;
-                    padding: 3px 8px;
-                    border-radius: 10px;
-                    white-space: nowrap;
+
+                &.next {
+                    right: -20px;
+                }
+
+                .nav-icon {
+                    width: 24px;
+                    height: 24px;
+                    color: #333;
                 }
             }
-        }
-    
-        .plan-cards {
-            // display: flex;
-            justify-content: center;
-            gap: 2rem;
-            // margin-top: 2rem;
-    
-            .plan-card {
-                width: 90% ;
-                margin: auto;
-                padding: 30px 10px;
-                transition: .3s;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                border-radius: 12px;
-                background: white;
-                border: 1.25px solid #B5A8A8;
-                transition: all 0.3s ease;
-                height: 350px;
-                &.active {
+
+            .slick-slide.slick-active:not(.slick-center):not(.slick-current) {
+                z-index: 10;
+                
+                .plan-card {
                     transform: scale(1.09);
-                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-                    z-index: 2;
-                    background: linear-gradient(180deg, #6BCCE5 0%, #3B717F 100%) !important;
-    
-                    color: white !important;
-    
-                    button {
-                        background: #FFFFFF !important;
-                        color: transparentize($color: #3B717F, $amount: 0) !important;
-    
-                    }
+                    border: 1px solid #6BCCE5;
+                    background: linear-gradient(180deg, #6BCCE5 0%, #3B717F 100%);
+                    color: white;
+                    opacity: 1;
                 }
-    
-                &:not(.active) {
-                    transform: scale(0.80);
-                    // opacity: 0.8;
-                }
-    
-                .price {
+            }
+
+            .plan-tabs {
+                display: flex;
+                width: 534px;
+                height: 53px;
+                margin: auto;
+                top: 133px;
+                left: 525px;
+                border-radius: 21.01px;
+                justify-content: center;
+                background: #EBEBEBB8;
+                gap: 1rem;
+                padding: 0px 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                margin-bottom: 3rem;
+
+                .tab {
+                    width: 173px;
+                    height: 41px;
+                    border: none;
+                    border-radius: 21.01px;
                     font-family: Montserrat;
-                    font-weight: 700;
-                    font-size: 26.36px;
-                    line-height: 23.97px;
-                    letter-spacing: -0.6px;
-                    text-align: center;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding-bottom: .5rem;
-    
-                    .currency {
-                        font-size: 1.5rem;
-                        vertical-align: super;
+                    font-weight: 600;
+                    font-size: 14.58px;
+                    letter-spacing: -0.98px;
+                    position: relative;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    background: #f5f5f5;
+                    color: black;
+
+                    &.active {
+                        background: #67C5DD;
+                        color: white;
                     }
-    
-                    .period {
+
+                    &:hover:not(.active) {
+                        background: #e0e0e0;
+                    }
+
+                    .coming-soon-badge {
+                        position: absolute;
+                        top: -10px;
+                        right: -10px;
+                        background: linear-gradient(90deg, #ff7676 0%, #ff4545 100%);
+                        color: white;
+                        font-size: 10px;
+                        padding: 3px 8px;
+                        border-radius: 10px;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            .plan-cards {
+                justify-content: center;
+                gap: 2rem;
+
+                .plan-card {
+                    width: 90%;
+                    margin: auto;
+                    padding: 30px 10px;
+                    transition: .3s;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    border-radius: 12px;
+                    background: white;
+                    border: 1.25px solid #B5A8A8;
+                    transition: all 0.3s ease;
+                    height: 350px;
+
+                    &.active {
+                        transform: scale(1.09);
+                        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                        z-index: 2;
+                        background: linear-gradient(180deg, #6BCCE5 0%, #3B717F 100%) !important;
+                        color: white !important;
+
+                        button {
+                            background: #FFFFFF !important;
+                            color: #3B717F !important;
+                        }
+                    }
+
+                    &:not(.active) {
+                        transform: scale(0.80);
+                    }
+
+                    .price {
                         font-family: Montserrat;
-                        font-weight: 500;
-                        font-size: 19.27px;
+                        font-weight: 700;
+                        font-size: 26.36px;
                         line-height: 23.97px;
                         letter-spacing: -0.6px;
                         text-align: center;
-    
-                    }
-                }
-    
-                .features {
-                    margin-bottom: 2rem;
-    
-                    .feature {
                         display: flex;
                         align-items: center;
-    
-                        span {
+                        justify-content: center;
+                        padding-bottom: .5rem;
+
+                        .currency {
+                            font-size: 1.5rem;
+                            vertical-align: super;
+                        }
+
+                        .period {
                             font-family: Montserrat;
                             font-weight: 500;
-                            font-size: 11.37px;
-                            line-height: 22.75px;
-                            letter-spacing: -0.57px;
+                            font-size: 19.27px;
+                            line-height: 23.97px;
+                            letter-spacing: -0.6px;
                             text-align: center;
-                            margin-top: 10px;
-                            padding: 0 !important;
-    
                         }
-    
-    
-                        .bullet {
-                            font-size: 2.9rem;
-                            margin-right: 10px !important;
-    
+                    }
+
+                    .features {
+                        margin-bottom: 2rem;
+
+                        .feature {
+                            display: flex;
+                            align-items: center;
+
+                            span {
+                                font-family: Montserrat;
+                                font-weight: 500;
+                                font-size: 11.37px;
+                                line-height: 22.75px;
+                                letter-spacing: -0.57px;
+                                text-align: center;
+                                margin-top: 10px;
+                                padding: 0 !important;
+                            }
+
+                            .bullet {
+                                font-size: 2.9rem;
+                                margin-right: 10px !important;
+                            }
+                        }
+                    }
+
+                    .buy-now {
+                        width: 138px;
+                        height: 34px !important;
+                        font-family: Montserrat;
+                        font-weight: 700;
+                        font-size: 12.36px;
+                        line-height: 13.36px;
+                        letter-spacing: -0.33px;
+                        text-align: center;
+                        margin: auto;
+                        border: none;
+                        background: linear-gradient(90deg, #6BCCE5 0%, #08415C 100%);
+                        color: white;
+                        cursor: pointer;
+                        transition: background 0.3s ease;
+                        border-radius: 4px;
+
+                        &:hover {
+                            background: linear-gradient(90deg, #5ab1ba 0%, #063346 100%);
                         }
                     }
                 }
-    
-                .buy-now {
-                    width: 138px;
-                    height: 34px !important;
-                    font-family: Montserrat;
-                    font-weight: 700;
-                    font-size: 12.36px;
-                    line-height: 13.36px;
-                    letter-spacing: -0.33px;
-                    text-align: center;
-                    margin: auto;
-                    border: none;
-                    background: linear-gradient(90deg, #6BCCE5 0%, #08415C 100%);
-                    color: white;
-    
-                    cursor: pointer;
-                    transition: background 0.3s ease;
-    
-                    &:hover {
-                        background: #5ab1ba;
+            }
+
+            .coming-soon-message {
+                padding: 2rem;
+                text-align: center;
+
+                .message-wrapper {
+                    max-width: 600px;
+                    margin: 0 auto;
+
+                    h2 {
+                        color: #333;
+                        margin-bottom: 1rem;
+                    }
+
+                    p {
+                        color: #666;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    ul {
+                        text-align: left;
+                        margin: 1rem 0;
+                        padding-left: 2rem;
+
+                        li {
+                            margin: 0.5rem 0;
+                            color: #555;
+                        }
+                    }
+
+                    .return-btn {
+                        background: #67C5DD;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        transition: background 0.3s ease;
+
+                        &:hover {
+                            background: #5ab1ba;
+                        }
                     }
                 }
             }
         }
     }
 
-}
+    @media(max-width: 575px) {
+        .right-side {
+            height: auto !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 40px !important;
+        }
 
-@media(max-width:575px){
-    .right-side{
-        height: auto !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 40px !important;
-    }
-    .userprofile{
-        display: none !important;
-    }
-    .plan-detail-wrapper{
-        margin: 0 !important;
-        border: none !important;
-    }
-    .plan-tabs{
-        width:  100% !important;
-        height: 50px !important;
-        .tab{
-            height: 35px !important;
+        .userprofile {
+            display: none !important;
         }
-     
-    }
-    .plan-cards{
-        flex-direction: column !important;
-        align-items: center !important;
-       
-    }
-    .plan-card{
-        width: 100% !important;
-        &.active{
-            transform: scale(0.98) !important;
-        }
-    }
-}
-@media (min-width:576px) and (max-width:768px){
-    .right-side{
-        height: auto !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 40px !important;
-    }
-    .userprofile{
-        display: none !important;
-    }
-    .plan-detail-wrapper{
-        margin: 0 !important;
-        border: none !important;
-    }
-    .plan-tabs{
-        width:  100% !important;
-        height: 50px !important;
-        .tab{
-            height: 35px !important;
-        }
-     
-    }
-    .plan-cards{
-        // flex-direction: column !important;
-        align-items: center !important;
-       gap: 0 !important;
-    }
-    .plan-card{
-        // width: 100% !important;
-        &.active{
-            transform: scale(0.89) !important;
-        }
-    }
-}
-@media (min-width:769px) and (max-width:993px){
-    .right-side{
-        height: auto !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 40px !important;
-    }
-    .userprofile{
-        display: none !important;
-    }
-    .plan-detail-wrapper{
-        margin: 0 !important;
-        border: none !important;
-    }
-    .plan-tabs{
-        width:  100% !important;
-        height: 50px !important;
-        .tab{
-            height: 35px !important;
-        }
-     
-    }
-    .plan-cards{
-        // flex-direction: column !important;
-        align-items: center !important;
-       gap: 0 !important;
-    }
-    .plan-card{
-        // width: 100% !important;
-        &.active{
-            transform: scale(0.89) !important;
-        }
-    }
-}
-@media (min-width:994px) and (max-width:1200px){
-    .right-side{
-        height: auto !important;
-    }
-    .plan-detail-wrapper{
-        margin: 0 !important;
-        border: none !important;
-    }
-    .plan-tabs{
-        width:  100% !important;
-        height: 50px !important;
-        .tab{
-            height: 35px !important;
-        }
-     
-    }
-    .plan-cards{
-        // flex-direction: column !important;
-        align-items: center !important;
-       gap: 0 !important;
-    }
-    .plan-card{
-        // width: 100% !important;
-        &.active{
-            transform: scale(0.89) !important;
-        }
-    }
-}
 
+        .plan-detail-wrapper {
+            margin: 0 !important;
+            border: none !important;
+
+            .nav-button {
+                width: 32px;
+                height: 32px;
+
+                &.prev {
+                    left: -16px;
+                }
+
+                &.next {
+                    right: -16px;
+                }
+
+                .nav-icon {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+
+        .plan-tabs {
+            width: 100% !important;
+            height: 50px !important;
+            .tab {
+                height: 35px !important;
+            }
+        }
+
+        .plan-cards {
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        .plan-card {
+            width: 100% !important;
+            &.active {
+                transform: scale(0.98) !important;
+            }
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 768px) {
+        .right-side {
+            height: auto !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 40px !important;
+        }
+
+        .userprofile {
+            display: none !important;
+        }
+
+        .plan-detail-wrapper {
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        .plan-tabs {
+            width: 100% !important;
+            height: 50px !important;
+            .tab {
+                height: 35px !important;
+            }
+        }
+
+        .plan-cards {
+            align-items: center !important;
+            gap: 0 !important;
+        }
+
+        .plan-card {
+            &.active {
+                transform: scale(0.89) !important;
+            }
+        }
+    }
+
+    @media (min-width: 769px) and (max-width: 993px) {
+        .right-side {
+            height: auto !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 40px !important;
+        }
+
+        .userprofile {
+            display: none !important;
+        }
+
+        .plan-detail-wrapper {
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        .plan-tabs {
+            width: 100% !important;
+            height: 50px !important;
+            .tab {
+                height: 35px !important;
+            }
+        }
+
+        .plan-cards {
+            align-items: center !important;
+            gap: 0 !important;
+        }
+
+        .plan-card {
+            &.active {
+                transform: scale(0.89) !important;
+            }
+        }
+    }
+
+    @media (min-width: 994px) and (max-width: 1200px) {
+        .right-side {
+            height: auto !important;
+        }
+
+        .plan-detail-wrapper {
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        .plan-tabs {
+            width: 100% !important;
+            height: 50px !important;
+            .tab {
+                height: 35px !important;
+            }
+        }
+
+        .plan-cards {
+            align-items: center !important;
+            gap: 0 !important;
+        }
+
+        .plan-card {
+            &.active {
+                transform: scale(0.89) !important;
+            }
+        }
+    }
 }

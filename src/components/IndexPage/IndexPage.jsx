@@ -350,7 +350,7 @@ const IndexPage = () => {
                                                 <div className="paper-card">
                                                     <Link to={`/paper-details/${paper.courseTitle || paper.title}/${paper.id}`}>
                                                         <div className="paper-image">
-                                                            <img src="/Images/image 6.png" alt="" />
+                                                            <img src={paper.imageUrl || '/Images/image 6.png'} alt="" />
                                                         </div>
                                                         <div className="card-details">
                                                             <h2>{paper.courseTitle || paper.title}</h2>

@@ -1,4 +1,20 @@
 .MyProfileMainWRapper {
+    .logout-button-wrapper{
+        position: fixed;
+        right: 1rem;
+        top: 1rem;
+        z-index: 33;
+        button{
+            background-color: rgb(255, 0, 0);
+            border: none;
+            color: white;
+            font-family: Montserrat;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
     .my-profile-main {
         display: flex;
         position: relative;

@@ -180,6 +180,8 @@ const PaperDetailPage = () => {
                 }
 
                 const data = await response.json();
+                console.log(data);
+
                 setModules(data);
                 setLoading(false);
             } catch (err) {
@@ -231,8 +233,8 @@ const PaperDetailPage = () => {
                         >
                             {loadingWishlist[module.id] ? (
                                 <span className="loading-wishlist" style={{ fontSize: '25px' }}><Box sx={{ display: 'flex' }}>
-                                <CircularProgress size={22} />
-                              </Box></span>
+                                    <CircularProgress size={22} />
+                                </Box></span>
                             ) : isInWishlist(module.id) ? (
                                 <IoIosHeart
                                     className="heart-icon active"
@@ -268,9 +270,7 @@ const PaperDetailPage = () => {
     if (error) {
         return <div className="error-message">Error loading modules: {error}</div>;
     }
-
-    if (modules.message === 'No modules found for this paper in your semester and course.' ||
-        modules.message === 'No modules found.') {
+    if (modules.length === 0) {
         return (
             <div className="PaperDetailPageMainWrapper">
                 <div className="detail-page-main">
@@ -291,14 +291,14 @@ const PaperDetailPage = () => {
                             <img src="/Images/image 11.png" alt="" />
                         </div>
                         <div className="no-modules-message">
-                            No modules found for this paper in your semester and course.
+                            No Materials Found for this Paper in Your Semester and Course.
                         </div>
                     </div>
                 </div>
             </div>
-        );
+        )
     }
-
+ 
     return (
         <div className="PaperDetailPageMainWrapper">
             {/* Wishlist Alert */}

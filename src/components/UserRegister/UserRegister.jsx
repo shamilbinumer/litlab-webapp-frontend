@@ -300,6 +300,7 @@ const UserRegister = () => {
         "S.M.I Arts and Science College",
         "Sadanam Kumaran College",
         "Safa Arabic College",
+        "SAFI Institute of Advanced Study (Autonomous)",
         "Safa College of Arts and Science",
         "Sahrdaya College of Advanced Studies",
         "Sahya Arts and Science College",

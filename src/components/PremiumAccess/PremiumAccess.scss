@@ -17,8 +17,6 @@
         width: 86%;
         margin-left: 14%;
         text-align: center;
-        // display: flex;
-
         margin-bottom: 2rem;
 
         .header {
@@ -31,7 +29,6 @@
                 font-size: 34.05px;
                 line-height: 72.87px;
                 letter-spacing: -2.28px;
-
             }
 
             p {
@@ -42,28 +39,65 @@
                 letter-spacing: -1.14px;
                 text-align: center;
                 color: #0000008C;
-
             }
         }
 
         .pricing-cards {
-            // display: flex;
             justify-content: center;
             align-items: center;
             gap: 2rem;
             margin: 0 auto;
             width: 100% !important;
-            .slick-track{
-                // background-color: red;
-                height: 450px;
-                padding-top: 3rem;
+            position: relative;
+
+            // Navigation Buttons
+            .nav-button {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #fff;
+                border: 1px solid #e0e0e0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: #f5f5f5;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    transform: translateY(-50%) scale(1.05);
+                }
+
+                &.prev {
+                    left: -20px;
+                }
+
+                &.next {
+                    right: -20px;
+                }
+
+                .nav-icon {
+                    width: 24px;
+                    height: 24px;
+                    color: #333;
+                }
             }
-           
+
+            .slick-track {
+                height: 510px;
+                padding-top: 5rem;
+            }
 
             .card {
                 position: relative;
                 width: 300px;
-                height: 356px;
+                height: 396px;
                 padding: 2rem;
                 margin: auto;
                 border-radius: 12px;
@@ -76,27 +110,11 @@
                 transition: all 0.3s ease;
                 border: 1px solid #0000007D;
 
-                // &.active {
-                //     transform: scale(1.09);
-                //     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-                //     z-index: 2;
-                //     height: 330px;
-                //     border: 2px solid #6BCCE5;
-                //     background: #DEF8FF;
-
-                // }
-
-                // &:not(.active) {
-                //     transform: scale(0.85);
-                //     // opacity: 0.8;
-                // }
-
                 .discount-badge {
                     position: absolute;
                     top: -12px;
                     right: -12px;
                     background: linear-gradient(90deg, #6BCCE5 0%, #3B717F 100%);
-
                     color: white;
                     padding: 0.5rem 1rem;
                     border-radius: 20px;
@@ -105,7 +123,6 @@
                     font-size: 10.42px;
                     line-height: 20.02px;
                     letter-spacing: -0.63px;
-
                 }
 
                 h2 {
@@ -131,7 +148,6 @@
                         line-height: 15.56px;
                         letter-spacing: -0.74px;
                         text-align: center;
-
                         color: #000000;
 
                         .bullet {
@@ -157,7 +173,6 @@
                         font-size: 30.05px;
                         line-height: 30.78px;
                         letter-spacing: -0.56px;
-
                         color: #000000;
 
                         .currency {
@@ -175,10 +190,8 @@
                             line-height: 11.78px;
                             letter-spacing: -0.56px;
                             text-align: center;
-
                         }
                     }
-
 
                     .original-price {
                         font-family: Montserrat;
@@ -206,24 +219,26 @@
                     &:hover {
                         color: #2980b9;
                     }
+
+                    &.disabled {
+                        color: #999;
+                        cursor: not-allowed;
+                    }
                 }
             }
+           
             .slick-slide.slick-active:not(.slick-center):not(.slick-current) {
-                // transform: scale(1.09);
                 z-index: 10;
                 
                 .card {
                     transform: scale(1.2);
                     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
                     z-index: 2;
-                    height: 330px;
+                    height: 390px;
                     border: 2px solid #6BCCE5;
                     background: #DEF8FF;
                 }
             }
-          
-
-
         }
 
         .continue-btn {
@@ -233,14 +248,12 @@
             border: none;
             border-radius: 8px;
             background: linear-gradient(90deg, #6BCCE5 0%, #3B717F 100%);
-
             color: white;
             font-family: Montserrat;
             font-weight: 700;
             font-size: 24.61px;
             line-height: 32.97px;
             letter-spacing: -1.03px;
-
             cursor: pointer;
             transition: background 0.3s ease;
 
@@ -285,26 +298,24 @@
             max-width: auto !important;
             align-items: normal !important;
             gap: 10px !important;
-            // Add arrows styling
-        .slick-prev, .slick-next {
-            z-index: 1;
-            width: 30px;
-            height: 30px;
-            &:before {
-                color: #6BCCE5;
-                font-size: 30px;
+
+            .nav-button {
+                width: 32px;
+                height: 32px;
+
+                &.prev {
+                    left: -16px;
+                }
+
+                &.next {
+                    right: -16px;
+                }
+
+                .nav-icon {
+                    width: 20px;
+                    height: 20px;
+                }
             }
-        }
-
-        .slick-prev {
-            left: -30px !important;
-        }
-
-        .slick-next {
-            right: -30px;
-        }
-
-
         }
 
         .card {
@@ -322,11 +333,8 @@
 
             &.active {
                 transform: scale(1.01) !important;
-
             }
         }
-
-
 
         .continue-btn {
             margin-top: 10px !important;
@@ -362,11 +370,23 @@
         }
 
         .pricing-cards {
-            // flex-direction: column !important;
             max-width: auto !important;
             align-items: normal !important;
             gap: 10px !important;
             height: auto !important;
+
+            .nav-button {
+                width: 36px;
+                height: 36px;
+
+                &.prev {
+                    left: -18px;
+                }
+
+                &.next {
+                    right: -18px;
+                }
+            }
         }
 
         .card {
@@ -375,11 +395,8 @@
             &.active {
                 transform: scale(1.01) !important;
                 height: auto !important;
-
             }
         }
-
-
 
         .continue-btn {
             margin-top: 20px !important;
@@ -415,11 +432,23 @@
         }
 
         .pricing-cards {
-            // flex-direction: column !important;
             max-width: auto !important;
             align-items: normal !important;
             gap: 10px !important;
             height: auto !important;
+
+            .nav-button {
+                width: 38px;
+                height: 38px;
+
+                &.prev {
+                    left: -19px;
+                }
+
+                &.next {
+                    right: -19px;
+                }
+            }
         }
 
         .card {
@@ -428,11 +457,8 @@
             &.active {
                 transform: scale(1.01) !important;
                 height: auto !important;
-
             }
         }
-
-
 
         .continue-btn {
             margin-top: 20px !important;
@@ -442,11 +468,7 @@
     }
 
     @media (min-width:994px) and (max-width:1200px) {
-
-
-
         .pricing-cards {
-            // flex-direction: column !important;
             max-width: auto !important;
             align-items: normal !important;
             gap: 10px !important;
@@ -459,11 +481,8 @@
             &.active {
                 transform: scale(1.01) !important;
                 height: auto !important;
-
             }
         }
-
-
 
         .continue-btn {
             margin-top: 20px !important;
@@ -471,6 +490,4 @@
             font-size: 17px !important;
         }
     }
-
-
 }

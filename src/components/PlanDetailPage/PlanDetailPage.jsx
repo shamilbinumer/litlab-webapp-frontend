@@ -6,16 +6,17 @@ import UserProfile from '../common/UserProfile/UserProfile';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const PlanDetailPage = () => {
     const [searchParams] = useSearchParams();
     const [activePlan, setActivePlan] = useState('silver');
     const [activeSlide, setActiveSlide] = useState(1);
     const navigate = useNavigate();
+    const [slider, setSlider] = useState(null);
 
     useEffect(() => {
         const planFromUrl = searchParams.get('plan');
-        // If diamond is accessed directly via URL, redirect to silver
         if (planFromUrl === 'diamond') {
             setActivePlan('silver');
         } else if (planFromUrl) {
@@ -24,19 +25,142 @@ const PlanDetailPage = () => {
     }, [searchParams]);
 
     const handleBuyNow = (plan) => {
-        // Extract paper count from the period (e.g., "6 Paper" -> "6")
         const paperCount = plan.period.split(' ')[0];
-        
-        // Create the query string with all required parameters
         const queryParams = new URLSearchParams({
             category: activePlan,
             amount: plan.price,
             paperCount: paperCount
         }).toString();
-
-        // Navigate to cart with query parameters
         navigate(`/cart/${activePlan}/${plan.price}/${paperCount}`);
     };
+
+    const plans = {
+        silver: [
+            {
+                id: 0,
+                price: 99,
+                strikedprice: 149,
+                period: '1 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                ]
+            },
+            {
+                id: 1,
+                price: 249,
+                strikedprice: 449,
+                period: '4 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                ]
+            },
+            {
+                id: 2,
+                price: 129,
+                strikedprice: 249,
+                period: '2 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                ]
+            }
+        ],
+        gold: [
+            {
+                id: 0,
+                price: 159,
+                strikedprice: 449,
+                period: '1 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                    'Practice Tests',
+                    'Video Classes',
+                ]
+            },
+            {
+                id: 1,
+                price: 569,
+                strikedprice: 1499,
+                period: '4 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                    'Practice Tests',
+                    'Video Classes',
+                ]
+            },
+            {
+                id: 2,
+                price: 289,
+                strikedprice: 799,
+                period: '2 Paper',
+                features: [
+                    'Access to High-Quality Notes',
+                    'Practice Tests',
+                    'Video Classes',
+                ]
+            }
+        ],
+        diamond: [
+            {
+                id: 0,
+                price: 299,
+                period: '1 Paper',
+                features: [
+                    "Access to High Quality Notes",
+                    "Video Classes ",
+                    "Practice Tests",
+                    "Model Question Papers",
+                    "Mentorship",
+                    "AI Assistance",
+                ]
+            },
+            {
+                id: 1,
+                price: 4999,
+                period: '6 Paper',
+                features: [
+                    "Access to High Quality Notes",
+                    "Video Classes ",
+                    "Practice Tests",
+                    "Model Question Papers",
+                    "Mentorship",
+                    "AI Assistance",
+                ]
+            },
+            {
+                id: 2,
+                price: 499,
+                period: '2 Paper',
+                features: [
+                    "Access to High Quality Notes",
+                    "Video Classes ",
+                    "Practice Tests",
+                    "Model Question Papers",
+                    "Mentorship",
+                    "AI Assistance",
+                ]
+            }
+        ]
+    };
+
+    const NextArrow = ({ onClick }) => (
+        <button
+            className="nav-button next"
+            onClick={onClick}
+            aria-label="Next slide"
+        >
+            <ChevronRight className="nav-icon" />
+        </button>
+    );
+
+    const PrevArrow = ({ onClick }) => (
+        <button
+            className="nav-button prev"
+            onClick={onClick}
+            aria-label="Previous slide"
+        >
+            <ChevronLeft className="nav-icon" />
+        </button>
+    );
 
     const settings = {
         className: "center",
@@ -53,6 +177,8 @@ const PlanDetailPage = () => {
         beforeChange: (current, next) => {
             setActiveSlide(next);
         },
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 993,
@@ -81,121 +207,6 @@ const PlanDetailPage = () => {
         ]
     };
 
-    const plans = {
-        silver: [
-            {
-                id: 0,
-                price: 99,
-                strikedprice:149,
-                period: '1 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Ideal for Exam Preparation',
-                    'Downloadable and Printable'
-                ]
-            },
-            {
-                id: 1,
-                price: 249,
-                strikedprice:449,
-                period: '4 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Ideal for Exam Preparation',
-                    'Downloadable and Printable'
-                ]
-            },
-            {
-                id: 2,
-                price: 129,
-                strikedprice:249,
-                period: '2 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Ideal for Exam Preparation',
-                    'Downloadable and Printable'
-                ]
-            }
-        ],
-        gold: [
-            {
-                id: 0,
-                price: 159,
-                strikedprice:449,
-                period: '1 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live Classes Access',
-                    'Downloadable and Printable',
-                    'Practice Tests'
-                ]
-            },
-            {
-                id: 1,
-                price: 569,
-                strikedprice:1499,
-                period: '4 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live Classes Access',
-                    'Downloadable and Printable',
-                    'Practice Tests'
-                ]
-            },
-            {
-                id: 2,
-                price: 289,
-                strikedprice:799,
-                period: '2 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live Classes Access',
-                    'Downloadable and Printable',
-                    'Practice Tests'
-                ]
-            }
-        ],
-        diamond: [
-            {
-                id: 0,
-                price: 299,
-                period: '1 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live & Recorded Classes',
-                    'Expert Mentorship',
-                    'Practice Tests',
-                    'Premium Study Materials'
-                ]
-            },
-            {
-                id: 1,
-                price: 4999,
-                period: '6 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live & Recorded Classes',
-                    'Expert Mentorship',
-                    'Practice Tests',
-                    'Premium Study Materials'
-                ]
-            },
-            {
-                id: 2,
-                price: 499,
-                period: '2 Paper',
-                features: [
-                    'Access to High-Quality Notes',
-                    'Live & Recorded Classes',
-                    'Expert Mentorship',
-                    'Practice Tests',
-                    'Premium Study Materials'
-                ]
-            }
-        ]
-    };
-
-    // Check if a plan is available
     const isPlanAvailable = (planType) => {
         return planType !== 'diamond';
     };
@@ -205,7 +216,6 @@ const PlanDetailPage = () => {
         return [...currentPlanCards];
     };
 
-    // Handle tab click with availability check
     const handleTabClick = (planType) => {
         if (isPlanAvailable(planType)) {
             setActivePlan(planType);
@@ -248,7 +258,7 @@ const PlanDetailPage = () => {
 
                     {activePlan !== 'diamond' ? (
                         <div className="plan-cards">
-                            <Slider {...settings}>
+                            <Slider ref={setSlider} {...settings}>
                                 {getOrderedCards().map((plan, index) => (
                                     <div key={plan.id} className="slide-wrapper">
                                         <div className='plan-card'>
@@ -257,22 +267,22 @@ const PlanDetailPage = () => {
                                                 {plan.price}
                                                 <span className="period">/{plan.period}</span>
                                             </div>
-                                            <div className="price" style={{fontSize:'15px'}}>
-                                                <span className="currency" style={{fontSize:'15px'}}>₹</span>
-                                               <strike style={{fontSize:'15px'}}> {plan.strikedprice}</strike>
-                                                <span className="period" style={{fontSize:'15px'}}>/{plan.period}</span>
+                                            <div className="price" style={{ fontSize: '15px' }}>
+                                                <span className="currency" style={{ fontSize: '15px' }}>₹</span>
+                                                <strike style={{ fontSize: '15px' }}> {plan.strikedprice}</strike>
+                                                <span className="period" style={{ fontSize: '15px' }}>/{plan.period}</span>
                                             </div>
 
                                             <div className="features">
                                                 {plan.features.map((feature, idx) => (
                                                     <div key={idx} className="feature">
-                                                        <span className="bullet">•</span> 
+                                                        <span className="bullet">•</span>
                                                         <span>{feature}</span>
                                                     </div>
                                                 ))}
                                             </div>
 
-                                            <button 
+                                            <button
                                                 className="buy-now"
                                                 onClick={() => handleBuyNow(plan)}
                                             >
@@ -293,7 +303,7 @@ const PlanDetailPage = () => {
                                         <li key={idx}><span className="bullet">•</span> {feature}</li>
                                     ))}
                                 </ul>
-                                <button 
+                                <button
                                     className="return-btn"
                                     onClick={() => setActivePlan('gold')}
                                 >

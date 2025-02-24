@@ -235,7 +235,7 @@ const MobileIndexPage = () => {
 
                     <div className="promo-card">
                         <div className="promo-content">
-                            <h2 className="promo-title">Master Your Grades<br />with Lit Lab</h2>
+                            <h2 className="promo-title">Master Your Grades<br />with LitLab</h2>
                             <button className="explore-button">Explore more</button>
                         </div>
                         <div className="phone-mockup"></div>

@@ -7,6 +7,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { LuEye } from 'react-icons/lu';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
+import ChatBot from '../ChatBot/ChatBot';
 
 const MyCourses = () => {
     const [papers, setPapers] = useState([]);
@@ -85,10 +86,11 @@ const MyCourses = () => {
                     <SideNave />
                 </div>
                 <div className="right-side">
-                    <Link to='/chat-with-expert'>  <div className="chat-expert">
+                     {/* <div className="chat-expert">
                         <div className="chat-title">Chat with Expert</div>
                         <img src="/Images/chatexpert.png" alt="" />
-                    </div></Link>
+                    </div> */}
+                    <ChatBot />
                     <div className="heading-section">
                         <Link to="/my-profile">
                             <div className="">

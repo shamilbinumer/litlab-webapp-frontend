@@ -85,7 +85,9 @@ const SideNave = () => {
                                 <img src="/Images/Logo P 7.png" alt="" />
                             </div>
                         </Link>
-                        <div className='second-icon'>
+                        <div className='second-icon'
+                        //  data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"
+                         >
                             <img src="/Images/Frame 1261153187.png" alt="" />
                         </div>
                         <div className="nav-items">
@@ -106,7 +108,7 @@ const SideNave = () => {
                             </Link>
                             <Link to='/cart'>
                                 <div className={`nav-item notification ${activeTab === 'cart' ? 'active' : ''}`}>
-                                    <TiShoppingCart style={{fontSize:'20px'}} />
+                                    <TiShoppingCart style={{ fontSize: '20px' }} />
                                     {!isLoading && cartItems.length > 0 && (
                                         <div className="count">{cartItems.length}</div>
                                     )}
@@ -124,6 +126,29 @@ const SideNave = () => {
                         <UserProfile />
                     </div>
                 </div>
+                {/* =============OfCanvass================ */}
+                <div className="offcanvas offcanvas-start" tabIndex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                    <div className="offcanvas-header">
+                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div className="offcanvas-body">
+                        {/* <div>
+                            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                        </div>
+                        <div className="dropdown mt-3">
+                            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Dropdown button
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li><a className="dropdown-item" href="#">Action</a></li>
+                                <li><a className="dropdown-item" href="#">Another action</a></li>
+                                <li><a className="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </div> */}
+                    </div>
+                </div>
+                {/* =============OfCanvass================ */}
+
             </div>
 
             <div className="mobile-sideNav">
