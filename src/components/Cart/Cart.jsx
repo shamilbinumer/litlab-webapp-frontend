@@ -26,9 +26,10 @@ const Cart = () => {
     const [showPaperCountAlert, setShowPaperCountAlert] = useState(false);
     const [showOrderSuccess, setShowOrderSuccess] = useState(false);
     const [paymentProcessing, setPaymentProcessing] = useState(false);
-    const [userdetails,setUserDetails]=useState(null)
+    const [userdetails, setUserDetails] = useState(null)
     const navigate = useNavigate();
-    const { category, amount, paperCount } = useParams();
+    const { planIndex, amount, paperCount } = useParams();
+    const planIndexNumber = Number(planIndex);
     const finalAmount = Number(amount);
 
     // Calculate GST and total amount
@@ -62,11 +63,24 @@ const Cart = () => {
             navigate('/login');
         }
     };
-
+    //fethc Plan details
+    const fetchPlanDetails = async () => {
+        try {
+            const response = await fetch(`${baseUrl}/api/fetch-plan-details`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch plan details');
+            }
+            const data = await response.json();
+            return data.plans; // Returning plans array
+        } catch (err) {
+            console.error(err.message);
+            return [];
+        }
+    };
+    // fetch cart items
     const fetchCartItems = async () => {
         try {
             const authToken = localStorage.getItem('authToken');
-
             if (!authToken) {
                 navigate('/login');
                 return;
@@ -89,8 +103,21 @@ const Cart = () => {
                 throw new Error('Failed to fetch cart items');
             }
 
-            const data = await response.json();
-            setCartItems(data.cart);
+            const cartData = await response.json();
+            console.log(cartData.cart);
+
+            setCartItems(cartData.cart);
+
+            // Fetch plan details
+            const plans = await fetchPlanDetails();
+
+            // Check if any cart item contains 'videoClass'
+            const hasVideoClass = cartData.cart.some(item => item.videoClassCount > 0);
+
+            if (hasVideoClass) {
+                console.log("Plan is 1");
+            }
+
             setLoading(false);
         } catch (err) {
             setError(err.message);
@@ -133,13 +160,13 @@ const Cart = () => {
                 prefill: {
                     name: `${userdetails.name}`,
                     email: `${userdetails.emil}`,
-                    contact:`${userdetails.phone}`
+                    contact: `${userdetails.phone}`
                 },
                 theme: {
                     color: '#6BCCE5'
                 },
                 modal: {
-                    ondismiss: function() {
+                    ondismiss: function () {
                         setPaymentProcessing(false);
                     }
                 }
@@ -162,12 +189,12 @@ const Cart = () => {
             setShowPaperCountAlert(true);
             return;
         }
-        
+
         if (cartItems.length < parseInt(paperCount)) {
             setShowPaperCountAlert(true);
             return;
         }
-        
+
         setShowCheckoutAlert(true);
     };
 
@@ -221,18 +248,40 @@ const Cart = () => {
         }
     };
 
+    // Modified processCheckout function to correctly handle plans for each item
     const processCheckout = async () => {
         try {
             setCheckoutLoading(true);
             const authToken = localStorage.getItem('authToken');
-
+    
             if (!authToken) {
                 navigate('/login');
                 return;
             }
-
+    
+            // Map each course with its appropriate plan
+            const purchases = cartItems.map(item => {
+                // Debug the values
+                console.log("Item:", item.id, "videoClassCount:", item.videoClassCount, "planIndexNumber:", planIndexNumber);
+    
+                // Set plan based on videoClassCount
+                // If videoClassCount > 0, use the selected plan index, otherwise use Silver (1)
+                const plan = item.videoClassCount > 0 ? planIndexNumber : 1;
+                
+                const currentDate = new Date();
+                return {
+                    courseId: item.id,
+                    date: currentDate,
+                    plan: plan, 
+                    expired: false
+                };
+            });
+    
+            console.log("Purchases to send:", purchases);
+    
+            // For backward compatibility, also send courseIds array
             const courseIds = cartItems.map(item => item.id);
-
+    
             const response = await fetch(`${baseUrl}/api/place-order`, {
                 method: 'POST',
                 headers: {
@@ -240,22 +289,21 @@ const Cart = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    courseIds,
-                    plan: category
+                    purchases, courseIds
                 })
             });
-
+    
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
                 navigate('/login');
                 return;
             }
-
+    
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to place order');
             }
-
+    
             const data = await response.json();
             if (data.success) {
                 setCartItems([]);
@@ -271,7 +319,6 @@ const Cart = () => {
             setPaymentProcessing(false);
         }
     };
-
     const handleBackClick = () => {
         navigate(-1);
     };
@@ -284,7 +331,7 @@ const Cart = () => {
     if (loading) {
         return (
             <div>
-                <PreLoader/>
+                <PreLoader />
             </div>
         );
     }
@@ -294,123 +341,123 @@ const Cart = () => {
     }
 
     return (
-       <div className="cartMainWrapper">
-         <div className="cart-container">
-            <div className="left-side">
-                <SideNave />
-            </div>
-            <div className="right-side">
-                <div className="cart-header">
-                    <button className="back-button" onClick={handleBackClick}>
-                        <FaArrowLeft /> Cart
-                    </button>
-                    <div className="cart-icon">
-                        <span className="cart-count">{cartItems.length}</span>
-                        <img src="/Images/cartIcon.png" alt="" />
-                    </div>
+        <div className="cartMainWrapper">
+            <div className="cart-container">
+                <div className="left-side">
+                    <SideNave />
                 </div>
+                <div className="right-side">
+                    <div className="cart-header">
+                        <button className="back-button" onClick={handleBackClick}>
+                            <FaArrowLeft /> Cart
+                        </button>
+                        <div className="cart-icon">
+                            <span className="cart-count">{cartItems.length}</span>
+                            <img src="/Images/cartIcon.png" alt="" />
+                        </div>
+                    </div>
 
-                <div className="modules-grid">
-                    {cartItems.map(item => (
-                        <div key={item.id}>
-                            <div className="module-card">
-                                <div className="module-content">
-                                    <div className="module-text">
-                                        <div className="module-title">{item.title}</div>
-                                        <div className="module-subtitle">
-                                            {item.course} - {item.semester} Semester
+                    <div className="modules-grid">
+                        {cartItems.map(item => (
+                            <div key={item.id}>
+                                <div className="module-card">
+                                    <div className="module-content">
+                                        <div className="module-text">
+                                            <div className="module-title">{item.title}</div>
+                                            <div className="module-subtitle">
+                                                {item.course} - {item.semester} Semester
+                                            </div>
+                                            <div className="module-details">
+                                                <span>Paper Type: {item.paperType}</span>
+                                            </div>
+                                            <div className="read-more-btn">
+                                                <button>
+                                                    Read Summary <FiEye />
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="module-details">
-                                            <span>Paper Type: {item.paperType}</span>
-                                        </div>
-                                        <div className="read-more-btn">
-                                            <button>
-                                                Read Summary <FiEye />
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="checklist-icon">
-                                        <img src="/Images/pad-simplem.png" alt="" />
-                                        <div>
-                                            <RiDeleteBinLine 
-                                                className='delete-btn' 
-                                                onClick={() => initiateDelete(item)}
-                                                style={{ 
-                                                    cursor: deleteLoading ? 'not-allowed' : 'pointer',
-                                                    opacity: deleteLoading ? 0.5 : 1
-                                                }}
-                                            />
+                                        <div className="checklist-icon">
+                                            <img src="/Images/pad-simplem.png" alt="" />
+                                            <div>
+                                                <RiDeleteBinLine
+                                                    className='delete-btn'
+                                                    onClick={() => initiateDelete(item)}
+                                                    style={{
+                                                        cursor: deleteLoading ? 'not-allowed' : 'pointer',
+                                                        opacity: deleteLoading ? 0.5 : 1
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+
+                    {cartItems.length === 0 ? (
+                        <div className="empty-cart">
+                            <p>Your cart is empty</p>
+                            <button onClick={() => navigate('/')}>Browse Papers</button>
                         </div>
-                    ))}
+                    ) : (
+                        <div className="checkout-section">
+                            <div className="price-breakdown">
+                                <div className="price-item">
+                                    <span>Base Price:</span>
+                                    <span>₹{finalAmount.toFixed(2)}</span>
+                                </div>
+                                <div className="price-item gst">
+                                    <span>GST (18%):</span>
+                                    <span>₹{gstAmount.toFixed(2)}</span>
+                                </div>
+                                <div className="price-item total">
+                                    <span>Total Amount:</span>
+                                    <span>₹{totalAmount.toFixed(2)}</span>
+                                </div>
+                            </div>
+                            <div className="checkout-button">
+                                <button
+                                    onClick={handleCheckout}
+                                    disabled={checkoutLoading || paymentProcessing}
+                                    className={`${checkoutLoading || paymentProcessing ? 'loading' : ''}`}
+                                >
+                                    {checkoutLoading || paymentProcessing ? 'Processing...' : 'Check out'}
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {cartItems.length === 0 ? (
-                    <div className="empty-cart">
-                        <p>Your cart is empty</p>
-                        <button onClick={() => navigate('/')}>Browse Papers</button>
-                    </div>
-                ) : (
-                    <div className="checkout-section">
-                        <div className="price-breakdown">
-                            <div className="price-item">
-                                <span>Base Price:</span>
-                                <span>₹{finalAmount.toFixed(2)}</span>
-                            </div>
-                            <div className="price-item gst">
-                                <span>GST (18%):</span>
-                                <span>₹{gstAmount.toFixed(2)}</span>
-                            </div>
-                            <div className="price-item total">
-                                <span>Total Amount:</span>
-                                <span>₹{totalAmount.toFixed(2)}</span>
-                            </div>
-                        </div>
-                        <div className="checkout-button">
-                            <button 
-                                onClick={handleCheckout}
-                                disabled={checkoutLoading || paymentProcessing}
-                                className={`${checkoutLoading || paymentProcessing ? 'loading' : ''}`}
-                            >
-                                {checkoutLoading || paymentProcessing ? 'Processing...' : 'Check out'}
-                            </button>
-                        </div>
-                    </div>
-                )}
+                <ConfirmationAlert
+                    isOpen={showDeleteAlert}
+                    message={`Are you sure you want to remove "${itemToDelete?.title}" from your cart?`}
+                    onConfirm={handleDeleteItem}
+                    onCancel={handleCancelDelete}
+                />
+
+                <ConfirmationAlert
+                    isOpen={showCheckoutAlert}
+                    message={`Proceed to payment for ${cartItems.length} papers (₹${totalAmount.toFixed(2)})?`}
+                    onConfirm={processCheckout}
+                    onCancel={() => setShowCheckoutAlert(false)}
+                    paymentProcessing={paymentProcessing}
+                />
+
+                <PaperCountAlert
+                    isOpen={showPaperCountAlert}
+                    onClose={() => setShowPaperCountAlert(false)}
+                    cartCount={cartItems.length}
+                    requiredCount={parseInt(paperCount)}
+                    maxCount={paperCount}
+                />
+
+                <OrderPlacedAlert
+                    isOpen={showOrderSuccess}
+                    onClose={handleOrderSuccessClose}
+                />
             </div>
-
-            <ConfirmationAlert 
-                isOpen={showDeleteAlert}
-                message={`Are you sure you want to remove "${itemToDelete?.title}" from your cart?`}
-                onConfirm={handleDeleteItem}
-                onCancel={handleCancelDelete}
-            />
-
-            <ConfirmationAlert 
-                isOpen={showCheckoutAlert}
-                message={`Proceed to payment for ${cartItems.length} papers (₹${totalAmount.toFixed(2)})?`}
-                onConfirm={handlePayment}
-                onCancel={() => setShowCheckoutAlert(false)}
-                paymentProcessing={paymentProcessing}
-            />
-
-            <PaperCountAlert 
-                isOpen={showPaperCountAlert}
-                onClose={() => setShowPaperCountAlert(false)}
-                cartCount={cartItems.length}
-                requiredCount={parseInt(paperCount)}
-                maxCount={paperCount}
-            />
-
-            <OrderPlacedAlert 
-                isOpen={showOrderSuccess}
-                onClose={handleOrderSuccessClose}
-            />
         </div>
-       </div>
     );
 };
 

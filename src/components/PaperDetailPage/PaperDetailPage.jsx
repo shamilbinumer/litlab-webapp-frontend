@@ -332,7 +332,7 @@ const PaperDetailPage = () => {
                     <div className='user-profilee'>
                         <UserProfile />
                     </div>
-                    <Link onClick={() => navigate('/')}>
+                    <Link to='/'>
                         <div className="back-btn-container">
                             <FaArrowLeft className="back-btn" />
                         </div>

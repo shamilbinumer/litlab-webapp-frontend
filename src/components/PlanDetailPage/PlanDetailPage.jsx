@@ -24,14 +24,21 @@ const PlanDetailPage = () => {
         }
     }, [searchParams]);
 
+    // Function to get plan index based on plan name
+    const getPlanIndex = (planName) => {
+        switch(planName) {
+            case 'silver': return 1;
+            case 'diamond': return 2;
+            case 'gold': return 0;
+            default: return 1; // Default to silver if unknown
+        }
+    };
+
     const handleBuyNow = (plan) => {
         const paperCount = plan.period.split(' ')[0];
-        const queryParams = new URLSearchParams({
-            category: activePlan,
-            amount: plan.price,
-            paperCount: paperCount
-        }).toString();
-        navigate(`/cart/${activePlan}/${plan.price}/${paperCount}`);
+        const planIndex = getPlanIndex(activePlan);
+        
+        navigate(`/cart/${planIndex}/${plan.price}/${paperCount}`);
     };
 
     const plans = {
@@ -110,7 +117,7 @@ const PlanDetailPage = () => {
                     "Practice Tests",
                     "Model Question Papers",
                     "Mentorship",
-                    "AI Assistance",
+                    "AI Assistance",
                 ]
             },
             {
@@ -123,7 +130,7 @@ const PlanDetailPage = () => {
                     "Practice Tests",
                     "Model Question Papers",
                     "Mentorship",
-                    "AI Assistance",
+                    "AI Assistance",
                 ]
             },
             {
@@ -136,7 +143,7 @@ const PlanDetailPage = () => {
                     "Practice Tests",
                     "Model Question Papers",
                     "Mentorship",
-                    "AI Assistance",
+                    "AI Assistance",
                 ]
             }
         ]

@@ -86,7 +86,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         }
 
         const data = await response.json();
-        console.log("Fetched video assessment data:", data); // Log the response
 
         // Access the questions array from the first object in the data array
         const questions = data.data[0]?.questions || [];

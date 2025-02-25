@@ -354,7 +354,6 @@ const IndexPage = () => {
                                                         </div>
                                                         <div className="card-details">
                                                             <h2>{paper.courseTitle || paper.title}</h2>
-                                                            <p>{paper.description || 'Description'}</p>
                                                         </div>
                                                     </Link>
                                                     <div className="buttons">
