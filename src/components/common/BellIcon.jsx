@@ -5,6 +5,7 @@ import { RiBookLine } from "react-icons/ri";
 import { IoHelpCircleOutline } from "react-icons/io5";
 import { MdOutlineChecklist } from "react-icons/md";
 import { IoIosPower } from "react-icons/io";
+import { IoClose } from "react-icons/io5"; // Added close icon import
 import "./BellIcon.scss";
 
 const BellIcon = () => {
@@ -25,7 +26,12 @@ const BellIcon = () => {
 
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header"></div>
+        <div className="sidebar-header">
+          {/* Added close icon here */}
+          <div className="close-icon" onClick={toggleSidebar}>
+            <IoClose className="icon" />
+          </div>
+        </div>
         <div className="sidebar-content">
           <div className="sidebar-item">
             <RiBookLine className="sidebar-icon" />
