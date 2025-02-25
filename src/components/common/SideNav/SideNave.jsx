@@ -7,7 +7,12 @@ import { GrDiamond } from 'react-icons/gr'
 import { TbBook2 } from 'react-icons/tb'
 import { LuUserRound } from 'react-icons/lu'
 import { TiShoppingCart } from 'react-icons/ti'
+import { IoNotificationsOutline } from 'react-icons/io5'
+import { MdOutlineHelp } from 'react-icons/md'
+import { FiFileText } from 'react-icons/fi'
+import { IoLogOutOutline } from 'react-icons/io5'
 import baseUrl from '../../../baseUrl'
+import { IoIosPower } from 'react-icons/io'
 
 const SideNave = () => {
     const location = useLocation();
@@ -75,6 +80,11 @@ const SideNave = () => {
         fetchCartItems();
     }, []);
 
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        navigate('/login');
+    };
     return (
         <div className='SideNavMainWrapper'>
             <div className="desktopSideNavWrapper">
@@ -86,8 +96,8 @@ const SideNave = () => {
                             </div>
                         </Link>
                         <div className='second-icon'
-                        //  data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"
-                         >
+                            data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"
+                        >
                             <img src="/Images/Frame 1261153187.png" alt="" />
                         </div>
                         <div className="nav-items">
@@ -127,26 +137,39 @@ const SideNave = () => {
                     </div>
                 </div>
                 {/* =============OfCanvass================ */}
+                {/* =============OfCanvass================ */}
                 <div className="offcanvas offcanvas-start" tabIndex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                     <div className="offcanvas-header">
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div className="offcanvas-body">
-                        {/* <div>
-                            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                        <div className="sidebar-content">
+                            <div className="sidebar-item">
+                                <TbBook2 className="sidebar-icon" />
+                                <span>My Courses</span>
+                            </div>
+                            <div className="sidebar-item">
+                                <IoNotificationsOutline className="sidebar-icon" />
+                                <span>Notifications</span>
+                            </div>
+                            <div className="sidebar-item">
+                                <MdOutlineHelp className="sidebar-icon" />
+                                <span>Help</span>
+                            </div>
+                            <div className="sidebar-item">
+                                <FiFileText className="sidebar-icon" />
+                                <span>Terms & conditions</span>
+                            </div>
+
+                            {/* Logout placed at the bottom */}
+                            <div className="sidebar-item logout" onClick={handleLogout}>
+                                <IoIosPower  className="sidebar-icon logout-icon" />
+                                <span className="logout-text">Logout</span>
+                            </div>
                         </div>
-                        <div className="dropdown mt-3">
-                            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Dropdown button
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="#">Action</a></li>
-                                <li><a className="dropdown-item" href="#">Another action</a></li>
-                                <li><a className="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </div> */}
                     </div>
                 </div>
+                {/* =============OfCanvass================ */}
                 {/* =============OfCanvass================ */}
 
             </div>

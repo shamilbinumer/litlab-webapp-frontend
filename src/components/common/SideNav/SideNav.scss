@@ -2,16 +2,16 @@
     .mobile-sideNav {
         display: none !important;
     }
-    .offcanvas{
-        width: 14%;
-    }
+
+  
+
     .sideNav {
         width: 100%;
         height: 100vh;
         background-color: #6BCCE5;
         padding: 1.5rem;
         position: relative; // Ensures absolute positioning works
-      
+
 
         .notification {
             position: relative;
@@ -81,6 +81,78 @@
 
     }
 
+    .offcanvas {
+        max-width: 230px;
+
+        .offcanvas-header {
+            background-color: #6CCEE6;
+            height: 80px;
+            padding: 1rem;
+
+            .btn-close {
+                margin-left: auto;
+                color: #fff;
+            }
+        }
+
+        .offcanvas-body {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 80px); // Subtract header height
+
+            .sidebar-content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                .sidebar-item {
+                    display: flex;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #f2f2f2;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
+
+                    &:hover {
+                        background-color: #f8f8f8;
+                    }
+
+                    .sidebar-icon {
+                        font-size: 22px;
+                        margin-right: 15px;
+                        color: #333;
+                    }
+
+                    span {
+                        font-size: 13px;
+                        color: #333;
+                    }
+                }
+
+                .sidebar-divider {
+                    height: 1px;
+                    background-color: #e0e0e0;
+                    margin: 15px 0;
+                }
+
+                .logout {
+                    margin-top: auto; // This pushes the logout button to the bottom
+                    border-top: 1px solid #f2f2f2;
+
+                    .logout-icon {
+                        color: #ff3b30;
+                    }
+
+                    .logout-text {
+                        color: #ff3b30;
+                    }
+                }
+            }
+        }
+    }
+
+
     .mobile-sideNav {
         display: none !important;
 
@@ -93,9 +165,11 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             padding: 8px 0;
             z-index: 1000;
-            .icon{
+
+            .icon {
                 position: relative;
-                .mobile-count{
+
+                .mobile-count {
                     position: absolute;
                     background-color: red;
                     right: -10px;
