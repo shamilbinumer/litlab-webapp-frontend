@@ -25,52 +25,76 @@ import TermsConditions from "./components/TermsConditions/TermsConditions";
 
 function App() {
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isBlurred, setIsBlurred] = useState(false);
 
   useEffect(() => {
+    // Screenshot detection for Windows (PrintScreen key)
     const handleKeyUp = (e) => {
       if (e.key === "PrintScreen") {
-        console.log("The 'Print Screen' key is pressed");
+        console.log("PrintScreen key detected! Overlay activated.");
         setShowOverlay(true);
 
-        // Hide the overlay after 1 second
         setTimeout(() => {
           setShowOverlay(false);
         }, 1000);
       }
     };
 
+    // Detect when user switches apps (for iOS & Android)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsBlurred(true);
+      } else {
+        setIsBlurred(false);
+      }
+    };
+
+    // Add event listeners
     window.addEventListener("keyup", handleKeyUp);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       window.removeEventListener("keyup", handleKeyUp);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [App]);
+  }, []);
 
   return (
     <HashRouter>
+      {/* Screenshot Prevention Overlay */}
       {showOverlay && <div className="black-overlay"></div>}
-      <Routes>
-        <Route path="/" Component={IndexPage} />
-        <Route path="/signup" Component={UserRegister} />
-        <Route path="/login" Component={UserLogin} />
-        <Route path="/welcome" Component={WelcomPage} />
-        <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />
-        <Route path="/lectures/:paperTitle/:paperId/:videoId" Component={Lectures} />
-        <Route path="/my-profile" Component={MyProfile} />
-        <Route path="/quiz-analysis" Component={QuizAnalysis} />
-        <Route path="/my-mock-details" Component={MyMockDetails} />
-        <Route path="/my-course-details" Component={MyCourses} />
-        <Route path="/my-favourites" Component={MyFavorites} />
-        <Route path="/help" Component={Help} />
-        <Route path="/premium-plans" Component={PremiumAccess} />
-        <Route path="/plan-detail-page" Component={PlanDetailPage} />
-        <Route path="/answer-key" Component={AnswerKey} />
-        <Route path="/cart/:planindex/:amount/:paperCount" Component={Cart} />
-        <Route path="/cart" Component={SeparateCart} />
-        <Route path="/instructions" Component={Instructions} />
-        <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
-        <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
-        <Route path="/terms-and-conditions" Component={TermsConditions} />
-      </Routes>
+
+      {/* Apply Blur Effect When App Goes to Background */}
+      <div className={isBlurred ? "blur-content" : ""}>
+
+        {/* Watermark to discourage screenshots */}
+        {(showOverlay || isBlurred) && <div className="watermark">Confidential - {new Date().toLocaleString()}</div>}
+
+        <Routes>
+          <Route path="/" Component={IndexPage} />
+          <Route path="/signup" Component={UserRegister} />
+          <Route path="/login" Component={UserLogin} />
+          <Route path="/welcome" Component={WelcomPage} />
+          <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />
+          <Route path="/lectures/:paperTitle/:paperId/:videoId" Component={Lectures} />
+          <Route path="/my-profile" Component={MyProfile} />
+          <Route path="/quiz-analysis" Component={QuizAnalysis} />
+          <Route path="/my-mock-details" Component={MyMockDetails} />
+          <Route path="/my-course-details" Component={MyCourses} />
+          <Route path="/my-favourites" Component={MyFavorites} />
+          <Route path="/help" Component={Help} />
+          <Route path="/premium-plans" Component={PremiumAccess} />
+          <Route path="/plan-detail-page" Component={PlanDetailPage} />
+          <Route path="/answer-key" Component={AnswerKey} />
+          <Route path="/cart/:planindex/:amount/:paperCount" Component={Cart} />
+          <Route path="/cart" Component={SeparateCart} />
+          <Route path="/instructions" Component={Instructions} />
+          <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
+          <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
+          <Route path="/terms-and-conditions" Component={TermsConditions} />
+        </Routes>
+
+      </div>
     </HashRouter>
   );
 }

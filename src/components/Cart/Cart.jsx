@@ -137,7 +137,7 @@ const Cart = () => {
                 amount: data.amount,
                 currency: 'INR',
                 name: 'Litlab Learning',
-                description: `${category} Plan - ${paperCount} Papers`,
+                description: `${paperCount} Papers`,
                 order_id: data.id,
                 handler: async (response) => {
                     try {
@@ -439,7 +439,7 @@ const Cart = () => {
                 <ConfirmationAlert
                     isOpen={showCheckoutAlert}
                     message={`Proceed to payment for ${cartItems.length} papers (₹${totalAmount.toFixed(2)})?`}
-                    onConfirm={processCheckout}
+                    onConfirm={handlePayment}
                     onCancel={() => setShowCheckoutAlert(false)}
                     paymentProcessing={paymentProcessing}
                 />
