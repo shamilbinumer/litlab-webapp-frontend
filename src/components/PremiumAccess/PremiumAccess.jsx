@@ -85,6 +85,14 @@ const PremiumAccess = () => {
             isAvailable: true
         },
         {
+            id: 'gold',
+            title: 'Gold',
+            features: ['Access to High Quality Notes', 'Video Classes','Practice Tests'],
+            price: 569,
+            originalPrice: 1499,
+            isAvailable: true
+        },
+        {
             id: 'diamond',
             title: 'Diamond',
             features: ['Access to High Quality Notes', 'Video Classes', 'Practice Tests','Model Question Papers','Mentorship','AI Assistance'],
@@ -92,14 +100,6 @@ const PremiumAccess = () => {
             originalPrice: 6999,
             discount: 'Launching Soon',
             isAvailable: false
-        },
-        {
-            id: 'gold',
-            title: 'Gold',
-            features: ['Access to High Quality Notes', 'Video Classes','Practice Tests'],
-            price: 569,
-            originalPrice: 1499,
-            isAvailable: true
         },
     ];
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserLogin.scss';
 import baseUrl from '../../baseUrl';
@@ -12,15 +12,34 @@ const UserLogin = () => {
   const [otpPageIsVisible, setOtpPageIsVisible] = useState(false);
   const [generatedOTP, setGeneratedOTP] = useState('');
   const [enteredOTP, setEnteredOTP] = useState('');
-   const location = useLocation();
-      const navigate = useNavigate();
-      const params = new URLSearchParams(location.search);
-      const price = params.get('price');
-      const couponApplied = params.get('couponApplied');
-      const ogPrice = params.get('ogPrice');
-      const forSem = params.get('forSem');
-    console.log(ogPrice);
+  const [timer, setTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const price = params.get('price');
+  const couponApplied = params.get('couponApplied');
+  const ogPrice = params.get('ogPrice');
+  const forSem = params.get('forSem');
+  console.log(ogPrice);
     
+  // Timer effect to countdown from 30 seconds
+  useEffect(() => {
+    let interval;
+    if (otpPageIsVisible && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setCanResend(true);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [otpPageIsVisible, timer]);
+
   const generateOTP = () => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedOTP(otp);
@@ -36,7 +55,7 @@ const UserLogin = () => {
   };
 
   const sendOTP = async (e) => {
-    e.preventDefault(); // Prevent form submission
+    if (e) e.preventDefault(); // Prevent form submission if called from form
     
     if (mobile.length !== 10) {
       setError('Please enter a valid 10-digit mobile number');
@@ -53,6 +72,9 @@ const UserLogin = () => {
         otp 
       });
       setOtpPageIsVisible(true);
+      // Reset timer and disable resend button
+      setTimer(30);
+      setCanResend(false);
     } catch (error) {
       if (error.response?.status === 404) {
         setError('No account found with this number. Please register first.');
@@ -150,14 +172,20 @@ const UserLogin = () => {
                     </button>
                   </div>
                   <div className="resend-otp">
-                    Didn't receive OTP? 
-                    <button 
-                      onClick={handleResendOTP}
-                      disabled={isLoading}
-                      className="resend-btn"
-                    >
-                      Resend OTP
-                    </button>
+                    {canResend ? (
+                      <>
+                        <p style={{textAlign:'center',paddingTop:'10px'}}>Didn't receive OTP?</p>
+                        <button 
+                          onClick={handleResendOTP}
+                          disabled={isLoading}
+                          className="resend-btn"
+                        >
+                          Resend OTP
+                        </button>
+                      </>
+                    ) : (
+                      <p style={{textAlign:'center'}}>Resend OTP in {timer} seconds</p>
+                    )}
                   </div>
                 </>
               ) : (

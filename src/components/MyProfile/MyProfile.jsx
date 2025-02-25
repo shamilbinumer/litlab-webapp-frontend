@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationAlert from '../common/Alerts/ConformationAlert/ConformationAlert';
+import BellIcon from '../common/BellIcon/BellIcon';
 
 const MyProfile = () => {
     const [user, setUser] = useState(null);
@@ -254,9 +255,9 @@ const MyProfile = () => {
 
     return (
         <div className='MyProfileMainWRapper'>
-            <div className="logout-button-wrapper">
-                <button onClick={handleLogoutClick}><FaPowerOff /></button>
-            </div>
+           <div className="mobile-bell">
+            <BellIcon/>
+           </div>
             <ConfirmationAlert 
                 isOpen={showLogoutAlert}
                 message="Are you sure you want to logout?"

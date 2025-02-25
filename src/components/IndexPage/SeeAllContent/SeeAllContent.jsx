@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IoCartOutline, IoSearchOutline } from 'react-icons/io5';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import BellIcon from '../../common/BellIcon';
+import BellIcon from '../../common/BellIcon/BellIcon';
 import baseUrl from '../../../baseUrl';
 import './SeeAllContent.scss';
 import CircularProgress from '@mui/material/CircularProgress';

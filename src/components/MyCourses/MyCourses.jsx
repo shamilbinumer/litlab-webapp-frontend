@@ -90,7 +90,7 @@ const MyCourses = () => {
                         <div className="chat-title">Chat with Expert</div>
                         <img src="/Images/chatexpert.png" alt="" />
                     </div> */}
-                    <ChatBot />
+                    {/* <ChatBot /> */}
                     <div className="heading-section">
                         <Link to="/my-profile">
                             <div className="">

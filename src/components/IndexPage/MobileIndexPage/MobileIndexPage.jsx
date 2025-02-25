@@ -1,5 +1,5 @@
 import { MdOutlineKeyboardVoice } from 'react-icons/md';
-import BellIcon from '../../common/BellIcon';
+import BellIcon from '../../common/BellIcon/BellIcon';
 import './MobileIndexPage.scss';
 import { IoIosSearch } from 'react-icons/io';
 import { BiMenuAltLeft } from 'react-icons/bi';
@@ -229,14 +229,14 @@ const MobileIndexPage = () => {
                             onChange={(e) => handleSearch(e.target.value)}
                         />
                         <button className="voice-search-button">
-                            <span className="voice-icon"><MdOutlineKeyboardVoice /></span>
+                            {/* <span className="voice-icon"><MdOutlineKeyboardVoice /></span> */}
                         </button>
                     </div>
 
                     <div className="promo-card">
                         <div className="promo-content">
                             <h2 className="promo-title">Master Your Grades<br />with LitLab</h2>
-                            <button className="explore-button">Explore more</button>
+                           <Link to='/see-all-mobile-indexpage'><button className="explore-button">Explore more</button></Link>
                         </div>
                         <div className="phone-mockup"></div>
                     </div>

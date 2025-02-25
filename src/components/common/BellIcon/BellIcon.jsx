@@ -7,16 +7,36 @@ import { MdOutlineChecklist } from "react-icons/md";
 import { IoIosPower } from "react-icons/io";
 import { IoClose } from "react-icons/io5"; // Added close icon import
 import "./BellIcon.scss";
+import ConfirmationAlert from "../Alerts/ConformationAlert/ConformationAlert";
+import { useNavigate } from "react-router-dom";
+
 
 const BellIcon = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleLogoutClick = () => {
+    setShowLogoutAlert(true);
+  };
+
+  const handleConfirmLogout = () => {
+  localStorage.removeItem('authToken');
+  navigate('/login');
+    setShowLogoutAlert(false);
+    setIsSidebarOpen(false);
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutAlert(false);
+  };
+
   return (
-    <div>
+    <div className="BellNavWrapper">
       <div className="bell-icon">
         <FaRegBell className="icon" />
       </div>
@@ -50,9 +70,8 @@ const BellIcon = () => {
             <span>Terms & conditions</span>
           </div>
           <div className="sidebar-divider"></div>
-          <div className="sidebar-item logout">
-            <IoIosPower
-            className="sidebar-icon logout-icon" />
+          <div className="sidebar-item logout" onClick={handleLogoutClick}>
+            <IoIosPower className="sidebar-icon logout-icon" />
             <span className="logout-text">Logout</span>
           </div>
         </div>
@@ -60,6 +79,14 @@ const BellIcon = () => {
 
       {/* Overlay */}
       {isSidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+
+      {/* Confirmation Alert */}
+      <ConfirmationAlert
+        isOpen={showLogoutAlert}
+        message="Are you sure you want to logout?"
+        onConfirm={handleConfirmLogout}
+        onCancel={handleCancelLogout}
+      />
     </div>
   );
 };

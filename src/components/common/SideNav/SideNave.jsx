@@ -13,12 +13,14 @@ import { FiFileText } from 'react-icons/fi'
 import { IoLogOutOutline } from 'react-icons/io5'
 import baseUrl from '../../../baseUrl'
 import { IoIosPower } from 'react-icons/io'
+import ConfirmationAlert from '../Alerts/ConformationAlert/ConformationAlert'
 
 const SideNave = () => {
     const location = useLocation();
     const [activeTab, setActiveTab] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showLogoutAlert, setShowLogoutAlert] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -80,13 +82,29 @@ const SideNave = () => {
         fetchCartItems();
     }, []);
 
+    const promptLogout = () => {
+        setShowLogoutAlert(true);
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         navigate('/login');
     };
+
+    const handleCancelLogout = () => {
+        setShowLogoutAlert(false);
+    };
+
     return (
         <div className='SideNavMainWrapper'>
+            {/* Confirmation Alert */}
+            <ConfirmationAlert
+                isOpen={showLogoutAlert}
+                message="Are you sure you want to logout?"
+                onConfirm={handleLogout}
+                onCancel={handleCancelLogout}
+            />
+
             <div className="desktopSideNavWrapper">
                 <div className="sideNav">
                     <div>
@@ -162,8 +180,8 @@ const SideNave = () => {
                             </div>
 
                             {/* Logout placed at the bottom */}
-                            <div className="sidebar-item logout" onClick={handleLogout}>
-                                <IoIosPower  className="sidebar-icon logout-icon" />
+                            <div className="sidebar-item logout" onClick={promptLogout}>
+                                <IoIosPower className="sidebar-icon logout-icon" />
                                 <span className="logout-text">Logout</span>
                             </div>
                         </div>

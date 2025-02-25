@@ -1,5 +1,6 @@
-// BellIcon.scss
-
+.BellNavWrapper{
+  display: none;
+}
 // Top navigation icons
 .bell-icon {
     background-color: white;
@@ -130,4 +131,10 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 99997;
+  }
+
+  @media(max-width: 768px){
+    .BellNavWrapper{
+      display: block !important;
+    }
   }

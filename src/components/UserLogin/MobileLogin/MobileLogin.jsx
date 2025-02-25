@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
@@ -11,9 +11,27 @@ const MobileLogin = () => {
     const [error, setError] = useState('');
     const [generatedOTP, setGeneratedOTP] = useState('');
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
+    const [timer, setTimer] = useState(30);
+    const [canResend, setCanResend] = useState(false);
     const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
     
     const navigate = useNavigate();
+
+    // Timer effect to countdown from 30 seconds
+    useEffect(() => {
+        let interval;
+        if (otpPageIsVisible && timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+        } else if (timer === 0) {
+            setCanResend(true);
+        }
+        
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [otpPageIsVisible, timer]);
 
     const generateOTP = () => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -47,6 +65,9 @@ const MobileLogin = () => {
                 otp 
             });
             setOtpPageIsVisible(true);
+            // Reset timer and disable resend button
+            setTimer(30);
+            setCanResend(false);
         } catch (error) {
             if (error.response?.status === 404) {
                 setError('No account found with this number. Please register first.');
@@ -81,6 +102,8 @@ const MobileLogin = () => {
     };
 
     const handleSendOTP = async () => {
+        if (!canResend) return;
+        
         setOtp(['', '', '', '', '', '']);
         setError('');
         setIsLoading(true);
@@ -91,6 +114,9 @@ const MobileLogin = () => {
                 phoneNo: mobile, 
                 otp: newOtp 
             });
+            // Reset timer and disable resend button
+            setTimer(30);
+            setCanResend(false);
         } catch (error) {
             setError('Failed to send OTP. Please try again.');
             console.error('OTP send failed', error);
@@ -165,7 +191,11 @@ const MobileLogin = () => {
                             ))}
                         </div>
                         <div className='recent-otp'>
-                            Do not send OTP? <span onClick={handleSendOTP} style={{ cursor: 'pointer' }}>Send OTP</span>
+                            {canResend ? (
+                                <>Do not send OTP? <span onClick={handleSendOTP} style={{ cursor: 'pointer' }}>Send OTP</span></>
+                            ) : (
+                                <>Resend OTP in <span>{timer}</span> seconds</>
+                            )}
                         </div>
                         {error && <p className="error">{error}</p>}
                         <div>
