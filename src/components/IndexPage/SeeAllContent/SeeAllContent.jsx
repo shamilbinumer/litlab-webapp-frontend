@@ -196,7 +196,7 @@ const SeeAllContent = () => {
                                 <div className="paper-card-left">
                                     <div className="paper-image">
                                         <img
-                                            src={paper.image || "/Images/image 6.png"}
+                                            src={paper.imageUrl || "/Images/image 6.png"}
                                             alt={paper.title}
                                         />
                                     </div>

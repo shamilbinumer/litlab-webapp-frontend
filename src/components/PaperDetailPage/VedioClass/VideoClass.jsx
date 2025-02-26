@@ -188,6 +188,24 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
         <div className="col-lg-7 col-md-7 col-sm-12 col-12">
           <div className="vedio-item-right">
             <h1>{video.title}</h1>
+            <p
+  style={{
+    fontFamily: "Inter",
+    fontSize: "12.26px",
+    fontWeight: 400,
+    lineHeight: "16.8px",
+    textAlign: "left",
+    marginTop: "10px",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  }}
+>
+  {video.description}
+</p>
+
+
             <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
             <div className="button-icon">
               {isLocked ? (

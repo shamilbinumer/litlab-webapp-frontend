@@ -270,35 +270,7 @@ const PaperDetailPage = () => {
     if (error) {
         return <div className="error-message">Error loading modules: {error}</div>;
     }
-    if (modules.length === 0) {
-        return (
-            <div className="PaperDetailPageMainWrapper">
-                <div className="detail-page-main">
-                    <div className="left-side">
-                        <SideNave />
-                    </div>
-                    <div className="right-side">
-                        <div className='user-profilee'>
-                            <UserProfile />
-                        </div>
-                        <Link to="/">
-                            <div className="back-btn-container">
-                                <FaArrowLeft className="back-btn" />
-                            </div>
-                        </Link>
-                        <h2 className="paper-title">{paperTitle}</h2>
-                        <div className="small-screen-banner">
-                            <img src="/Images/image 11.png" alt="" />
-                        </div>
-                        <div className="no-modules-message">
-                            No Materials Found for this Paper in Your Semester and Course.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
- 
+
     return (
         <div className="PaperDetailPageMainWrapper">
             {/* Wishlist Alert */}
@@ -353,13 +325,27 @@ const PaperDetailPage = () => {
                                 )
                             ) : activeCategory === 'Study Notes' ? (
                                 activeSubCategory === 'Study Notes' ? (
-                                    modules?.map((module, index) => (
-                                        <ModuleCard
-                                            key={module.id || index}
-                                            module={module}
-                                            index={index}
-                                        />
-                                    ))
+                                    modules.length > 0 ? (
+                                        modules?.map((module, index) => (
+                                            <ModuleCard
+                                                key={module.id || index}
+                                                module={module}
+                                                index={index}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="no-modules-message" style={{ 
+                                            padding: '20px', 
+                                            backgroundColor: '#f9f9f9', 
+                                            borderRadius: '8px',
+                                            textAlign: 'center',
+                                            marginBottom: '20px',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}>
+                                            <p>No Study Notes Available for this Paper in Your Semester and Course.</p>
+                                            <p>Please check other categories like Video Classes or Mock Tests.</p>
+                                        </div>
+                                    )
                                 ) : activeSubCategory === 'Model Question Paper' ? (
                                     <div>
                                         <ModalQuestanPaper paperId={paperId} isAccessible={hasPurchased} />

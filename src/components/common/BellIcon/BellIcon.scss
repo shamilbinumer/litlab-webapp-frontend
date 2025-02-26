@@ -46,6 +46,8 @@
     left: -300px;
     width: 280px;
     height: 100vh;
+    height: 100dvh;
+    height: -webkit-fill-available;
     background-color: #fff;
     z-index: 99998;
     transition: left 0.3s ease;

@@ -4,7 +4,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SideNave from "../common/SideNav/SideNave";
 import axios from "axios";
 import baseUrl from "../../baseUrl";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Help = () => {
     const navigate = useNavigate()
@@ -44,10 +44,11 @@ const Help = () => {
                         <img src="/Images/backgroundRond.png" alt="" />
                     </div>
                     <div className="help-wrapper">
+                        <Link to='/' style={{display:'flex',alignItems:'center'}}>
                         <button className="back-button">
                             <FaArrowLeft />
                         </button>
-                        <h2>Help</h2>
+                        <h2>Help</h2></Link>
                     </div>
                     <form className="help-form">
                         <label>Type of issue</label>

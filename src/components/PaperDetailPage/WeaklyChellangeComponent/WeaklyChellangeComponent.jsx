@@ -351,6 +351,62 @@ const WeeklyChallenge = ({ paperId, userDetails, isAccessible, onPurchaseClick }
   const currentQuestion = questions[currentQuestionIndex];
 
   if (!selectedModule) {
+    // Handle case when no modules are available
+    if (modules.length === 0) {
+      return (
+        <div className="modules-container" style={{textAlign: "center", padding: "2rem"}}>
+          <div className="empty-state" style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "200px",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "8px",
+            padding: "2rem"
+          }}>
+            {/* <img 
+              src="/Images/empty-folder.png" 
+              alt="No modules available" 
+              style={{
+                width: "80px",
+                marginBottom: "1rem"
+              }}
+            /> */}
+            <h3 style={{
+              fontFamily: "Montserrat",
+              fontSize: "20px",
+              color: "#333",
+              marginBottom: "0.5rem"
+            }}>No Modules Available</h3>
+            <p style={{
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              color: "#666",
+              maxWidth: "400px",
+              margin: "0 auto"
+            }}>
+              There are currently no modules available for this weekly challenge. 
+              Please check back later or contact your administrator for assistance.
+            </p>
+            <Link to="/" style={{
+              marginTop: "1.5rem",
+              padding: "10px 20px",
+              backgroundColor: "#4a90e2",
+              color: "white",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              fontWeight: "500"
+            }}>
+              Return to Dashboard
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="modules-container">
         <div className="modules-grid">

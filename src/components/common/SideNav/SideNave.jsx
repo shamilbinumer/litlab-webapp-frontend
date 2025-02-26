@@ -161,22 +161,26 @@ const SideNave = () => {
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div className="offcanvas-body">
-                        <div className="sidebar-content">
+                    <div className="sidebar-content">
                             <div className="sidebar-item">
-                                <TbBook2 className="sidebar-icon" />
-                                <span>My Courses</span>
+                                <Link to='/my-course-details'>
+                                    <TbBook2 className="sidebar-icon" />
+                                    <span>My Courses</span></Link>
                             </div>
-                            <div className="sidebar-item">
+                            {/* <div className="sidebar-item">
                                 <IoNotificationsOutline className="sidebar-icon" />
                                 <span>Notifications</span>
+                            </div> */}
+                            <div className="sidebar-item">
+                            <Link to='/help'>
+                            <MdOutlineHelp className="sidebar-icon" />
+                            <span>Help</span>
+                            </Link>
                             </div>
                             <div className="sidebar-item">
-                                <MdOutlineHelp className="sidebar-icon" />
-                                <span>Help</span>
-                            </div>
-                            <div className="sidebar-item">
-                                <FiFileText className="sidebar-icon" />
-                                <span>Terms & conditions</span>
+                              <Link to='/terms-and-conditions'> 
+                               <FiFileText className="sidebar-icon" />
+                              <span>Terms & conditions</span></Link>
                             </div>
 
                             {/* Logout placed at the bottom */}
@@ -184,7 +188,7 @@ const SideNave = () => {
                                 <IoIosPower className="sidebar-icon logout-icon" />
                                 <span className="logout-text">Logout</span>
                             </div>
-                        </div>
+              </div>
                     </div>
                 </div>
                 {/* =============OfCanvass================ */}

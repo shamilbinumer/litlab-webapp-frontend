@@ -45,7 +45,7 @@ const PlanDetailPage = () => {
         silver: [
             {
                 id: 0,
-                price: 99,
+                price: 69,
                 strikedprice: 149,
                 period: '1 Paper',
                 features: [
@@ -54,7 +54,7 @@ const PlanDetailPage = () => {
             },
             {
                 id: 1,
-                price: 249,
+                price: 199,
                 strikedprice: 449,
                 period: '4 Paper',
                 features: [
@@ -63,7 +63,7 @@ const PlanDetailPage = () => {
             },
             {
                 id: 2,
-                price: 129,
+                price: 109,
                 strikedprice: 249,
                 period: '2 Paper',
                 features: [
@@ -74,7 +74,7 @@ const PlanDetailPage = () => {
         gold: [
             {
                 id: 0,
-                price: 159,
+                price: 129,
                 strikedprice: 449,
                 period: '1 Paper',
                 features: [
@@ -85,7 +85,7 @@ const PlanDetailPage = () => {
             },
             {
                 id: 1,
-                price: 569,
+                price: 529,
                 strikedprice: 1499,
                 period: '4 Paper',
                 features: [
@@ -96,7 +96,7 @@ const PlanDetailPage = () => {
             },
             {
                 id: 2,
-                price: 289,
+                price: 249,
                 strikedprice: 799,
                 period: '2 Paper',
                 features: [

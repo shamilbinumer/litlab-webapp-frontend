@@ -167,16 +167,13 @@ const MobileIndexPage = () => {
                         <div>
                             <div className="category-card">
                                 <div className="category-img">
-                                    <img src={item.image || "/Images/image 6.png"} alt={item.title} />
+                                    <img src={item.imageUrl || "/Images/image 6.png"} alt={item.title} />
                                 </div>
 
                                 <div className="card-description">
                                     <div className="main-description">
                                         <h6>{item.title}</h6>
                                     </div>
-                                    {/* <div className="sub-description">
-                                        <p>{item.lessons || '0 Lessons'}</p>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

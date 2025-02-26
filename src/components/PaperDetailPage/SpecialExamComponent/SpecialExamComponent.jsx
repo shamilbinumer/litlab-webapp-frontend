@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { LuArrowLeft, LuLock } from 'react-icons/lu';
@@ -272,13 +272,13 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           category: "Special Exam",
           isSubmitted: true,
           marks: correctCount,
-          module: selectedModule?.module || 0, // Default to 0 if undefined
-          moduleTitle: selectedModule?.title || "", // Default to empty string if undefined
-          paperTitle: paperDetails?.paperTitle || "", // Default to empty string if undefined
-          paperType: paperDetails?.paperType || "", // Default to empty string if undefined
+          module: selectedModule?.module || 0, 
+          moduleTitle: selectedModule?.title || "", 
+          paperTitle: paperDetails?.paperTitle || "", 
+          paperType: paperDetails?.paperType || "", 
         };
 
-        console.log("Mock test data:", mockTestData); // Log the data for debugging
+        console.log("Mock test data:", mockTestData); 
 
         const response = await axios.post(
           `${baseUrl}/api/add-mock-test`,
@@ -348,6 +348,62 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
   const currentQuestion = questions[currentQuestionIndex];
 
   if (!selectedModule) {
+    // Handle case when no modules are available
+    if (modules.length === 0) {
+      return (
+        <div className="modules-container" style={{textAlign: "center", padding: "2rem"}}>
+          <div className="empty-state" style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "200px",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "8px",
+            padding: "2rem"
+          }}>
+            {/* <img 
+              src="/Images/empty-folder.png" 
+              alt="No modules available" 
+              style={{
+                width: "80px",
+                marginBottom: "1rem"
+              }}
+            /> */}
+            <h3 style={{
+              fontFamily: "Montserrat",
+              fontSize: "20px",
+              color: "#333",
+              marginBottom: "0.5rem"
+            }}>No Special Exams Available</h3>
+            <p style={{
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              color: "#666",
+              maxWidth: "400px",
+              margin: "0 auto"
+            }}>
+              There are currently no special exams available. 
+              Please check back later or contact your administrator for assistance.
+            </p>
+            <Link to="/" style={{
+              marginTop: "1.5rem",
+              padding: "10px 20px",
+              backgroundColor: "#4a90e2",
+              color: "white",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              fontWeight: "500"
+            }}>
+              Return to Dashboard
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="modules-container">
         <div className="modules-grid">
@@ -424,7 +480,72 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
   }
 
   if (!questions || questions.length === 0) {
-    return <div style={{ textAlign: "center" }}>No questions available</div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-header">
+          <LuArrowLeft
+            onClick={handleModuleBack}
+            style={{ fontSize: '30px', cursor: 'pointer', marginTop: '-1rem' }}
+          />
+          <div className="paper-info">
+            <h2 className='moduleTitle' style={{ fontSize: '25px', fontFamily: 'Montserrat', fontWeight: '600' }}>
+              {selectedModule.module} : {selectedModule.title}
+            </h2>
+          </div>
+        </div>
+        <div className="empty-state" style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "200px",
+          backgroundColor: "#f9f9f9",
+          borderRadius: "8px",
+          padding: "2rem",
+          margin: "1rem 0"
+        }}>
+          <img 
+            src="/Images/empty-questions.png" 
+            alt="No questions available" 
+            style={{
+              width: "80px",
+              marginBottom: "1rem"
+            }}
+          />
+          <h3 style={{
+            fontFamily: "Montserrat",
+            fontSize: "20px",
+            color: "#333",
+            marginBottom: "0.5rem"
+          }}>No Questions Available</h3>
+          <p style={{
+            fontFamily: "Montserrat",
+            fontSize: "14px",
+            color: "#666",
+            maxWidth: "400px",
+            margin: "0 auto"
+          }}>
+            There are currently no questions available for this special exam module.
+            Please select a different module or check back later.
+          </p>
+          <button onClick={handleModuleBack} style={{
+            marginTop: "1.5rem",
+            padding: "10px 20px",
+            backgroundColor: "#4a90e2",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            textDecoration: "none",
+            fontFamily: "Montserrat",
+            fontSize: "14px",
+            fontWeight: "500",
+            cursor: "pointer"
+          }}>
+            Return to Modules
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!currentQuestion) {

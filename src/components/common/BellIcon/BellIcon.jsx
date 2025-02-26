@@ -8,7 +8,7 @@ import { IoIosPower } from "react-icons/io";
 import { IoClose } from "react-icons/io5"; // Added close icon import
 import "./BellIcon.scss";
 import ConfirmationAlert from "../Alerts/ConformationAlert/ConformationAlert";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const BellIcon = () => {
@@ -47,28 +47,35 @@ const BellIcon = () => {
       {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          {/* Added close icon here */}
           <div className="close-icon" onClick={toggleSidebar}>
             <IoClose className="icon" />
           </div>
         </div>
         <div className="sidebar-content">
-          <div className="sidebar-item">
-            <RiBookLine className="sidebar-icon" />
-            <span>My Courses</span>
-          </div>
-          <div className="sidebar-item">
+        <Link to='/my-course-details'>
+            <div className="sidebar-item">
+              <RiBookLine className="sidebar-icon" />
+              <span>My Courses</span>
+            </div>
+          </Link>
+
+          <Link to='/help'>
+            <div className="sidebar-item">
+              <IoHelpCircleOutline className="sidebar-icon" />
+              <span>Help</span>
+            </div>
+          </Link>
+
+          {/* <div className="sidebar-item">
             <FaRegBell className="sidebar-icon" />
             <span>Notifications</span>
-          </div>
-          <div className="sidebar-item">
-            <IoHelpCircleOutline className="sidebar-icon" />
-            <span>Help</span>
-          </div>
-          <div className="sidebar-item">
-            <MdOutlineChecklist className="sidebar-icon" />
-            <span>Terms & conditions</span>
-          </div>
+          </div> */}
+          <Link to='/terms-and-conditions'>
+            <div className="sidebar-item">
+              <MdOutlineChecklist className="sidebar-icon" />
+              <span>Terms & conditions</span>
+            </div>
+ </Link>
           <div className="sidebar-divider"></div>
           <div className="sidebar-item logout" onClick={handleLogoutClick}>
             <IoIosPower className="sidebar-icon logout-icon" />

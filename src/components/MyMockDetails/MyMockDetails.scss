@@ -708,6 +708,9 @@
 
 
     @media (max-width:575px) {
+        .left-side{
+            width: 0 !important;
+        }
         .right-side{
             width: 100% !important;
             padding-bottom: 90px !important;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import baseUrl from '../../../baseUrl';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { LuArrowLeft, LuLock } from 'react-icons/lu';
@@ -376,6 +376,62 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   }
 
   if (!selectedModule) {
+    // Handle case when no modules are available
+    if (modules.length === 0) {
+      return (
+        <div className="modules-container" style={{textAlign: "center", padding: "2rem"}}>
+          <div className="empty-state" style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "200px",
+            backgroundColor: "#f9f9f9",
+            borderRadius: "8px",
+            padding: "2rem"
+          }}>
+            {/* <img 
+              src="/Images/empty-folder.png" 
+              alt="No modules available" 
+              style={{
+                width: "80px",
+                marginBottom: "1rem"
+              }}
+            /> */}
+            <h3 style={{
+              fontFamily: "Montserrat",
+              fontSize: "20px",
+              color: "#333",
+              marginBottom: "0.5rem"
+            }}>No Modules Available</h3>
+            <p style={{
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              color: "#666",
+              maxWidth: "400px",
+              margin: "0 auto"
+            }}>
+              There are currently no modules available for assessment tests. 
+              Please check back later or contact your administrator for assistance.
+            </p>
+            <Link to="/" style={{
+              marginTop: "1.5rem",
+              padding: "10px 20px",
+              backgroundColor: "#4a90e2",
+              color: "white",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontFamily: "Montserrat",
+              fontSize: "14px",
+              fontWeight: "500"
+            }}>
+              Return to Dashboard
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="modules-container">
         <div className="modules-grid">
@@ -452,6 +508,74 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   }
 
   if (!selectedVideo) {
+    // Handle case when no videos are available
+    if (!videoLoading && videos.length === 0) {
+      return (
+        <div className="quiz-container">
+          <div className="quiz-header" style={{ display: 'flex', gap: '1rem' }}>
+            <FaArrowLeft onClick={handleModuleBack} style={{ cursor: "pointer", fontSize: "25px" }} />
+            <h2 style={{ fontFamily: 'Montserrat', fontSize: "25px", fontWeight: '600' }}>{selectedModule.title}</h2>
+          </div>
+          <div className="videos-container">
+            <div className="videos-header">
+              <h3 style={{ fontFamily: 'Montserrat', fontSize: "25px" }}>Module Videos</h3>
+            </div>
+            <div className="empty-state" style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "200px",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "8px",
+              padding: "2rem",
+              margin: "1rem 0"
+            }}>
+              <img 
+                src="/Images/empty-video.png" 
+                alt="No videos available" 
+                style={{
+                  width: "80px",
+                  marginBottom: "1rem"
+                }}
+              />
+              <h3 style={{
+                fontFamily: "Montserrat",
+                fontSize: "20px",
+                color: "#333",
+                marginBottom: "0.5rem"
+              }}>No Videos Available</h3>
+              <p style={{
+                fontFamily: "Montserrat",
+                fontSize: "14px",
+                color: "#666",
+                maxWidth: "400px",
+                margin: "0 auto"
+              }}>
+                There are currently no videos available for this module.
+                Please check back later or select a different module.
+              </p>
+              <button onClick={handleModuleBack} style={{
+                marginTop: "1.5rem",
+                padding: "10px 20px",
+                backgroundColor: "#4a90e2",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                textDecoration: "none",
+                fontFamily: "Montserrat",
+                fontSize: "14px",
+                fontWeight: "500",
+                cursor: "pointer"
+              }}>
+                Return to Modules
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="quiz-container">
         <div className="quiz-header" style={{ display: 'flex', gap: '1rem' }}>
@@ -481,9 +605,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
                   </div>
                 </div>
               ))}
-              {!videoLoading && videos.length === 0 && (
-                <div className="no-videos">No videos available for this module</div>
-              )}
             </div>
           )}
         </div>
@@ -492,7 +613,72 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
   }
 
   if (!questions || questions.length === 0) {
-    return <div style={{ textAlign: "center" }}>No questions available</div>;
+    return (
+      <div className="quiz-container">
+        <div className="quiz-header">
+          <LuArrowLeft
+            onClick={handleVideoBack}
+            style={{ fontSize: '30px', cursor: 'pointer', marginTop: '-1rem' }}
+          />
+          <div className="paper-info">
+            <h2 className='moduleTitle' style={{ fontSize: '25px', fontFamily: 'Montserrat', fontWeight: '600' }}>
+              {selectedVideo.title}
+            </h2>
+          </div>
+        </div>
+        <div className="empty-state" style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "200px",
+          backgroundColor: "#f9f9f9",
+          borderRadius: "8px",
+          padding: "2rem",
+          margin: "1rem 0"
+        }}>
+          <img 
+            src="/Images/empty-questions.png" 
+            alt="No questions available" 
+            style={{
+              width: "80px",
+              marginBottom: "1rem"
+            }}
+          />
+          <h3 style={{
+            fontFamily: "Montserrat",
+            fontSize: "20px",
+            color: "#333",
+            marginBottom: "0.5rem"
+          }}>No Questions Available</h3>
+          <p style={{
+            fontFamily: "Montserrat",
+            fontSize: "14px",
+            color: "#666",
+            maxWidth: "400px",
+            margin: "0 auto"
+          }}>
+            There are currently no assessment questions available for this video.
+            Please select a different video or check back later.
+          </p>
+          <button onClick={handleVideoBack} style={{
+            marginTop: "1.5rem",
+            padding: "10px 20px",
+            backgroundColor: "#4a90e2",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            textDecoration: "none",
+            fontFamily: "Montserrat",
+            fontSize: "14px",
+            fontWeight: "500",
+            cursor: "pointer"
+          }}>
+            Return to Videos
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const currentQuestion = questions[currentQuestionIndex];

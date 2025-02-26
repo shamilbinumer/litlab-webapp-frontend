@@ -97,7 +97,10 @@ const MyCourses = () => {
                                 <FaArrowLeft className="my-course-heading" />
                             </div>
                         </Link>
-                        <h2 className='my-course-heading'>My Courses</h2>
+                        <Link to='/my-profile'>
+                            <h2 className='my-course-heading'>My Courses</h2>
+
+                        </Link>                 
                     </div>
                     <div className='user-pro'>
                         <UserProfile />

@@ -163,6 +163,9 @@
     }
 
     @media (max-width:993px) {
+        .left-side{
+            width: 0 !important;
+        }
         .cards-main-wrapper {
             width: 100% !important;
 

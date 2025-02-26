@@ -60,6 +60,9 @@
     }
 
     @media (max-width:993px) {
+        .left-side{
+            width: 0 !important;
+        }
         .right-side {
             margin: 0 !important;
             width: 100% !important;

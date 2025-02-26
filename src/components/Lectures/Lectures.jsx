@@ -214,7 +214,12 @@ const Lectures = () => {
                               <div className="vedio-item-right">
                                 <h1>{video.title}</h1>
                                 <div className="teacer-name">{video.teacherName}</div>
-                                <p className='vedio-description'>{video.description}</p>
+                                <p className='vedio-description'  style={{
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  }}>{video.description}</p>
                                 <div className="button-icon">
                                   <button>Watch now <LuEye /></button>
                                   <LuHeart className='heart-icon' />
