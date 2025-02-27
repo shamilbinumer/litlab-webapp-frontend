@@ -380,7 +380,7 @@ const IndexPage = () => {
                                                                     )}
                                                                 </button>
                                                             )}
-                                                            <button className='buy-now-btn'>Buy Now</button>
+                                                            {/* <button className='buy-now-btn'>Buy Now</button> */}
                                                         </div>
                                                         <div>
                                                             <div
