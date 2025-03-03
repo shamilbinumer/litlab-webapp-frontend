@@ -1,25 +1,42 @@
-
-a{
+a {
     text-decoration: none;
     color: black;
 }
+
 .WelcomPageMainWrapper {
     .welcome-page {
         padding: 3rem;
+        height: 100vh;
+        overflow: hidden;
     }
-    .top-image{
+    
+    .mobile-header {
+        display: none;
+    }
+    
+    .top-image {
         width: fit-content;
         margin: auto;
         position: relative;
-        .cap{
+        animation: floatDown 1.2s ease-out forwards;
+        opacity: 0;
+        transform: translateY(-50px);
+        
+        .cap {
             position: absolute;
             right: 38px;
             top: 45px;
+            animation: spinIn 1.5s ease-out 0.8s forwards;
+            opacity: 0;
+            transform: rotate(-90deg);
         }
     }
+    
     .welcome {
         display: block;
         margin: 0 auto;
+        animation: fadeIn 1s ease-out 0.5s forwards;
+        opacity: 0;
     }
 
     h1 {
@@ -31,13 +48,18 @@ a{
         text-align: center;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
-
+        animation: scaleIn 1.2s ease-out 0.7s forwards;
+        opacity: 0;
+        transform: scale(0.8);
     }
 
     .glob-image {
         display: block;
         margin: 0 auto;
         margin-top: 4rem;
+        animation: bounceIn 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1s forwards;
+        opacity: 0;
+        transform: scale(0.3);
     }
 
     button {
@@ -57,5 +79,124 @@ a{
         display: block;
         margin: 0 auto;
         margin-top: 3rem;
+        animation: pulseIn 1.2s ease-out 1.8s forwards;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(107, 205, 229, 0.4);
+        }
+    }
+    
+    /* Animation Keyframes */
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    
+    @keyframes floatDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        70% {
+            transform: scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes pulseIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        60% {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes spinIn {
+        0% {
+            opacity: 0;
+            transform: rotate(-90deg);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+    }
+
+    @media(max-width:700px) {
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .welcome-page {
+            padding: 1rem !important;
+            
+            .mobile-top-image {
+                width: fit-content;
+                margin-right: -3rem;
+                position: relative;
+                animation: floatDown 1.2s ease-out forwards;
+                opacity: 0;
+                transform: translateY(-30px);
+                
+                .cap {
+                    position: absolute;
+                    right: 38px;
+                    top: 45px;
+                    animation: spinIn 1.5s ease-out 0.8s forwards;
+                    opacity: 0;
+                }
+            }
+            
+            h1 {
+                font-size: 25px;
+                line-height: 26px;
+            }
+        }
+        
+        .top-image {
+            display: none !important;
+        }
     }
 }

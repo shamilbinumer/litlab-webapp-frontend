@@ -22,7 +22,7 @@ const FavoriteModuleDetail = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -33,10 +33,10 @@ const FavoriteModuleDetail = () => {
                 });
 
                 if (response.status !== 200) {
-                    navigate('/login');
+                    navigate('/welcome');
                 }
             } catch (error) {
-                navigate('/login');
+                navigate('/welcome');
             }
         };
 

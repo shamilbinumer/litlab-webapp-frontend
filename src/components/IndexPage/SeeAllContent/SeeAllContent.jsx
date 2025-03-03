@@ -27,7 +27,7 @@ const SeeAllContent = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -58,7 +58,7 @@ const SeeAllContent = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -98,7 +98,7 @@ const SeeAllContent = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 

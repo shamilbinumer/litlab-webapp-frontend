@@ -1,0 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.NotificationPageMainWrapper {
+  background-color: #f9fafb;
+//   min-height: 100vh;
+  
+  .notification-main {
+    display: flex;
+    
+    .left-side {
+      width: 14%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 9999;
+    }
+    
+    .right-side {
+      width: 86%;
+      margin-left: 14%;
+      padding: 1rem;
+      
+      .notification-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        
+        /* Header Section */
+        .notification-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 20px;
+          background-color: #6BCCE5;
+          color: white;
+          
+          h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+          }
+          
+          .notification-actions {
+            display: flex;
+            gap: 10px;
+            
+            button {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+              padding: 6px 12px;
+              background-color: rgba(255, 255, 255, 0.2);
+              border: none;
+              border-radius: 4px;
+              color: white;
+              font-family: 'Montserrat', sans-serif;
+              font-size: 13px;
+              cursor: pointer;
+              transition: all 0.2s;
+              
+              &:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+              }
+              
+              svg {
+                font-size: 16px;
+              }
+            }
+            
+            .clear-all-btn {
+              background-color: rgba(255, 66, 66, 0.2);
+              
+              &:hover {
+                background-color: rgba(255, 66, 66, 0.3);
+              }
+            }
+          }
+        }
+        
+        /* Notifications List */
+        .notifications-list {
+          max-height: 80vh;
+          overflow-y: auto;
+          padding: 0;
+          
+          /* Scrollbar Styling */
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+          }
+          
+          &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+          }
+          
+          &::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+          }
+          
+          /* Loading State */
+          .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 250px;
+            color: #888;
+            
+            .spinner {
+              width: 35px;
+              height: 35px;
+              border: 3px solid #f3f3f3;
+              border-top: 3px solid #6BCCE5;
+              border-radius: 50%;
+              margin-bottom: 15px;
+              animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            
+            p {
+              font-family: 'Montserrat', sans-serif;
+              font-size: 15px;
+              font-weight: 500;
+              color: #666;
+            }
+          }
+          
+          /* Empty State */
+          .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            color: #888;
+            animation: fadeIn 0.5s ease-out;
+            
+            .empty-icon {
+              font-size: 50px;
+              color: #6BCCE5;
+              margin-bottom: 16px;
+              opacity: 0.8;
+              animation: pulseIcon 2.5s infinite ease-in-out;
+            }
+            
+            @keyframes pulseIcon {
+              0% { transform: scale(1); opacity: 0.6; }
+              50% { transform: scale(1.1); opacity: 0.9; }
+              100% { transform: scale(1); opacity: 0.6; }
+            }
+            
+            @keyframes fadeIn {
+              from { opacity: 0; transform: translateY(10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            
+            h3 {
+              font-family: 'Montserrat', sans-serif;
+              font-size: 18px;
+              font-weight: 600;
+              color: #444;
+              margin: 0 0 8px 0;
+            }
+            
+            p {
+              font-family: 'Montserrat', sans-serif;
+              font-size: 14px;
+              font-weight: 400;
+              color: #777;
+              text-align: center;
+              max-width: 280px;
+              margin: 0;
+            }
+          }
+          
+          /* Notification Item */
+          .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+            
+            &:hover {
+              background-color: #f9f9f9;
+            }
+            
+            &.unread {
+              background-color: rgba(107, 204, 229, 0.05);
+              
+              &:hover {
+                background-color: rgba(107, 204, 229, 0.1);
+              }
+              
+              &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 4px;
+                height: 60%;
+                background-color: #6BCCE5;
+                border-radius: 0 2px 2px 0;
+              }
+            }
+            
+            position: relative;
+            
+            .notification-content {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              flex: 1;
+              
+              .notification-icon-wrapper {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(107, 204, 229, 0.1);
+                border-radius: 50%;
+                flex-shrink: 0;
+                
+                .notification-icon {
+                  font-size: 18px;
+                  color: #6BCCE5;
+                }
+              }
+              
+              .notification-details {
+                flex: 1;
+                
+                .notification-title {
+                  font-family: 'Montserrat', sans-serif;
+                  font-size: 15px;
+                  font-weight: 500;
+                  color: #333;
+                  margin: 0 0 5px 0;
+                  
+                  .unread & {
+                    font-weight: 600;
+                    color: #222;
+                  }
+                }
+                
+                .notification-message {
+                  font-family: 'Montserrat', sans-serif;
+                  font-size: 13px;
+                  font-weight: 400;
+                  color: #666;
+                  margin: 0 0 5px 0;
+                  line-height: 1.4;
+                }
+                
+                .notification-time {
+                  font-family: 'Montserrat', sans-serif;
+                  font-size: 11px;
+                  font-weight: 500;
+                  color: #999;
+                }
+              }
+            }
+            
+            .notification-actions {
+              display: flex;
+              gap: 8px;
+              opacity: 0;
+              transition: opacity 0.3s;
+              
+              button {
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f0f0f0;
+                border: none;
+                border-radius: 50%;
+                color: #777;
+                cursor: pointer;
+                transition: all 0.2s;
+                
+                svg {
+                  font-size: 15px;
+                }
+                
+                &:hover {
+                  background-color: #e0e0e0;
+                  color: #333;
+                }
+                
+                &.mark-read-btn:hover {
+                  background-color: #e8f4f8;
+                  color: #6BCCE5;
+                }
+                
+                &.delete-btn:hover {
+                  background-color: #ffebeb;
+                  color: #ff4242;
+                }
+              }
+            }
+            
+            &:hover .notification-actions {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive styles for mobile and tablet view */
+@media (max-width: 768px) {
+  .NotificationPageMainWrapper {
+    .notification-main {
+      flex-direction: column;
+      
+      .left-side {
+        width: 0;
+        // height: auto;
+        // position: relative;
+        // display: none; /* Hide sidebar on mobile as it's likely handled by your mobile nav */
+      }
+      
+      .right-side {
+        width: 100%;
+        margin-left: 0;
+        padding: 0.5rem;
+        
+        .notification-container {
+            // height: 500px;
+          .notification-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 15px;
+            
+            .notification-actions {
+              width: 100%;
+              justify-content: space-between;
+            }
+          }
+          
+          .notification-item {
+            padding: 12px 15px;
+            
+            .notification-content {
+              .notification-icon-wrapper {
+                width: 35px;
+                height: 35px;
+              }
+            }
+            
+            .notification-actions {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}

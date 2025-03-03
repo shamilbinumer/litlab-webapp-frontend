@@ -18,7 +18,7 @@ import ModalQuestanPaper from './ModalQuestanPaper';
 import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import PreLoader from '../common/PreLoader/PreLoader';
+import Splash from '../common/Splash/Splash';
 
 const PaperDetailPage = () => {
     const [activeCategory, setActiveCategory] = useState('Study Notes');
@@ -40,7 +40,7 @@ const PaperDetailPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -73,7 +73,7 @@ const PaperDetailPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -134,7 +134,7 @@ const PaperDetailPage = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -153,7 +153,7 @@ const PaperDetailPage = () => {
                 await fetchWishlistItems();
 
             } catch (error) {
-                navigate('/login');
+                navigate('/welcome');
             }
         };
 
@@ -264,7 +264,7 @@ const PaperDetailPage = () => {
     };
 
     if (loading) {
-        return <PreLoader />;
+        return <Splash />;
     }
 
     if (error) {

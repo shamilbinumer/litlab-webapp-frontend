@@ -48,7 +48,7 @@ const MyMockDetails = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -59,7 +59,7 @@ const MyMockDetails = () => {
                 });
 
                 if (response.status !== 200) {
-                    navigate('/login');
+                    navigate('/welcome');
 
                 } else {
                     setUserDetails(response.data.user);
@@ -67,7 +67,7 @@ const MyMockDetails = () => {
 
                 }
             } catch (error) {
-                navigate('/login');
+                navigate('/welcome');
 
             }
         };

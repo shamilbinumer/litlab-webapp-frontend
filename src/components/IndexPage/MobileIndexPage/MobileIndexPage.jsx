@@ -11,7 +11,7 @@ import SideNave from '../../common/SideNav/SideNave';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import baseUrl from '../../../baseUrl';
-import PreLoader from '../../common/PreLoader/PreLoader';
+import Splash from '../../common/Splash/Splash';
 
 const MobileIndexPage = () => {
     const navigate = useNavigate();
@@ -82,7 +82,7 @@ const MobileIndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -189,7 +189,7 @@ const MobileIndexPage = () => {
     );
 
     if (loading) {
-        return <PreLoader />;
+        return <Splash />;
     }
 
     return (

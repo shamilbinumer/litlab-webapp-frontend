@@ -8,7 +8,7 @@ import { LuEye } from 'react-icons/lu';
 import { IoIosHeart } from 'react-icons/io';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
-import PreLoader from '../common/PreLoader/PreLoader';
+import Splash from '../common/Splash/Splash';
 
 const MyFavorites = () => {
     const [favorites, setFavorites] = useState([]);
@@ -48,7 +48,7 @@ const MyFavorites = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -63,7 +63,7 @@ const MyFavorites = () => {
                 }
             } catch (error) {
                 setError(error.message);
-                navigate('/login');
+                navigate('/welcome');
             }
         };
 
@@ -75,7 +75,7 @@ const MyFavorites = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -125,7 +125,7 @@ const MyFavorites = () => {
     };
 
     if (loading) {
-        return <PreLoader />;
+        return <Splash />;
     }
 
     if (error) {

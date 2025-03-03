@@ -14,7 +14,7 @@ import MobileIndexPage from './MobileIndexPage/MobileIndexPage';
 import './IndexPage.scss';
 import { TbShoppingCartCopy } from 'react-icons/tb';
 import AddedToCart from '../common/Alerts/AddedTocart/AddedToCart';
-import PreLoader from '../common/PreLoader/PreLoader';
+import Splash from '../common/Splash/Splash';
 
 const IndexPage = () => {
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ const IndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -73,7 +73,7 @@ const IndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -134,7 +134,7 @@ const IndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -162,7 +162,7 @@ const IndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -189,7 +189,7 @@ const IndexPage = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -221,7 +221,7 @@ const IndexPage = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -232,10 +232,10 @@ const IndexPage = () => {
                 });
 
                 if (response.status !== 200) {
-                    navigate('/login');
+                    navigate('/welcome');
                 }
             } catch (error) {
-                navigate('/login');
+                navigate('/welcome');
             }
         };
 
@@ -263,7 +263,7 @@ const IndexPage = () => {
     }, [searchTerm, papers]);
 
     if (loadingPapers) {
-        return <PreLoader />;
+        return <Splash />;
     }
 
     return (

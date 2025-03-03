@@ -12,7 +12,7 @@ import OrderPlacedAlert from '../../common/Alerts/OrderPlacedAlert/OrderPlacedAl
 import axios from 'axios';
 import SideNave from '../../common/SideNav/SideNave';
 import baseUrl from '../../../baseUrl';
-import PreLoader from '../../common/PreLoader/PreLoader';
+import Splash from '../../common/Splash/Splash';
 
 const SeparateCart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -40,7 +40,7 @@ const SeparateCart = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -51,10 +51,10 @@ const SeparateCart = () => {
             });
             setUserDetails(response.data.user)
             if (response.status !== 200) {
-                navigate('/login');
+                navigate('/welcome');
             }
         } catch (error) {
-            navigate('/login');
+            navigate('/welcome');
         }
     };
 
@@ -63,7 +63,7 @@ const SeparateCart = () => {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -76,7 +76,7 @@ const SeparateCart = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -184,7 +184,7 @@ const SeparateCart = () => {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -198,7 +198,7 @@ const SeparateCart = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -222,7 +222,7 @@ const SeparateCart = () => {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -242,7 +242,7 @@ const SeparateCart = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -279,7 +279,7 @@ const SeparateCart = () => {
     if (loading) {
         return (
             <div>
-                <PreLoader/>
+                <Splash/>
             </div>
         );
     }

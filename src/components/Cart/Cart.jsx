@@ -12,7 +12,7 @@ import ConfirmationAlert from '../common/Alerts/ConformationAlert/ConformationAl
 import PaperCountAlert from '../common/Alerts/PaperCountAlert/PaperCountAlert';
 import OrderPlacedAlert from '../common/Alerts/OrderPlacedAlert/OrderPlacedAlert';
 import axios from 'axios';
-import PreLoader from '../common/PreLoader/PreLoader';
+import Splash from '../common/Splash/Splash';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -46,7 +46,7 @@ const Cart = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -57,10 +57,10 @@ const Cart = () => {
             });
             setUserDetails(response.data.user)
             if (response.status !== 200) {
-                navigate('/login');
+                navigate('/welcome');
             }
         } catch (error) {
-            navigate('/login');
+            navigate('/welcome');
         }
     };
     //fethc Plan details
@@ -82,7 +82,7 @@ const Cart = () => {
         try {
             const authToken = localStorage.getItem('authToken');
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -95,7 +95,7 @@ const Cart = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -216,7 +216,7 @@ const Cart = () => {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -230,7 +230,7 @@ const Cart = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -255,7 +255,7 @@ const Cart = () => {
             const authToken = localStorage.getItem('authToken');
     
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
     
@@ -295,7 +295,7 @@ const Cart = () => {
     
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
     
@@ -331,7 +331,7 @@ const Cart = () => {
     if (loading) {
         return (
             <div>
-                <PreLoader />
+                <Splash />
             </div>
         );
     }

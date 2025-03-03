@@ -26,7 +26,7 @@ const MyCourses = () => {
             try {
                 const token = localStorage.getItem('authToken');
                 if (!token) {
-                    navigate('/login');
+                    navigate('/welcome');
                     return;
                 }
 
@@ -41,7 +41,7 @@ const MyCourses = () => {
                 }
             } catch (error) {
                 setError(error.message);
-                navigate('/login');
+                navigate('/welcome');
             } finally {
                 setLoading(false);
             }

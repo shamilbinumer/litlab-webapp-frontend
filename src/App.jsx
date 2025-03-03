@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import './App.css';
 import { Routes, Route, HashRouter } from "react-router-dom";
+import Splash from "./components/common/Splash/Splash"; // Import your Splash component
 import UserRegister from "./components/UserRegister/UserRegister";
 import UserLogin from "./components/UserLogin/UserLogin";
 import IndexPage from "./components/IndexPage/IndexPage";
@@ -22,10 +23,21 @@ import FavoriteModuleDetail from "./components/ModuleSummery/FavoriteModuleDetai
 import SeeAllContent from "./components/IndexPage/SeeAllContent/SeeAllContent";
 import MyFavorites from "./components/MyFavorites/MyFavorites";
 import TermsConditions from "./components/TermsConditions/TermsConditions";
+import NotificationPage from "./components/NotificationPage/NotificationPage";
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
   const [isBlurred, setIsBlurred] = useState(false);
+
+  useEffect(() => {
+    // Hide splash screen after 2 seconds
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // Screenshot detection for Windows (PrintScreen key)
@@ -33,7 +45,6 @@ function App() {
       if (e.key === "PrintScreen") {
         console.log("PrintScreen key detected! Overlay activated.");
         setShowOverlay(true);
-
         setTimeout(() => {
           setShowOverlay(false);
         }, 1000);
@@ -42,14 +53,9 @@ function App() {
 
     // Detect when user switches apps (for iOS & Android)
     const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setIsBlurred(true);
-      } else {
-        setIsBlurred(false);
-      }
+      setIsBlurred(document.hidden);
     };
 
-    // Add event listeners
     window.addEventListener("keyup", handleKeyUp);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -58,6 +64,10 @@ function App() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  if (showSplash) {
+    return <Splash />; // Show splash screen first
+  }
 
   return (
     <HashRouter>
@@ -73,6 +83,7 @@ function App() {
         <Routes>
           <Route path="/" Component={IndexPage} />
           <Route path="/signup" Component={UserRegister} />
+          <Route path="/notification" Component={NotificationPage} />
           <Route path="/login" Component={UserLogin} />
           <Route path="/welcome" Component={WelcomPage} />
           <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />

@@ -37,9 +37,9 @@ const BellIcon = () => {
 
   return (
     <div className="BellNavWrapper">
-      <div className="bell-icon">
+     <Link to='/notification'><div className="bell-icon">
         <FaRegBell className="icon" />
-      </div>
+      </div></Link>
       <div className="menu-icon" onClick={toggleSidebar}>
         <HiOutlineBars3BottomLeft className="icon" />
       </div>
@@ -66,10 +66,10 @@ const BellIcon = () => {
             </div>
           </Link>
 
-          {/* <div className="sidebar-item">
+         {/* <Link to='/notification'> <div className="sidebar-item">
             <FaRegBell className="sidebar-icon" />
             <span>Notifications</span>
-          </div> */}
+          </div></Link> */}
           <Link to='/terms-and-conditions'>
             <div className="sidebar-item">
               <MdOutlineChecklist className="sidebar-icon" />

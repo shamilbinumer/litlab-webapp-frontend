@@ -30,6 +30,8 @@ const SideNave = () => {
             '/my-course-details': 'courses',
             '/my-profile': 'profile',
             '/cart': 'cart',
+            '/notification': 'notification',
+
         };
         setActiveTab(pathToTab[location.pathname] || 'home');
     }, [location.pathname]);
@@ -48,7 +50,7 @@ const SideNave = () => {
             const authToken = localStorage.getItem('authToken');
 
             if (!authToken) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -61,7 +63,7 @@ const SideNave = () => {
 
             if (response.status === 401) {
                 localStorage.removeItem('authToken');
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -142,8 +144,8 @@ const SideNave = () => {
                                     )}
                                 </div>
                             </Link>
-                            <Link to='/'>
-                                <div className={`nav-item notification ${activeTab === '' ? 'active' : ''}`}>
+                            <Link to='/notification'>
+                                <div className={`nav-item notification ${activeTab === 'notification' ? 'active' : ''}`}>
                                     <img src="/Images/Group 1000004528 (1).png" alt="" />
                                     <div className="count">4</div>
                                 </div>
@@ -167,10 +169,10 @@ const SideNave = () => {
                                     <TbBook2 className="sidebar-icon" />
                                     <span>My Courses</span></Link>
                             </div>
-                            {/* <div className="sidebar-item">
+                          <Link to='/notification'>  <div className="sidebar-item">
                                 <IoNotificationsOutline className="sidebar-icon" />
                                 <span>Notifications</span>
-                            </div> */}
+                            </div></Link>
                             <div className="sidebar-item">
                             <Link to='/help'>
                             <MdOutlineHelp className="sidebar-icon" />

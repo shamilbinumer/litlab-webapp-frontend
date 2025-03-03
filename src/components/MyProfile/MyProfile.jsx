@@ -24,6 +24,7 @@ import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import ConfirmationAlert from '../common/Alerts/ConformationAlert/ConformationAlert';
 import BellIcon from '../common/BellIcon/BellIcon';
+import Splash from '../common/Splash/Splash';
 
 const MyProfile = () => {
     const [user, setUser] = useState(null);
@@ -75,7 +76,7 @@ const MyProfile = () => {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/login');
+                navigate('/welcome');
                 return;
             }
 
@@ -94,7 +95,7 @@ const MyProfile = () => {
             }
         } catch (error) {
             setError(error.message);
-            navigate('/login');
+            navigate('/welcome');
         } finally {
             setIsLoading(false);
         }
@@ -238,9 +239,7 @@ const MyProfile = () => {
     if (isLoading) {
         return (
             <div className="loading-container">
-                <Box sx={{ width: '100%' }}>
-                    <LinearProgress />
-                </Box>
+               <Splash/>
             </div>
         );
     }
