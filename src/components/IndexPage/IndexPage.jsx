@@ -262,10 +262,6 @@ const IndexPage = () => {
         }
     }, [searchTerm, papers]);
 
-    if (loadingPapers) {
-        return <Splash />;
-    }
-
     return (
         <div className="IndexPageMainWrapper">
             {/* Cart Alert */}
@@ -380,7 +376,6 @@ const IndexPage = () => {
                                                                     )}
                                                                 </button>
                                                             )}
-                                                            {/* <button className='buy-now-btn'>Buy Now</button> */}
                                                         </div>
                                                         <div>
                                                             <div
@@ -397,7 +392,6 @@ const IndexPage = () => {
                                                                        <CircularProgress size={22} /> 
                                                                    </Box>
                                                                </span>
-                                                               
                                                                 ) : isInWishlist(paper.id) ? (
                                                                     <IoIosHeart className="heart-icon active" />
                                                                 ) : (

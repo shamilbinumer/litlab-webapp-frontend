@@ -147,7 +147,7 @@ const SideNave = () => {
                             <Link to='/notification'>
                                 <div className={`nav-item notification ${activeTab === 'notification' ? 'active' : ''}`}>
                                     <img src="/Images/Group 1000004528 (1).png" alt="" />
-                                    <div className="count">4</div>
+                                    <div className="count">0</div>
                                 </div>
                             </Link>
                         </div>

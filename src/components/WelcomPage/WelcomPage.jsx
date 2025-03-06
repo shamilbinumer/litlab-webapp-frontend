@@ -18,7 +18,7 @@ const WelcomPage = () => {
       </div>
         <h1>Welcome to Your Learning Hub</h1>
         <img src="/Images/welcome-e7aDyISq44.png" alt="" className="glob-image" />
-        <Link to='/login'><button>Get Started</button></Link>
+        <Link to='/signup'><button>Get Started</button></Link>
       </div>
     </div>
   )

@@ -20,9 +20,11 @@ const UserRegister = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [department, setDepartments] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState('');
-    const [couses, setCouses] = useState([])
+    const [couses, setCouses] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [departmentsLoading, setDepartmentsLoading] = useState(true);
+    const [coursesLoading, setCoursesLoading] = useState(false);
     const [errors, setErrors] = useState({
         email: '',
         phone: '',
@@ -42,30 +44,33 @@ const UserRegister = () => {
 
     // Fetch departments
     const fetchAllDepartments = async () => {
+        setDepartmentsLoading(true);
         try {
             const response = await axios.get(`${baseUrl}/api/fetch-department`);
-            console.log("sfjdfgjhdf", response.data);
-
             setDepartments(response.data.data);
         } catch (error) {
             setErrors(prev => ({
                 ...prev,
                 general: "Failed to fetch departments"
             }));
+        } finally {
+            setDepartmentsLoading(false);
         }
     };
 
     const fetchCourses = async (departmentId) => {
         if (!departmentId) return;
+        setCoursesLoading(true);
         try {
             const response = await axios.get(`${baseUrl}/api/fetch-course/${departmentId}`);
-            console.log(response.data);
             setCouses(response.data.data);
         } catch (error) {
             setErrors(prev => ({
                 ...prev,
                 general: "Failed to fetch courses"
             }));
+        } finally {
+            setCoursesLoading(false);
         }
     };
 
@@ -399,8 +404,8 @@ const UserRegister = () => {
 
     useEffect(() => {
         fetchAllDepartments();
-        fetchCourses()
     }, []);
+
     useEffect(() => {
         if (selectedDepartment) {
             fetchCourses(selectedDepartment);
@@ -409,50 +414,11 @@ const UserRegister = () => {
         }
     }, [selectedDepartment]);
 
-    // Validate password strength
-    const validatePassword = (pwd) => {
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(pwd);
-        const hasLowerCase = /[a-z]/.test(pwd);
-        const hasNumber = /[0-9]/.test(pwd);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
-
-        return {
-            isValid: pwd.length >= minLength &&
-                hasUpperCase &&
-                hasLowerCase &&
-                hasNumber &&
-                hasSpecialChar,
-            message: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
-        };
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setErrors({ email: '', phone: '', password: '', confirmPassword: '', general: '' });
+        setErrors({ email: '', phone: '', general: '' });
         setSuccessMessage('');
-
-        // Password validation
-        const passwordValidation = validatePassword(password);
-        if (!passwordValidation.isValid) {
-            setErrors(prev => ({
-                ...prev,
-                password: passwordValidation.message
-            }));
-            setLoading(false);
-            return;
-        }
-
-        // Confirm password check
-        if (password !== confirmPassword) {
-            setErrors(prev => ({
-                ...prev,
-                confirmPassword: "Passwords do not match"
-            }));
-            setLoading(false);
-            return;
-        }
 
         // Existing validation checks
         if (!name || !email || !phone || !selectedCollege || !selectedDepartment || !selectedCourse || !selectedSemester) {
@@ -469,7 +435,6 @@ const UserRegister = () => {
             name,
             phone,
             email,
-            password,
             course: selectedCourse,
             collegeName: selectedCollege,
             department: selectedDepartment,
@@ -488,8 +453,6 @@ const UserRegister = () => {
             setName('');
             setPhone('');
             setEmail('');
-            setPassword('');
-            setConfirmPassword('');
             setSelectedCollege('');
             setSearchTerm('');
             setSelectedDepartment('');
@@ -517,7 +480,6 @@ const UserRegister = () => {
             }
         }
     };
-
 
     return (
         <div className='UserRegisterMainWrapper'>
@@ -555,7 +517,10 @@ const UserRegister = () => {
                                         type="text"
                                         placeholder='Contact number'
                                         value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
+                                        onChange={(e) => {
+                                            setPhone(e.target.value);
+                                            clearFieldError('phone');
+                                        }}
                                         required
                                         maxLength={10}
                                     />
@@ -569,49 +534,13 @@ const UserRegister = () => {
                                         type="email"
                                         placeholder='Enter your email'
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                            clearFieldError('email');
+                                        }}
                                         required
                                     />
                                     {errors.email && <div className="error-message" style={{ color: 'red', fontSize: '0.8rem' }}>{errors.email}</div>}
-                                </div>
-                            </div>
-                            <div className="input-wrapper">
-                                <div><label htmlFor="">Password</label></div>
-                                <div className="password-input-container">
-                                    <input
-                                        type={passwordVisible ? "text" : "password"}
-                                        placeholder='Create your password'
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    {/* <button
-                                        type="button"
-                                        className="password-toggle"
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
-                                    >
-                                        {passwordVisible ? "Hide" : "Show"}
-                                    </button> */}
-                                </div>
-                                {errors.password && <div className="error-message" style={{ color: 'red', fontSize: '0.8rem' }}>{errors.password}</div>}
-                            </div>
-                            <div className="input-wrapper">
-                                <div><label htmlFor="">Confirm Password</label></div>
-                                <div className="password-input-container">
-                                    <input
-                                        type={confirmPasswordVisible ? "text" : "password"}
-                                        placeholder='Confirm your password'
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        required
-                                    />
-                                    {/* <button
-                                        type="button"
-                                        className="password-toggle"
-                                        onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-                                    >
-                                        {confirmPasswordVisible ? "Hide" : "Show"}
-                                    </button> */}
                                 </div>
                             </div>
                             <div className="input-wrapper" ref={dropdownRef}>
@@ -656,16 +585,24 @@ const UserRegister = () => {
                                             setSelectedDepartment(e.target.value);
                                             setSelectedCourse(''); // Clear selected course when department changes
                                         }}
+                                        disabled={departmentsLoading}
                                     >
-                                        <option value="" disabled>Select your Department</option>
-                                        {department && department.length > 0 ? (
+                                        <option value="" disabled>
+                                            {departmentsLoading ? "Loading departments..." : "Select your Department"}
+                                        </option>
+                                        {!departmentsLoading && department && department.length > 0 ? (
                                             department.map((dept, index) => (
                                                 <option value={dept.id} key={index}>{dept.department}</option>
                                             ))
                                         ) : (
-                                            <option value="" disabled>No departments available</option>
+                                            departmentsLoading ? null : <option value="" disabled>No departments available</option>
                                         )}
                                     </select>
+                                    {departmentsLoading && (
+                                        <div className="loading-indicator" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
+                                            Loading departments...
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="input-wrapper">
@@ -674,23 +611,31 @@ const UserRegister = () => {
                                     <select
                                         value={selectedCourse}
                                         onChange={(e) => setSelectedCourse(e.target.value)}
-                                        disabled={!selectedDepartment} // Disable if no department selected
+                                        disabled={!selectedDepartment || coursesLoading} // Disable if no department selected or loading
                                     >
                                         <option value="" disabled>
-                                            {selectedDepartment ? "Select your Course" : "Select a department first"}
+                                            {!selectedDepartment 
+                                                ? "Select a department first" 
+                                                : coursesLoading 
+                                                    ? "Loading courses..." 
+                                                    : "Select your Course"}
                                         </option>
-                                        {couses && couses.length > 0 ? (
+                                        {!coursesLoading && couses && couses.length > 0 ? (
                                             couses.map((course, index) => (
                                                 <option value={course.id} key={index}>
                                                     {course.courseTitle}
                                                 </option>
                                             ))
                                         ) : (
-                                            <option value="" disabled>
-                                                {selectedDepartment ? "No courses available" : "Select a department first"}
-                                            </option>
+                                            coursesLoading ? null : selectedDepartment ? 
+                                                <option value="" disabled>No courses available</option> : null
                                         )}
                                     </select>
+                                    {coursesLoading && (
+                                        <div className="loading-indicator" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
+                                            Loading courses...
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="input-wrapper">
@@ -705,13 +650,13 @@ const UserRegister = () => {
                                 </div>
                             </div>
                             <div>
-                                <button type="submit" disabled={loading}>
-                                    {loading ? "Registering" : "Register"}
+                                <button type="submit" disabled={loading || departmentsLoading || coursesLoading}>
+                                    {loading ? "Registering..." : "Register"}
                                 </button>
                             </div>
                             {errors.general && <div style={{ color: 'red', textAlign: "center", paddingTop: "1rem" }}>{errors.general}</div>}
                             {successMessage && <div style={{ color: 'green', textAlign: "center", paddingTop: "1rem" }}>{successMessage}</div>}
-                            <div className='login'>You have an account? <Link to='/login'>Login</Link></div>
+                            <div className='login'>You have an account? <Link to='/login' style={{color:"blue"}}>Login</Link></div>
                         </form>
                     </div>
                 </div>

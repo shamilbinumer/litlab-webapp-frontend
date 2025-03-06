@@ -214,7 +214,7 @@ const UserLogin = () => {
                       </button>
                     </div>
                     <div className="register-link">
-                      Don't have an account? <Link to="/signup">Register here</Link>
+                      Don't have an account? <Link to="/signup" style={{color:'blue'}}>Register here</Link>
                     </div>
                   </form>
                 </>
