@@ -67,29 +67,58 @@
             gap: 10px;
             display: flex;
             // justify-content: center;
-            padding: 4px;
+            padding: 10px;
             align-items: center;
             font-family: Inter;
             font-weight: 400;
             font-size: 20.84px;
             letter-spacing: 0.15%;
             text-align: center;
-            border: 1px solid rgba(0, 0, 0, 0.29);
-            border-radius: 6px;
+            border: 2px solid rgba(107, 204, 229, 0.6);
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+
+            &:focus-within {
+                border-color: #6BCCE5;
+                box-shadow: 0 4px 12px rgba(107, 204, 229, 0.2);
+            }
 
             input {
                 border: none;
+                width: 100%;
+                font-size: 18px;
+                padding: 2px 5px;
             }
 
             input:focus {
                 outline: none;
             }
+        }
 
+        .signup-text {
+            width: 300px;
+            margin: 10px auto;
+            text-align: center;
+            font-family: Poppins;
+            font-size: 14px;
+            color: #333;
+            
+            span {
+                color: #6BCCE5;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
 
         button {
-            padding: 6px 90px;
+            padding: 8px 90px;
             background-color: #6BCCE5;
             border-radius: 8px;
             border: none;
@@ -102,6 +131,17 @@
             letter-spacing: 0.15%;
             text-align: center;
             color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            
+            &:hover {
+                background-color: #5ab8d1;
+            }
+            
+            &:disabled {
+                background-color: #b8e2ec;
+                cursor: not-allowed;
+            }
         }
 
         .timer {
@@ -137,8 +177,13 @@
                 font-weight: 700;
                 font-size: 15.92px;
                 text-align: center;
-
             }
+        }
+        
+        .error {
+            color: #ff4d4d;
+            margin-top: 5px;
+            font-size: 14px;
         }
     }
 }

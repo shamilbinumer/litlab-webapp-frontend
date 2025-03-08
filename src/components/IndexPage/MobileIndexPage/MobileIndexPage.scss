@@ -27,8 +27,6 @@
         font-size: 29px;
         border: none;
         cursor: pointer;
-
-
     }
 
     .welcome-content {
@@ -185,13 +183,36 @@
             color: black;
             font-size: 20px;
             padding-top: 10px !important;
-          
+        }
+        
+        // Handle single item slider differently
+        .slider-container {
+            &.single-item {
+                .slick-track {
+                    width: auto !important; 
+                    transform: none !important;
+                    margin-left: 0 !important;
+                    
+                    .slick-slide {
+                        width: auto !important;
+                        margin-right: 15px;
+                    }
+                }
+                
+                .slick-list {
+                    padding: 0 !important;
+                    overflow: visible !important;
+                }
+            }
+        }
 
+        .card-wrapper {
+            padding-right: 5px;
         }
 
         .category-card {
             width: 95%;
-            margin: auto !important;
+            // margin: auto !important;
 
             .category-img {
                 height: 150px;
@@ -231,10 +252,21 @@
                     padding: 0;
                     margin: 0;
                     color: #0000007D;
-
-
                 }
             }
+        }
+    }
+    
+    // Override slick carousel default behaviors when needed
+    .slick-track {
+        display: flex !important;
+    }
+    
+    .slick-slide {
+        height: inherit !important;
+        
+        & > div {
+            height: 100%;
         }
     }
 }

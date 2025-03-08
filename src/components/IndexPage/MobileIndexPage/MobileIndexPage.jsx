@@ -29,52 +29,41 @@ const MobileIndexPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     // Separate settings for each paper type
-    const sliderSettings = {
-        major: {
+    const getSliderSettings = (type, itemCount) => {
+        // Base settings
+        const settings = {
             dots: false,
             speed: 500,
-            slidesToShow: 1.5,  // Show more items for major papers
             slidesToScroll: 1,
             infinite: false,
+            variableWidth: false,
+            centerMode: false,
             responsive: [
                 {
                     breakpoint: 768,
                     settings: {
-                        slidesToShow: 1.2
+                        slidesToShow: itemCount === 1 ? 1 : 1.2
                     }
                 }
             ]
-        },
-        minor: {
-            dots: false,
-            speed: 500,
-            slidesToShow: 2.2,  // Show even more items for minor papers
-            slidesToScroll: 1,
-            infinite: false,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1.5
-                    }
-                }
-            ]
-        },
-        common: {
-            dots: false,
-            speed: 500,
-            slidesToShow: 2.5,  // Show most items for common papers
-            slidesToScroll: 1,
-            infinite: false,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 1.8
-                    }
-                }
-            ]
+        };
+
+        // Add type-specific settings
+        switch(type) {
+            case 'major':
+                settings.slidesToShow = itemCount === 1 ? 1 : 1.5;
+                break;
+            case 'minor':
+                settings.slidesToShow = itemCount === 1 ? 1 : 2.2;
+                break;
+            case 'common':
+                settings.slidesToShow = itemCount === 1 ? 1 : 2.5;
+                break;
+            default:
+                settings.slidesToShow = itemCount === 1 ? 1 : 1.5;
         }
+
+        return settings;
     };
 
     // Fetch functions for each paper type
@@ -154,39 +143,46 @@ const MobileIndexPage = () => {
         fetchAllPapers();
     }, []);
 
-    const renderPaperSection = (type, items) => (
-        <div className="category-carousel-wrapper">
-            <div className="carousel-titile">
-                <h3>{type.charAt(0).toUpperCase() + type.slice(1)}</h3>
-            </div>
+    const renderPaperSection = (type, items) => {
+        // Get dynamic settings based on item count
+        const dynamicSettings = getSliderSettings(type, items.length);
+        
+        return (
+            <div className="category-carousel-wrapper">
+                <div className="carousel-titile">
+                    <h3>{type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                </div>
 
-            <Slider {...sliderSettings[type]}>
-                {items.length > 0 ? (
-                    items.map((item, index) => (
-                       <Link  key={item.id || index} to={`/paper-details/${item.title || item.paperTitle}/${item.id}`}>
-                        <div>
-                            <div className="category-card">
-                                <div className="category-img">
-                                    <img src={item.imageUrl || "/Images/image 6.png"} alt={item.title} />
-                                </div>
+                <div className={`slider-container ${items.length === 1 ? 'single-item' : ''}`}>
+                    <Slider {...dynamicSettings}>
+                        {items.length > 0 ? (
+                            items.map((item, index) => (
+                                <Link key={item.id || index} to={`/paper-details/${item.title || item.paperTitle}/${item.id}`}>
+                                    <div className="card-wrapper">
+                                        <div className="category-card">
+                                            <div className="category-img">
+                                                <img src={item.imageUrl || "/Images/image 6.png"} alt={item.title} />
+                                            </div>
 
-                                <div className="card-description">
-                                    <div className="main-description">
-                                        <h6>{item.title}</h6>
+                                            <div className="card-description">
+                                                <div className="main-description">
+                                                    <h6>{item.title}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="no-papers-found">
+                                <p>No {type} papers found</p>
                             </div>
-                        </div>
-                       </Link>
-                    ))
-                ) : (
-                    <div className="no-papers-found">
-                        <p>No {type} papers found</p>
-                    </div>
-                )}
-            </Slider>
-        </div>
-    );
+                        )}
+                    </Slider>
+                </div>
+            </div>
+        );
+    };
 
     if (loading) {
         return <Splash />;

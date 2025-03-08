@@ -153,6 +153,10 @@ const MobileLogin = () => {
             setError('Incorrect OTP');
         }
     };
+    
+    const handleSignup = () => {
+        navigate('/signup'); // Adjust this route according to your app's routing
+    };
 
     return (
         <div className='MobileLoginPageMainWrapper'>
@@ -229,6 +233,9 @@ const MobileLogin = () => {
                                 </div>
                             </div>
                             {error && <p className="error">{error}</p>}
+                            <div className="signup-text">
+                                Don't have account? <span onClick={handleSignup}>Signup</span>
+                            </div>
                             <div>
                                 <button 
                                     type="submit"
