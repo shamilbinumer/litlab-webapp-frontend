@@ -28,7 +28,7 @@ const MobileIndexPage = () => {
     });
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Separate settings for each paper type
+    // Settings for all paper types with fixed card width
     const getSliderSettings = (type, itemCount) => {
         // Base settings
         const settings = {
@@ -36,32 +36,18 @@ const MobileIndexPage = () => {
             speed: 500,
             slidesToScroll: 1,
             infinite: false,
-            variableWidth: false,
+            variableWidth: true,
             centerMode: false,
+            slidesToShow: itemCount === 1 ? 1 : 2,
             responsive: [
                 {
                     breakpoint: 768,
                     settings: {
-                        slidesToShow: itemCount === 1 ? 1 : 1.2
+                        slidesToShow: itemCount === 1 ? 1 : 2
                     }
                 }
             ]
         };
-
-        // Add type-specific settings
-        switch(type) {
-            case 'major':
-                settings.slidesToShow = itemCount === 1 ? 1 : 1.5;
-                break;
-            case 'minor':
-                settings.slidesToShow = itemCount === 1 ? 1 : 2.2;
-                break;
-            case 'common':
-                settings.slidesToShow = itemCount === 1 ? 1 : 2.5;
-                break;
-            default:
-                settings.slidesToShow = itemCount === 1 ? 1 : 1.5;
-        }
 
         return settings;
     };
@@ -159,7 +145,7 @@ const MobileIndexPage = () => {
                             items.map((item, index) => (
                                 <Link key={item.id || index} to={`/paper-details/${item.title || item.paperTitle}/${item.id}`}>
                                     <div className="card-wrapper">
-                                        <div className="category-card">
+                                        <div className="category-card fixed-width">
                                             <div className="category-img">
                                                 <img src={item.imageUrl || "/Images/image 6.png"} alt={item.title} />
                                             </div>

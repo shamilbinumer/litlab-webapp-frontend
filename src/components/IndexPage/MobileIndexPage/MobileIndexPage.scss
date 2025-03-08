@@ -194,7 +194,7 @@
                     margin-left: 0 !important;
                     
                     .slick-slide {
-                        width: auto !important;
+                        width: 200px !important;
                         margin-right: 15px;
                     }
                 }
@@ -204,14 +204,21 @@
                     overflow: visible !important;
                 }
             }
+            
+            .slick-slide {
+                width: 200px !important;
+                margin-right: 10px;
+            }
         }
 
         .card-wrapper {
             padding-right: 5px;
+            width: 200px !important;
+            display: inline-block;
         }
 
         .category-card {
-            width: 95%;
+            width: 200px !important;
             // margin: auto !important;
 
             .category-img {
