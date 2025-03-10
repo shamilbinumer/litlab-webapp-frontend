@@ -101,16 +101,76 @@
         cursor: pointer;
     }
 
+    // Banner carousel styles
+    .banner-carousel {
+        margin-bottom: 24px;
+        
+        .slick-dots {
+            bottom: -25px;
+            display: none !important;
+            
+            li {
+                margin: 0 3px;
+                
+                button:before {
+                    font-size: 8px;
+                    color: #6BCCE5;
+                    opacity: 0.5;
+                }
+                
+                &.slick-active button:before {
+                    opacity: 1;
+                    color: #6BCCE5;
+                }
+            }
+        }
+        
+        .banner-slide {
+            outline: none;
+        }
+    }
+
     .promo-card {
-        background: #6BCCE5;
         border-radius: 16px;
-        padding: 24px;
+        // padding: 24px;
         position: relative;
+        width: 99%;
+        margin: auto;
         overflow: hidden;
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // Default background is set in inline style
+        // Allow image to be the main container background
+        background-position: center;
+        background-size: cover;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        img{
+            width: 100%;
+            height: 100%;
+            // object-fit: cover;
+        }
+        
+        // Add a dark overlay to ensure text is readable on any image
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            // background: rgba(0, 0, 0, 0.3); // Semi-transparent overlay
+            z-index: 1;
+            border-radius: 16px;
+        }
     }
 
     .promo-content {
-        max-width: 71%;
+        max-width: 80%;
+        position: relative;
+        z-index: 2; // Ensure content is above the overlay
     }
 
     .promo-title {
@@ -119,7 +179,7 @@
         font-size: 20.62px;
         letter-spacing: 0.12px;
         color: white;
-
+        text-shadow: 0px 1px 2px rgba(0,0,0,0.5); // Add shadow for better readability
     }
 
     .explore-button {
@@ -132,18 +192,6 @@
         font-family: roboto;
         cursor: pointer;
         font-size: 12px;
-    }
-
-    .phone-mockup {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
-        width: 100px;
-        height: 100px;
-        background-image: url('/Images/mobile-phone.png');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: bottom right;
     }
 
     .PaperCategories {

@@ -78,7 +78,7 @@ const FavoriteModuleDetail = () => {
 
                 {/* Header */}
                 <div className="header" style={{display:'flex',alignItems:'center',gap:'10px'}}>
-                    <ImArrowLeft2 className='heading' />
+                    {/* <ImArrowLeft2 className='heading' /> */}
 
                     <span className='heading'>{moduleDetails?.title || 'Module'}</span>
                 </div>

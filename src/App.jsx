@@ -24,20 +24,21 @@ import SeeAllContent from "./components/IndexPage/SeeAllContent/SeeAllContent";
 import MyFavorites from "./components/MyFavorites/MyFavorites";
 import TermsConditions from "./components/TermsConditions/TermsConditions";
 import NotificationPage from "./components/NotificationPage/NotificationPage";
+import SlideView from "./components/PaperDetailPage/SlideView";
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  // const [showSplash, setShowSplash] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
   const [isBlurred, setIsBlurred] = useState(false);
 
-  useEffect(() => {
-    // Hide splash screen after 2 seconds
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2000);
+  // useEffect(() => {
+  //   // Hide splash screen after 2 seconds
+  //   const timer = setTimeout(() => {
+  //     setShowSplash(false);
+  //   }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     // Screenshot detection for Windows (PrintScreen key)
@@ -65,9 +66,9 @@ function App() {
     };
   }, []);
 
-  if (showSplash) {
-    return <Splash />; // Show splash screen first
-  }
+  // if (showSplash) {
+  //   return <Splash />; // Show splash screen first
+  // }
 
   return (
     <HashRouter>
@@ -103,6 +104,7 @@ function App() {
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
           <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
           <Route path="/terms-and-conditions" Component={TermsConditions} />
+          <Route path="/slide/:videoId" Component={SlideView} />
         </Routes>
 
       </div>

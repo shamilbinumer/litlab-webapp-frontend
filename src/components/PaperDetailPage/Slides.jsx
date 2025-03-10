@@ -7,6 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import PropTypes from 'prop-types';
 import PurchasePopup from '../common/Alerts/PurchasePopup/PurchasePopup';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from 'react-router-dom';
 
 
 const Slides = ({ paperId, paperTitle, isAccessible }) => {
@@ -234,7 +235,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                               Locked <LuLock />
                             </button>
                           ) : (
-                            <a href={video.fileUrl} target='_blank' rel="noopener noreferrer">
+                            <Link to={`/slide/${video.id}`} rel="noopener noreferrer">
                               <button style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -242,7 +243,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                               }}>
                                 View Slide <LuEye />
                               </button>
-                            </a>
+                            </Link>
                           )}
                         </div>
                       </div>

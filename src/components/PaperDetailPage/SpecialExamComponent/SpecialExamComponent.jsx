@@ -504,14 +504,14 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           padding: "2rem",
           margin: "1rem 0"
         }}>
-          <img 
+          {/* <img 
             src="/Images/empty-questions.png" 
             alt="No questions available" 
             style={{
               width: "80px",
               marginBottom: "1rem"
             }}
-          />
+          /> */}
           <h3 style={{
             fontFamily: "Montserrat",
             fontSize: "20px",

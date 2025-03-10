@@ -1,8 +1,6 @@
-import { MdOutlineKeyboardVoice } from 'react-icons/md';
 import BellIcon from '../../common/BellIcon/BellIcon';
 import './MobileIndexPage.scss';
 import { IoIosSearch } from 'react-icons/io';
-import { BiMenuAltLeft } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -16,6 +14,7 @@ import Splash from '../../common/Splash/Splash';
 const MobileIndexPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [banners, setBanners] = useState([]);
     const [papers, setPapers] = useState({
         major: [],
         minor: [],
@@ -27,6 +26,29 @@ const MobileIndexPage = () => {
         common: []
     });
     const [searchTerm, setSearchTerm] = useState('');
+     // Fetch banners
+     const fetchBanners = async () => {
+        try {
+            const response = await axios.get(`${baseUrl}/api/fetch-banners`);
+            if (response.status === 200) {
+                setBanners(response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching banners:', error);
+        }
+    };
+
+    // Banner slider settings
+    const bannerSliderSettings = {
+        dots: true,
+        speed: 900,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        arrows: false,
+        infinite: true
+    };
 
     // Settings for all paper types with fixed card width
     const getSliderSettings = (type, itemCount) => {
@@ -115,6 +137,7 @@ const MobileIndexPage = () => {
             setLoading(true);
             try {
                 await Promise.all([
+                    fetchBanners(),
                     fetchPapers('major'),
                     fetchPapers('minor'),
                     fetchPapers('common')
@@ -174,14 +197,23 @@ const MobileIndexPage = () => {
         return <Splash />;
     }
 
+    // Default banner to display if no banners from API
+    const defaultBanner = {
+        id: 0,
+        title: "Master Your Grades with LitLab",
+        buttonText: "Explore more",
+        buttonLink: "/see-all-mobile-indexpage",
+        imageUrl: null // Will use the default blue background color
+    };
+
+    // Use banners from API or fallback to default banner
+    const displayBanners = banners.length > 0 ? banners : [defaultBanner];
+
     return (
         <div className='MobileIndexPageMainWrapper'>
             <SideNave />
             <div className="mobile-index-page">
                 <header className="header">
-                    {/* <button className="menu-button">
-                        <BiMenuAltLeft />
-                    </button> */}
                     <div className="bell-icon">
                         <BellIcon />
                     </div>
@@ -208,16 +240,23 @@ const MobileIndexPage = () => {
                             onChange={(e) => handleSearch(e.target.value)}
                         />
                         <button className="voice-search-button">
-                            {/* <span className="voice-icon"><MdOutlineKeyboardVoice /></span> */}
                         </button>
                     </div>
-
-                    <div className="promo-card">
-                        <div className="promo-content">
-                            <h2 className="promo-title">Master Your Grades<br />with LitLab</h2>
-                           <Link to='/see-all-mobile-indexpage'><button className="explore-button">Explore more</button></Link>
-                        </div>
-                        <div className="phone-mockup"></div>
+                    
+                    {/* Banner Carousel Section */}
+                    <div className="banner-carousel">
+                        <Slider {...bannerSliderSettings}>
+                            {displayBanners.map((banner, index) => (
+                                <div key={banner.id} className="banner-slide">
+                                    <div 
+                                        className="promo-card"
+                                       
+                                    >
+                                        <img src={banner.imageUrl} alt="" />
+                                    </div>
+                                </div>
+                            ))}
+                        </Slider>
                     </div>
                 </main>
 
