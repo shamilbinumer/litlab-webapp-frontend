@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './App.css';
 import { Routes, Route, HashRouter } from "react-router-dom";
-import Splash from "./components/common/Splash/Splash"; // Import your Splash component
+// import Splash from "./components/common/Splash/Splash"; // Import your Splash component
 import UserRegister from "./components/UserRegister/UserRegister";
 import UserLogin from "./components/UserLogin/UserLogin";
 import IndexPage from "./components/IndexPage/IndexPage";
@@ -44,7 +44,6 @@ function App() {
     // Screenshot detection for Windows (PrintScreen key)
     const handleKeyUp = (e) => {
       if (e.key === "PrintScreen") {
-        console.log("PrintScreen key detected! Overlay activated.");
         setShowOverlay(true);
         setTimeout(() => {
           setShowOverlay(false);
@@ -88,7 +87,7 @@ function App() {
           <Route path="/login" Component={UserLogin} />
           <Route path="/welcome" Component={WelcomPage} />
           <Route path="/paper-details/:paperTitle/:paperId" Component={PaperDetailPage} />
-          <Route path="/lectures/:paperTitle/:paperId/:videoId" Component={Lectures} />
+          <Route path="/lectures/:paperTitle/:paperId/:videoId/:isAccessible" Component={Lectures} />
           <Route path="/my-profile" Component={MyProfile} />
           <Route path="/quiz-analysis" Component={QuizAnalysis} />
           <Route path="/my-mock-details" Component={MyMockDetails} />

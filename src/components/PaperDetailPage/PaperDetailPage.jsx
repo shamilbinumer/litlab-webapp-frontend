@@ -21,6 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Splash from '../common/Splash/Splash';
 
 const PaperDetailPage = () => {
+    const [purchasedPlan, setPurchasedPlan] = useState('');
     const [activeCategory, setActiveCategory] = useState('Study Notes');
     const [activeSubCategory, setActiveSubCategory] = useState('Study Notes');
     const [modules, setModules] = useState([]);
@@ -34,6 +35,16 @@ const PaperDetailPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loadingWishlist, setLoadingWishlist] = useState({});
     const [wishlistAlert, setWishlistAlert] = useState({ show: false, message: '' });
+
+    // Check if video content is accessible based on plan and video index
+    const isVideoAccessible = (videoIndex = 0) => {
+        // Silver plan users can only access the first video (index 0)
+        if (hasPurchased && purchasedPlan === 'silver') {
+            return videoIndex === 0; // Only first video is accessible
+        }
+        // Gold and Diamond plans can access all videos
+        return hasPurchased;
+    };
 
     // Fetch wishlist items
     const fetchWishlistItems = async () => {
@@ -145,14 +156,50 @@ const PaperDetailPage = () => {
                 });
 
                 setUserDetails(response.data.user);
-
-                const isPurchased = response.data.user?.purchases?.some(
+                console.log('User data:', response.data.user);
+                
+                // Check in purchases array
+                const purchaseItem = response.data.user?.purchases?.find(
                     purchase => purchase.courseId === paperId
                 );
-                setHasPurchased(isPurchased);
+                
+                // Check in purchasedCourses array if not found in purchases
+                const purchasedCourseItem = !purchaseItem && response.data.user?.purchasedCourses?.find(
+                    course => course.courseId === paperId
+                );
+                
+                // Determine which item to use for plan checking
+                const itemToCheck = purchaseItem || purchasedCourseItem;
+                
+                // Set purchased status
+                setHasPurchased(!!itemToCheck);
+                
+                // Set plan type if a purchase was found
+                if (itemToCheck) {
+                    let planName = '';
+                    switch (itemToCheck.plan) {
+                        case 0:
+                            planName = 'diamond';
+                            break;
+                        case 1:
+                            planName = 'gold';
+                            break;
+                        case 2:
+                            planName = 'silver';
+                            break;
+                        default:
+                            planName = 'unknown';
+                    }
+                    setPurchasedPlan(planName);
+                    console.log(`User has purchased this paper with ${planName} plan`);
+                } else {
+                    console.log('User has not purchased this paper');
+                }
+                
                 await fetchWishlistItems();
 
             } catch (error) {
+                console.error('Authentication error:', error);
                 navigate('/welcome');
             }
         };
@@ -194,14 +241,16 @@ const PaperDetailPage = () => {
     }, [paperId]);
 
     const isModuleAccessible = (index) => {
-        return hasPurchased || index < 2;
+        return hasPurchased || index < 1;
     };
 
     const ModuleCard = ({ module, index }) => {
         const isAccessible = isModuleAccessible(index);
 
         return (
-            <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
+           <>
+           <a href={module.fileUrl}>
+           <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
                 <div className="module-card-left">
                     <h4 className="module-title">
                         Module {module.module} : {module.title}
@@ -260,6 +309,8 @@ const PaperDetailPage = () => {
                     <img src="/Images/Module-icon.png" alt="" />
                 </div>
             </div>
+           </a>
+           </>
         );
     };
 
@@ -318,10 +369,22 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                        <Slides paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased} />
+                                        <Slides 
+                                            paperId={paperId}
+                                            paperTitle={paperTitle}
+                                            isAccessible={purchasedPlan=='silver'?false:isVideoAccessible()}
+                                            planType={purchasedPlan}
+                                        />
                                     </div>
                                 ) : (
-                                    <VideoClasses paperId={paperId} paperTitle={paperTitle} isAccessible={hasPurchased} />
+                                    <VideoClasses 
+                                        paperId={paperId}
+                                        paperTitle={paperTitle}
+                                        isAccessible={purchasedPlan=='silver'?false: isVideoAccessible}
+                                        // planType={purchasedPlan}
+                                        // hasPurchased={hasPurchased}
+                                        onPurchaseClick={() => setShowPurchasePopup(true)}
+                                    />
                                 )
                             ) : activeCategory === 'Study Notes' ? (
                                 activeSubCategory === 'Study Notes' ? (
@@ -419,20 +482,67 @@ const PaperDetailPage = () => {
                                 )}
                                 {activeCategory === 'Video Class' && (
                                     <>
-                                        <div
-                                            className={`vedio-clas-card ${activeSubCategory === 'Lectures' ? 'active' : ''}`}
-                                            onClick={() => setActiveSubCategory('Lectures')}
-                                        >
-                                            <img src="/Images/lecture.png" alt="" />
-                                            <span>Lectures</span>
-                                        </div>
-                                        <div
-                                            className={`vedio-clas-card ${activeSubCategory === 'Slides' ? 'active' : ''}`}
-                                            onClick={() => setActiveSubCategory('Slides')}
-                                        >
-                                            <img src="/Images/slides.png" alt="" />
-                                            <span>Slides</span>
-                                        </div>
+                                        {purchasedPlan === 'silver' && hasPurchased ? (
+                                            <>
+                                                <div className="limited-access-message" style={{
+                                                    padding: '15px',
+                                                    backgroundColor: '#f8f9fa',
+                                                    borderRadius: '5px',
+                                                    textAlign: 'center',
+                                                    margin: '10px 0',
+                                                    border: '1px dashed #ccc'
+                                                }}>
+                                                    <p><strong>Silver Plan:</strong> Access to first video only</p>
+                                                    <p style={{fontSize: '0.9em', color: '#666'}}>Upgrade to Gold or Diamond plan for full access</p>
+                                                    <button 
+                                                        className="upgrade-btn"
+                                                        onClick={() => setShowPurchasePopup(true)}
+                                                        style={{
+                                                            backgroundColor: '#4CAF50',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            padding: '8px 16px',
+                                                            borderRadius: '4px',
+                                                            cursor: 'pointer',
+                                                            marginTop: '10px'
+                                                        }}
+                                                    >
+                                                        Upgrade Plan
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    className={`vedio-clas-card ${activeSubCategory === 'Lectures' ? 'active' : ''}`}
+                                                    onClick={() => setActiveSubCategory('Lectures')}
+                                                >
+                                                    <img src="/Images/lecture.png" alt="" />
+                                                    <span>Lectures</span>
+                                                </div>
+                                                <div
+                                                    className={`vedio-clas-card ${activeSubCategory === 'Slides' ? 'active' : ''}`}
+                                                    onClick={() => setActiveSubCategory('Slides')}
+                                                >
+                                                    <img src="/Images/slides.png" alt="" />
+                                                    <span>Slides</span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div
+                                                    className={`vedio-clas-card ${activeSubCategory === 'Lectures' ? 'active' : ''}`}
+                                                    onClick={() => setActiveSubCategory('Lectures')}
+                                                >
+                                                    <img src="/Images/lecture.png" alt="" />
+                                                    <span>Lectures</span>
+                                                </div>
+                                                <div
+                                                    className={`vedio-clas-card ${activeSubCategory === 'Slides' ? 'active' : ''}`}
+                                                    onClick={() => setActiveSubCategory('Slides')}
+                                                >
+                                                    <img src="/Images/slides.png" alt="" />
+                                                    <span>Slides</span>
+                                                </div>
+                                            </>
+                                        )}
                                     </>
                                 )}
                                 {activeCategory === 'Mock Test' && (

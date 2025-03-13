@@ -104,7 +104,6 @@ const Cart = () => {
             }
 
             const cartData = await response.json();
-            console.log(cartData.cart);
 
             setCartItems(cartData.cart);
 
@@ -262,7 +261,7 @@ const Cart = () => {
             // Map each course with its appropriate plan
             const purchases = cartItems.map(item => {
                 // Debug the values
-                console.log("Item:", item.id, "videoClassCount:", item.videoClassCount, "planIndexNumber:", planIndexNumber);
+                // console.log("Item:", item.id, "videoClassCount:", item.videoClassCount, "planIndexNumber:", planIndexNumber);
     
                 // Set plan based on videoClassCount
                 // If videoClassCount > 0, use the selected plan index, otherwise use Silver (1)
@@ -277,7 +276,6 @@ const Cart = () => {
                 };
             });
     
-            console.log("Purchases to send:", purchases);
     
             // For backward compatibility, also send courseIds array
             const courseIds = cartItems.map(item => item.id);

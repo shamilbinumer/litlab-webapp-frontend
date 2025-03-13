@@ -195,11 +195,12 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
         <div className="main-content-right">
           <div className="vedio-list-wrapper">
             {videoClasses.map((video, index) => {
-              const isLocked = !isAccessible && index > 1;
+              const isLocked = !isAccessible && index > 0;
 
               return (
                 <div className="vedio-item row" key={video.id || index}>
                   <div>
+                  <Link to={isLocked ? "" : `/slide/${video.id}`}>
                     <div
                       className={`vedio-item-right ${isLocked ? 'locked' : ''}`}
                       style={{
@@ -210,7 +211,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                         alignItems: "center",
                         justifyContent: "space-between",
                         opacity: isLocked ? 0.8 : 1,
-                        cursor: isLocked ? 'pointer' : 'default'
+                        cursor: isLocked ? 'not-allowed' : 'pointer'
                       }}
                       onClick={isLocked ? handleLockedClick : undefined}
                     >
@@ -219,7 +220,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                         <div className="teacer-name" style={{ marginBottom: "1rem" }}>
                           Module : {video.Module}
                         </div>
-                        <div className="button-icon">
+                        {/* <div className="button-icon">
                           {isLocked ? (
                             <button
                               className="locked-button"
@@ -245,7 +246,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                               </button>
                             </Link>
                           )}
-                        </div>
+                        </div> */}
                       </div>
                       <div style={{ paddingRight: '1rem' }}>
                         <button
@@ -278,6 +279,7 @@ const Slides = ({ paperId, paperTitle, isAccessible }) => {
                         </button>
                       </div>
                     </div>
+                    </Link>
                   </div>
                 </div>
               );

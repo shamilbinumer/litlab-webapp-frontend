@@ -36,7 +36,6 @@ const ModalQuestanPaper = ({ paperId }) => {
       fetchQuestions();
     }
   }, [paperId]);
-console.log(questions);
   return (
     <div>
       <div className="module-card questianPaper-card">

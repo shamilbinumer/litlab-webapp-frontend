@@ -27,7 +27,7 @@ const WeeklyChallenge = ({ paperId, userDetails, isAccessible, onPurchaseClick }
   const [purchasePopupIsOpen,setPurchasePopupIsOpen]=useState(false)
   // Helper function to check if a module is accessible
   const isModuleAccessible = (index) => {
-    return isAccessible || index < 2;
+    return isAccessible || index < 1;
   };
 
   // Fetch modules
@@ -294,7 +294,6 @@ const WeeklyChallenge = ({ paperId, userDetails, isAccessible, onPurchaseClick }
           }
         );
     
-        console.log("Mock test added successfully:", response.data);
         alert("Mock test submitted successfully!");
       } catch (error) {
         console.error("Error adding mock test:", error.response?.data?.message || error.message);

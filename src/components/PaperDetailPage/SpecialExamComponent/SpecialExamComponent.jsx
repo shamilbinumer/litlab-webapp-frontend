@@ -27,7 +27,7 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
   const [purchasePopupIsOpen, setPurchasePopupIsOpen] = useState(false);
 
   const isModuleAccessible = (index) => {
-    return isAccessible || index < 2;
+    return isAccessible || index < 1;
   };
 
   useEffect(() => {
@@ -278,7 +278,6 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           paperType: paperDetails?.paperType || "", 
         };
 
-        console.log("Mock test data:", mockTestData); 
 
         const response = await axios.post(
           `${baseUrl}/api/add-mock-test`,
@@ -291,7 +290,6 @@ const SpecialExam = ({ paperId, userDetails, isAccessible, onPurchaseClick }) =>
           }
         );
 
-        console.log("Mock test added successfully:", response.data);
         alert("Mock test submitted successfully!");
       } catch (error) {
         console.error("Error adding mock test:", error.response?.data?.message || error.message);

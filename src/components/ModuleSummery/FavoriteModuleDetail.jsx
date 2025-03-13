@@ -47,7 +47,6 @@ const FavoriteModuleDetail = () => {
             try {
                 const response = await axios.get(`${baseUrl}/api/fetch-module-details/${moduleId}`);
                 setModuleDetails(response.data.data);
-                console.log(response.data, 'hjvjh');
 
             } catch (err) {
                 setError('Failed to fetch module details');
@@ -122,6 +121,9 @@ const FavoriteModuleDetail = () => {
                             <p className="summary-content">
                                 {moduleDetails?.description || 'No summary available'}
                             </p>
+                            <div>
+                                <a href={moduleDetails.fileUrl}><button className='full-view-btn'>View Full Version</button></a>
+                            </div>
                         </div>
                     </>
                 )}

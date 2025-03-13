@@ -63,7 +63,6 @@ const MyMockDetails = () => {
 
                 } else {
                     setUserDetails(response.data.user);
-                    console.log(response.data.user);
 
                 }
             } catch (error) {
@@ -468,7 +467,6 @@ const MyMockDetails = () => {
                 }
             );
     
-            console.log("Mock test added successfully:", response.data);
         } catch (error) {
             console.error("Error adding mock test:", error.response?.data?.message || error.message);
             alert("Failed to submit mock test. Try again.");
@@ -1025,7 +1023,7 @@ const MyMockDetails = () => {
                             )}
                         </div>
                         <div className="col-lg-6 content-right">
-                            <div className="boxes-container row">
+                            {/* <div className="boxes-container row">
                                 {['Mock Test'].map((category) => (
                                     <div className="col-lg-12 col-sm-12 col-12" key={category}>
                                         <div
@@ -1041,7 +1039,7 @@ const MyMockDetails = () => {
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
                             <div className="content-details">
                                 {activeCategory === 'Mock Test' && (
                                     <>

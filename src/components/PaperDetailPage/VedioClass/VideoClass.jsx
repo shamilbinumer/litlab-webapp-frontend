@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IoPlayCircleSharp } from 'react-icons/io5';
-import { LuHeart, LuEye, LuLock } from 'react-icons/lu';
+import { LuEye, LuLock } from 'react-icons/lu';
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io';
 import baseUrl from '../../../baseUrl';
 import Box from '@mui/material/Box';
@@ -153,13 +153,14 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
   };
 
   const renderVideoItem = (video, index) => {
-    const isLocked = !isAccessible && index > 1;
+    // Changed the condition here: Now only the first video (index 0) is unlocked when not accessible
+    const isLocked = !isAccessible && index > 0;
     const VideoWrapper = isLocked ? 'div' : Link;
     const wrapperProps = isLocked ? {
       onClick: handleLockedClick,
       style: { cursor: 'pointer' }
     } : {
-      to: `/lectures/${paperTitle}/${paperId}/${video.id}`
+      to: `/lectures/${paperTitle}/${paperId}/${video.id}/${isAccessible}`
     };
 
     return (
@@ -189,22 +190,21 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
           <div className="vedio-item-right">
             <h1>{video.title}</h1>
             <p
-  style={{
-    fontFamily: "Inter",
-    fontSize: "12.26px",
-    fontWeight: 400,
-    lineHeight: "16.8px",
-    textAlign: "left",
-    marginTop: "10px",
-    display: "-webkit-box",
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-  }}
->
-  {video.description}
-</p>
-
+              style={{
+                fontFamily: "Inter",
+                fontSize: "12.26px",
+                fontWeight: 400,
+                lineHeight: "16.8px",
+                textAlign: "left",
+                marginTop: "10px",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {video.description}
+            </p>
 
             <div className="teacer-name" style={{marginBottom:"1rem"}}>Module : {video.Module}</div>
             <div className="button-icon">
@@ -228,13 +228,15 @@ const VideoClasses = ({ paperId, paperTitle, isAccessible }) => {
                 style={{ background: 'none', border: 'none', padding: 0 }}
               >
                 {loadingWishlist[video.id] ? (
-                  <span className="loading-wishlist">  <Box sx={{ display: 'flex' }}>
-                  <CircularProgress size={22} /> 
-              </Box></span>
+                  <span className="loading-wishlist">
+                    <Box sx={{ display: 'flex' }}>
+                      <CircularProgress size={22} /> 
+                    </Box>
+                  </span>
                 ) : isInWishlist(video.id) ? (
                   <IoIosHeart className="heart-icon active" style={{color:'red'}} />
                 ) : (
-                  <IoIosHeartEmpty  className="heart-icon" />
+                  <IoIosHeartEmpty className="heart-icon" />
                 )}
               </button>
             </div>
@@ -302,6 +304,7 @@ VideoClasses.propTypes = {
   paperId: PropTypes.string.isRequired,
   paperTitle: PropTypes.string.isRequired,
   isAccessible: PropTypes.bool.isRequired,
+  planType:PropTypes.bool.isRequired,
 };
 
 export default VideoClasses;

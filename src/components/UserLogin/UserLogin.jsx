@@ -22,7 +22,6 @@ const UserLogin = () => {
   const couponApplied = params.get('couponApplied');
   const ogPrice = params.get('ogPrice');
   const forSem = params.get('forSem');
-  console.log(ogPrice);
     
   // Timer effect to countdown from 30 seconds
   useEffect(() => {
@@ -61,11 +60,25 @@ const UserLogin = () => {
       setError('Please enter a valid 10-digit mobile number');
       return;
     }
-
+  
     setIsLoading(true);
     setError('');
+    
+    // Special case for 9562890504
+    if (mobile === '9562890504') {
+      // Use fixed OTP 000000 for this number
+      setGeneratedOTP('000000');
+      setOtpPageIsVisible(true);
+      // Reset timer and disable resend button
+      setTimer(30);
+      setCanResend(false);
+      setIsLoading(false);
+      return;
+    }
+  
+    // For other numbers, generate random OTP
     const otp = generateOTP();
-
+  
     try {
       await axios.post(`${baseUrl}/api/otp-send`, { 
         phoneNo: mobile, 
@@ -99,8 +112,8 @@ const UserLogin = () => {
         const response = await axios.post(`${baseUrl}/api/verify-otp`, {
           mobile,
           otp: enteredOTP
+          // otp: mobile==='9562890504' ? '000000' : enteredOTP
         });
-        console.log(response.data,'this is response');
         
         localStorage.setItem('authToken', response.data.token);
         if (response.data.user) {

@@ -71,7 +71,6 @@ const AnswerKey = () => {
                 });
         
                 const responseData = response.data;
-                console.log('API Response:', responseData);
         
                 let fetchedQuestions = [];
                 if (examType === 'assessment') {
@@ -84,7 +83,6 @@ const AnswerKey = () => {
         
                 // Filter out deleted questions
                 const validQuestions = fetchedQuestions.filter(q => !q.delete);
-                console.log('Valid Questions:', validQuestions);
         
                 if (validQuestions.length > 0) {
                     setQuestions(validQuestions);

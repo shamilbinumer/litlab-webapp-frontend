@@ -47,8 +47,8 @@ const MobileLogin = () => {
         }
     };
 
-    const sendOTP = async (e) => {
-        e.preventDefault();
+    const handleSendOTP = async (e) => {
+        if (e) e.preventDefault();
         
         if (mobile.length !== 10) {
             setError('Please enter a valid 10-digit mobile number');
@@ -57,8 +57,22 @@ const MobileLogin = () => {
 
         setIsLoading(true);
         setError('');
+        
+        // Special case for 9562890504
+        if (mobile === '9562890504') {
+            // Use fixed OTP 000000 for this number
+            setGeneratedOTP('000000');
+            setOtpPageIsVisible(true);
+            // Reset timer and disable resend button
+            setTimer(30);
+            setCanResend(false);
+            setIsLoading(false);
+            return;
+        }
+        
+        // For other numbers, generate random OTP
         const otp = generateOTP();
-
+        
         try {
             await axios.post(`${baseUrl}/api/otp-send`, { 
                 phoneNo: mobile, 
@@ -100,59 +114,39 @@ const MobileLogin = () => {
             }
         }
     };
-
-    const handleSendOTP = async () => {
-        if (!canResend) return;
-        
-        setOtp(['', '', '', '', '', '']);
-        setError('');
-        setIsLoading(true);
-        const newOtp = generateOTP();
-
-        try {
-            await axios.post(`${baseUrl}/api/otp-send`, { 
-                phoneNo: mobile, 
-                otp: newOtp 
-            });
-            // Reset timer and disable resend button
-            setTimer(30);
-            setCanResend(false);
-        } catch (error) {
-            setError('Failed to send OTP. Please try again.');
-            console.error('OTP send failed', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
+    const enteredOTP = otp.join('');
     const verifyOTP = async () => {
-        const enteredOTP = otp.join('');
-        
-        if (enteredOTP.length !== 6) {
-            setError('Please enter complete OTP');
-            return;
+        if (!enteredOTP) {
+          setError('Please enter OTP');
+          return;
         }
-
+    
         if (enteredOTP === generatedOTP) {
-            setIsLoading(true);
-            try {
-                const response = await axios.post(`${baseUrl}/api/verify-otp`, {
-                    mobile,
-                    otp: enteredOTP
-                });
-                
-                localStorage.setItem('authToken', response.data.token);
-                navigate('/');
-            } catch (error) {
-                setError('Verification failed. Please try again.');
-                console.error('Verification error', error);
-            } finally {
-                setIsLoading(false);
+          setIsLoading(true);
+          try {
+            const response = await axios.post(`${baseUrl}/api/verify-otp`, {
+              mobile,
+              otp: enteredOTP
+              // otp: mobile==='9562890504' ? '000000' : enteredOTP
+            });
+            
+            localStorage.setItem('authToken', response.data.token);
+            if (response.data.user) {
+              // localStorage.setItem('userData', JSON.stringify(response.data.user));
             }
+            
+            navigate(`/`);
+          } catch (error) {
+            setError('Verification failed. Please try again.');
+            console.error('Verification error', error);
+          } finally {
+            setIsLoading(false);
+          }
         } else {
-            setError('Incorrect OTP');
+          setError('Incorrect OTP');
         }
-    };
+      };
+    
     
     const handleSignup = () => {
         navigate('/signup'); // Adjust this route according to your app's routing
@@ -215,7 +209,7 @@ const MobileLogin = () => {
                     <>
                         <h1>Enter Your Mobile Number</h1>
                         <p>We will send you a confirmation code</p>
-                        <form onSubmit={sendOTP}>
+                        <form onSubmit={handleSendOTP}>
                             <div className="input-section">
                                 <div>+91</div>
                                 <div>

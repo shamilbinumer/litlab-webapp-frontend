@@ -31,16 +31,16 @@ const QuizAnalysis = () => {
         const secs = seconds % 60;
         return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     };
-    useEffect(() => {
-        console.log("Query Parameters:", searchParams.toString());
-        console.log("Total Questions:", totalQuestions);
-        console.log("Correct Answers:", correctAnswers);
-        console.log("Wrong Answers:", wrongAnswers);
-        console.log("Ignored Questions:", ignoredQuestions);
-        console.log("Total Time:", totalTime);
-        console.log("Average Time:", avgTime);
-        console.log("Paper ID:", paperId);
-    }, [searchParams]);
+    // useEffect(() => {
+    //     console.log("Query Parameters:", searchParams.toString());
+    //     console.log("Total Questions:", totalQuestions);
+    //     console.log("Correct Answers:", correctAnswers);
+    //     console.log("Wrong Answers:", wrongAnswers);
+    //     console.log("Ignored Questions:", ignoredQuestions);
+    //     console.log("Total Time:", totalTime);
+    //     console.log("Average Time:", avgTime);
+    //     console.log("Paper ID:", paperId);
+    // }, [searchParams]);
 
     const StatCard = ({ image, value, label }) => (
         <div className="stat-card">
