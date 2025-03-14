@@ -157,23 +157,23 @@ const PaperDetailPage = () => {
 
                 setUserDetails(response.data.user);
                 console.log('User data:', response.data.user);
-                
+
                 // Check in purchases array
                 const purchaseItem = response.data.user?.purchases?.find(
                     purchase => purchase.courseId === paperId
                 );
-                
+
                 // Check in purchasedCourses array if not found in purchases
                 const purchasedCourseItem = !purchaseItem && response.data.user?.purchasedCourses?.find(
                     course => course.courseId === paperId
                 );
-                
+
                 // Determine which item to use for plan checking
                 const itemToCheck = purchaseItem || purchasedCourseItem;
-                
+
                 // Set purchased status
                 setHasPurchased(!!itemToCheck);
-                
+
                 // Set plan type if a purchase was found
                 if (itemToCheck) {
                     let planName = '';
@@ -195,7 +195,7 @@ const PaperDetailPage = () => {
                 } else {
                     console.log('User has not purchased this paper');
                 }
-                
+
                 await fetchWishlistItems();
 
             } catch (error) {
@@ -248,69 +248,69 @@ const PaperDetailPage = () => {
         const isAccessible = isModuleAccessible(index);
 
         return (
-           <>
-           <a href={module.fileUrl}>
-           <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
-                <div className="module-card-left">
-                    <h4 className="module-title">
-                        Module {module.module} : {module.title}
-                    </h4>
-                    <div className="button-heart">
-                        {isAccessible ? (
-                            <Link to={`/module-summery/${module.id}`}>
-                                <button>Read Summary</button>
-                            </Link>
-                        ) : (
-                            <button
-                                className="locked-content"
-                                onClick={() => setShowPurchasePopup(true)}
-                            >
-                                <LuLock className="lock-icon" />
-                                <span>Purchase to unlock</span>
-                            </button>
-                        )}
-                        <button
-                            className="wishlist-btn"
-                            onClick={(e) => handleWishlist(module.id, e)}
-                            disabled={loadingWishlist[module.id]}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                padding: 0,
-                                cursor: 'pointer'
-                            }}
-                        >
-                            {loadingWishlist[module.id] ? (
-                                <span className="loading-wishlist" style={{ fontSize: '25px' }}><Box sx={{ display: 'flex' }}>
-                                    <CircularProgress size={22} />
-                                </Box></span>
-                            ) : isInWishlist(module.id) ? (
-                                <IoIosHeart
-                                    className="heart-icon active"
+            <>
+                 <Link to={`/pdf/${module.id}`}>
+                    <div className={`module-card ${!isAccessible ? 'disabled' : ''}`}>
+                        <div className="module-card-left">
+                            <h4 className="module-title">
+                                Module {module.module} : {module.title}
+                            </h4>
+                            <div className="button-heart">
+                                {isAccessible ? (
+                                    <Link to={`/module-summery/${module.id}`}>
+                                        <button>Read Summary</button>
+                                    </Link>
+                                ) : (
+                                    <button
+                                        className="locked-content"
+                                        onClick={() => setShowPurchasePopup(true)}
+                                    >
+                                        <LuLock className="lock-icon" />
+                                        <span>Purchase to unlock</span>
+                                    </button>
+                                )}
+                                <button
+                                    className="wishlist-btn"
+                                    onClick={(e) => handleWishlist(module.id, e)}
+                                    disabled={loadingWishlist[module.id]}
                                     style={{
-                                        fontSize: '25px',
-                                        color: '#ff0000',
-                                        transition: 'all 0.3s ease'
+                                        background: 'none',
+                                        border: 'none',
+                                        padding: 0,
+                                        cursor: 'pointer'
                                     }}
-                                />
-                            ) : (
-                                <LuHeart
-                                    className="heart-icon"
-                                    style={{
-                                        fontSize: '25px',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                />
-                            )}
-                        </button>
+                                >
+                                    {loadingWishlist[module.id] ? (
+                                        <span className="loading-wishlist" style={{ fontSize: '25px' }}><Box sx={{ display: 'flex' }}>
+                                            <CircularProgress size={22} />
+                                        </Box></span>
+                                    ) : isInWishlist(module.id) ? (
+                                        <IoIosHeart
+                                            className="heart-icon active"
+                                            style={{
+                                                fontSize: '25px',
+                                                color: '#ff0000',
+                                                transition: 'all 0.3s ease'
+                                            }}
+                                        />
+                                    ) : (
+                                        <LuHeart
+                                            className="heart-icon"
+                                            style={{
+                                                fontSize: '25px',
+                                                transition: 'all 0.3s ease'
+                                            }}
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="module-card-right">
+                            <img src="/Images/Module-icon.png" alt="" />
+                        </div>
                     </div>
-                </div>
-                <div className="module-card-right">
-                    <img src="/Images/Module-icon.png" alt="" />
-                </div>
-            </div>
-           </a>
-           </>
+                </Link>
+            </>
         );
     };
 
@@ -369,20 +369,20 @@ const PaperDetailPage = () => {
                             {activeCategory === 'Video Class' ? (
                                 activeSubCategory === 'Slides' ? (
                                     <div className="slides-wrapper">
-                                        <Slides 
+                                        <Slides
                                             paperId={paperId}
                                             paperTitle={paperTitle}
-                                            isAccessible={purchasedPlan=='silver'?false:isVideoAccessible()}
+                                            isAccessible={purchasedPlan == 'silver' ? false : isVideoAccessible()}
                                             planType={purchasedPlan}
                                         />
                                     </div>
                                 ) : (
-                                    <VideoClasses 
+                                    <VideoClasses
                                         paperId={paperId}
                                         paperTitle={paperTitle}
-                                        isAccessible={purchasedPlan=='silver'?false: isVideoAccessible}
+                                        isAccessible={purchasedPlan == 'silver' ? false : isVideoAccessible()}
                                         // planType={purchasedPlan}
-                                        // hasPurchased={hasPurchased}
+                                        hasPurchased={hasPurchased}
                                         onPurchaseClick={() => setShowPurchasePopup(true)}
                                     />
                                 )
@@ -397,9 +397,9 @@ const PaperDetailPage = () => {
                                             />
                                         ))
                                     ) : (
-                                        <div className="no-modules-message" style={{ 
-                                            padding: '20px', 
-                                            backgroundColor: '#f9f9f9', 
+                                        <div className="no-modules-message" style={{
+                                            padding: '20px',
+                                            backgroundColor: '#f9f9f9',
                                             borderRadius: '8px',
                                             textAlign: 'center',
                                             marginBottom: '20px',
@@ -493,8 +493,8 @@ const PaperDetailPage = () => {
                                                     border: '1px dashed #ccc'
                                                 }}>
                                                     <p><strong>Silver Plan:</strong> Access to first video only</p>
-                                                    <p style={{fontSize: '0.9em', color: '#666'}}>Upgrade to Gold or Diamond plan for full access</p>
-                                                    <button 
+                                                    <p style={{ fontSize: '0.9em', color: '#666' }}>Upgrade to Gold or Diamond plan for full access</p>
+                                                    <button
                                                         className="upgrade-btn"
                                                         onClick={() => setShowPurchasePopup(true)}
                                                         style={{

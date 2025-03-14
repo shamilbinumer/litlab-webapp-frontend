@@ -25,6 +25,7 @@ import MyFavorites from "./components/MyFavorites/MyFavorites";
 import TermsConditions from "./components/TermsConditions/TermsConditions";
 import NotificationPage from "./components/NotificationPage/NotificationPage";
 import SlideView from "./components/PaperDetailPage/SlideView";
+import PptViewer from "./components/ModuleSummery/PPTViewer/PPTViewer";
 
 function App() {
   // const [showSplash, setShowSplash] = useState(true);
@@ -101,6 +102,7 @@ function App() {
           <Route path="/cart" Component={SeparateCart} />
           <Route path="/instructions" Component={Instructions} />
           <Route path="/module-summery/:moduleId" Component={FavoriteModuleDetail} />
+          <Route path="/pdf/:moduleId" Component={PptViewer} />
           <Route path="/see-all-mobile-indexpage" Component={SeeAllContent} />
           <Route path="/terms-and-conditions" Component={TermsConditions} />
           <Route path="/slide/:videoId" Component={SlideView} />

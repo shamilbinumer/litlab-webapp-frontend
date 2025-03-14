@@ -122,7 +122,7 @@ const FavoriteModuleDetail = () => {
                                 {moduleDetails?.description || 'No summary available'}
                             </p>
                             <div>
-                                <a href={moduleDetails.fileUrl}><button className='full-view-btn'>View Full Version</button></a>
+                                <Link to={`/pdf/${moduleId}`}><button className='full-view-btn'>View Full Version</button></Link>
                             </div>
                         </div>
                     </>
