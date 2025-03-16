@@ -238,7 +238,7 @@ const MyProfile = () => {
 
     if (isLoading) {
         return (
-            <div className="loading-container">
+            <div>
                <Splash/>
             </div>
         );
