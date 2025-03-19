@@ -19,15 +19,27 @@ const PptViewer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [scale, setScale] = useState(1.0);
+  const [isRendering, setIsRendering] = useState(false);
   const canvasRef = useRef(null);
-  const renderingRef = useRef(false);
+  
+  // Refs to store the actual current values for use in callbacks
+  const currentPageRef = useRef(1);
+  const scaleRef = useRef(1.0);
+  
+  // Update refs when state changes
+  useEffect(() => {
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
+  
+  useEffect(() => {
+    scaleRef.current = scale;
+  }, [scale]);
 
   useEffect(() => {
     const fetchModuleDetails = async () => {
       try {
         const response = await axios.get(`${baseUrl}/api/fetch-module-details/${moduleId}`);
         setModuleDetails(response.data.data);
-        console.log("File URL:", response.data.data?.fileUrl);
       } catch (err) {
         console.error("Error fetching module details:", err);
         setError('Failed to fetch module details');
@@ -42,52 +54,68 @@ const PptViewer = () => {
   }, [moduleId]);
 
   useEffect(() => {
+    let isMounted = true;
+    
     const loadPdfDocument = async () => {
       if (!moduleDetails?.fileUrl) return;
       
       try {
         setLoading(true);
         
-        // Load document directly rather than using iframe
         const loadingTask = pdfjs.getDocument(moduleDetails.fileUrl);
         const pdf = await loadingTask.promise;
         
-        setPdfDocument(pdf);
-        setTotalPages(pdf.numPages);
-        setCurrentPage(1);
+        if (isMounted) {
+          setPdfDocument(pdf);
+          setTotalPages(pdf.numPages);
+          setCurrentPage(1);
+          currentPageRef.current = 1;
+        }
       } catch (err) {
         console.error("Error loading PDF:", err);
-        setError('Failed to load PDF document');
+        if (isMounted) {
+          setError('Failed to load PDF document');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadPdfDocument();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [moduleDetails]);
 
-  const renderPage = async (pageNum, pageScale) => {
-    if (!pdfDocument || renderingRef.current) return;
+  const renderPage = async () => {
+    if (!pdfDocument || !canvasRef.current || isRendering) return;
     
     try {
-      renderingRef.current = true;
+      setIsRendering(true);
+      
+      // Get the current page
+      const pageNum = currentPageRef.current;
+      const currentScale = scaleRef.current;
+      
+      console.log(`Rendering page ${pageNum} at scale ${currentScale}`);
+      
       const page = await pdfDocument.getPage(pageNum);
       const canvas = canvasRef.current;
-      if (!canvas) {
-        renderingRef.current = false;
-        return;
-      }
-      
       const context = canvas.getContext('2d');
+      
+      // Clear previous content
       context.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Calculate viewport based on container width for responsiveness
+      // Calculate viewport
       const container = canvas.parentElement;
       const containerWidth = container.clientWidth;
       
       const viewport = page.getViewport({ scale: 1.0 });
-      const scaleFactor = containerWidth / viewport.width;
-      const scaledViewport = page.getViewport({ scale: scaleFactor * pageScale });
+      const scaleFactor = Math.min(containerWidth / viewport.width, 1.0);
+      const scaledViewport = page.getViewport({ scale: scaleFactor * currentScale });
       
       canvas.height = scaledViewport.height;
       canvas.width = scaledViewport.width;
@@ -98,59 +126,63 @@ const PptViewer = () => {
       };
       
       await page.render(renderContext).promise;
+      console.log("Rendering complete");
+      
     } catch (err) {
       console.error("Error rendering page:", err);
     } finally {
-      renderingRef.current = false;
+      setIsRendering(false);
     }
   };
 
+  // Effect to trigger page rendering when dependencies change
   useEffect(() => {
-    renderPage(currentPage, scale);
+    renderPage();
   }, [pdfDocument, currentPage, scale]);
 
-  // Handle window resize for responsive rendering
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      // Re-render current page when window is resized
-      if (pdfDocument && !renderingRef.current) {
-        renderPage(currentPage, scale);
+      if (pdfDocument && !isRendering) {
+        renderPage();
       }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [pdfDocument, currentPage, scale]);
+  }, [pdfDocument, isRendering]);
 
   const goToPreviousPage = () => {
-    if (currentPage > 1 && !renderingRef.current) {
-      setCurrentPage(prevPage => prevPage - 1);
+    if (currentPage > 1 && !isRendering) {
+      const newPage = currentPage - 1;
+      setCurrentPage(newPage);
+      currentPageRef.current = newPage;
     }
   };
 
   const goToNextPage = () => {
-    if (currentPage < totalPages && !renderingRef.current) {
-      setCurrentPage(prevPage => prevPage + 1);
+    if (currentPage < totalPages && !isRendering) {
+      const newPage = currentPage + 1;
+      setCurrentPage(newPage);
+      currentPageRef.current = newPage;
     }
   };
 
-  const zoomIn = () => {
-    if (!renderingRef.current) {
-      setScale(prevScale => {
-        const newScale = Math.min(prevScale + 0.2, 3.0);
-        console.log(`Zoom in: ${prevScale} → ${newScale}`);
-        return newScale;
-      });
+  const handleZoomIn = () => {
+    if (!isRendering && scale < 3.0) {
+      const newScale = Math.min(scale + 0.2, 3.0).toFixed(1);
+      console.log(`Zoom in from ${scale} to ${newScale}`);
+      setScale(parseFloat(newScale));
+      scaleRef.current = parseFloat(newScale);
     }
   };
 
-  const zoomOut = () => {
-    if (!renderingRef.current) {
-      setScale(prevScale => {
-        const newScale = Math.max(prevScale - 0.2, 0.5);
-        console.log(`Zoom out: ${prevScale} → ${newScale}`);
-        return newScale;
-      });
+  const handleZoomOut = () => {
+    if (!isRendering && scale > 0.5) {
+      const newScale = Math.max(scale - 0.2, 0.5).toFixed(1);
+      console.log(`Zoom out from ${scale} to ${newScale}`);
+      setScale(parseFloat(newScale));
+      scaleRef.current = parseFloat(newScale);
     }
   };
 
@@ -173,7 +205,7 @@ const PptViewer = () => {
         <div className="pdf-controls">
           <button 
             onClick={goToPreviousPage} 
-            disabled={currentPage <= 1 || renderingRef.current}
+            disabled={currentPage <= 1 || isRendering}
             className="control-button"
           >
             Previous
@@ -183,22 +215,22 @@ const PptViewer = () => {
           </span>
           <button 
             onClick={goToNextPage} 
-            disabled={currentPage >= totalPages || renderingRef.current}
+            disabled={currentPage >= totalPages || isRendering}
             className="control-button"
           >
             Next
           </button>
           <button 
-            onClick={zoomOut} 
-            disabled={scale <= 0.5 || renderingRef.current}
+            onClick={handleZoomOut} 
+            disabled={scale <= 0.5 || isRendering}
             className="control-button"
           >
             -
           </button>
           <span className="zoom-info">{Math.round(scale * 100)}%</span>
           <button 
-            onClick={zoomIn} 
-            disabled={scale >= 3.0 || renderingRef.current}
+            onClick={handleZoomIn} 
+            disabled={scale >= 3.0 || isRendering}
             className="control-button"
           >
             +
@@ -208,7 +240,7 @@ const PptViewer = () => {
       <div className="pdf-wrapper">
         <div className="canvas-container">
           <canvas ref={canvasRef} className="pdf-canvas" />
-          {renderingRef.current && (
+          {isRendering && (
             <div className="rendering-indicator">Rendering...</div>
           )}
         </div>
