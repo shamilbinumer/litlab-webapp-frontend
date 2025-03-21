@@ -6,7 +6,38 @@
   overflow: hidden;
   background-color: #f0f0f0;
 }
-
+.access-denied-container{
+  width: 100%;
+  height: 100vh;
+  font-family: Montserrat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.863);
+  color: white;
+  position: fixed;
+  top: 0;
+  z-index: 999999999;
+  left: 0;
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+  h2{
+    text-align: center;
+    padding: 10px;
+  }
+  p{
+    text-align: center;
+  }
+  button{
+    display: block;
+    margin: 0 auto;
+    background-color: #6BCCE5;
+    border: none;
+    padding: 5px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+}
 .pdf-header {
   padding: 10px 15px;
   background-color: #f5f5f5;
