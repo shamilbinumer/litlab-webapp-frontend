@@ -18,7 +18,7 @@ const PptViewer = () => {
   const [pdfDocument, setPdfDocument] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [scale, setScale] = useState(1.0);
+  const [scale, setScale] = useState(3.0);
   const [isRendering, setIsRendering] = useState(false);
   const canvasRef = useRef(null);
   const [user, setUser] = useState(null);
@@ -208,51 +208,59 @@ const PptViewer = () => {
 
   const renderPage = async () => {
     if (!pdfDocument || !canvasRef.current || isRendering) return;
-
+  
     try {
       setIsRendering(true);
-
+  
       // Get the current page
       const pageNum = currentPageRef.current;
       const currentScale = scaleRef.current;
-
+  
       const page = await pdfDocument.getPage(pageNum);
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
-
+  
       // Clear previous content
       context.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Calculate viewport - get container width more reliably
-      const container = containerRef.current;
-      const containerWidth = container ? container.clientWidth : window.innerWidth;
+  
+      // Use full viewport width
+      const containerWidth = window.innerWidth;
+      const containerHeight = window.innerHeight;
       
-      // Default viewport at scale 1.0
+      // Get the original viewport
       const defaultViewport = page.getViewport({ scale: 1.0 });
       
-      // Calculate scale factor to fit width, with a maximum scale of 1.0
-      // For mobile, we want to ensure it fits within the screen width
-      const scaleFactor = Math.min(containerWidth / defaultViewport.width, 1.0);
+      // Calculate scale to fit width precisely
+      const widthScale = containerWidth / defaultViewport.width;
       
       // Apply current zoom level to the calculated scale
-      const scaledViewport = page.getViewport({ scale: scaleFactor * currentScale });
-
-      // Set canvas dimensions to match the viewport
-      canvas.height = scaledViewport.height;
+      const scaledViewport = page.getViewport({ 
+        scale: widthScale * currentScale 
+      });
+  
+      // Set canvas dimensions exactly
       canvas.width = scaledViewport.width;
+      canvas.height = scaledViewport.height;
       
-      // Ensure canvas style width is set to 100% for mobile
-      canvas.style.width = '100%';
+      // Ensure canvas fills viewport width
+      canvas.style.width = '100vw';
+      canvas.style.maxWidth = '100vw';
       canvas.style.height = 'auto';
-
+      canvas.style.display = 'block';
+      canvas.style.margin = '0 auto';
+  
+      // Reset any previous transformations
+      context.setTransform(1, 0, 0, 1, 0, 0);
+  
       const renderContext = {
         canvasContext: context,
         viewport: scaledViewport,
         enableWebGL: true,
         renderInteractiveForms: true,
       };
-
+  
       await page.render(renderContext).promise;
+  
     } catch (err) {
       console.error("Error rendering page:", err);
     } finally {
@@ -315,7 +323,7 @@ const PptViewer = () => {
 
   return (
     <>
-      {!isPdfAccessible && (
+      {/* {!isPdfAccessible && (
         <div className="access-denied-container">
           <div>
             <h2>Access Denied</h2>
@@ -323,7 +331,7 @@ const PptViewer = () => {
             <Link to='/premium-plans'><button>Access Premium Plans</button></Link>
           </div>
         </div>
-      )}
+      )} */}
       <div className="pdf-container">
         <div className="pdf-header">
           <span>PDF Viewer</span>
@@ -345,7 +353,7 @@ const PptViewer = () => {
             >
               Next
             </button>
-            <button
+            {/* <button
               onClick={handleZoomOut}
               disabled={scale <= 0.5 || isRendering}
               className="control-button"
@@ -359,7 +367,7 @@ const PptViewer = () => {
               className="control-button"
             >
               +
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="pdf-wrapper" ref={containerRef}>

@@ -211,7 +211,7 @@ const Lectures = () => {
             <div className="main-content">
               <div className="row">
                 <div className="col-lg-7 main-content-left">
-                  <div className="search-bar desktop-search-bar">
+                  {/* <div className="search-bar desktop-search-bar">
                    <div> <IoSearchOutline className='search-icon' /></div>
                    <div>  <input
                       type="text"
@@ -219,7 +219,7 @@ const Lectures = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     /></div>
-                  </div>
+                  </div> */}
                   {videoDetails && videoDetails.tutorial && (
                     <div className="vedio-card">
                       <div className="vedio-container">

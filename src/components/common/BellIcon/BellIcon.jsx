@@ -59,12 +59,16 @@ const BellIcon = () => {
             </div>
           </Link>
 
-          <Link to='/help'>
-            <div className="sidebar-item">
-              <IoHelpCircleOutline className="sidebar-icon" />
-              <span>Help</span>
-            </div>
-          </Link>
+          {/* <a href="https://wa.me/918137851545?text=Hello%2C%20I%20need%20help" target="_blank" rel="noopener noreferrer"> */}
+          <div className="sidebar-item" onClick={() => {
+  const phone = '918137851545';
+  const message = encodeURIComponent('Hello, I need help');
+  window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+}}>
+  <IoHelpCircleOutline className="sidebar-icon" />
+  <span>Help</span>
+</div>
+{/* </a> */}
 
          {/* <Link to='/notification'> <div className="sidebar-item">
             <FaRegBell className="sidebar-icon" />

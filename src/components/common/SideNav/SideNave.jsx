@@ -173,12 +173,13 @@ const SideNave = () => {
                                 <IoNotificationsOutline className="sidebar-icon" />
                                 <span>Notifications</span>
                             </div></Link>
+                            <a href="whatsapp://send?phone=918137851545&text=Hello%20I%20need%20help" target="_blank" rel="noopener noreferrer">
                             <div className="sidebar-item">
-                            <Link to='/help'>
                             <MdOutlineHelp className="sidebar-icon" />
                             <span>Help</span>
-                            </Link>
                             </div>
+                            </a>
+
                             <div className="sidebar-item">
                               <Link to='/terms-and-conditions'> 
                                <FiFileText className="sidebar-icon" />

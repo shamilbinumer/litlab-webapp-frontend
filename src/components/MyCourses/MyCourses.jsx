@@ -7,7 +7,6 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { LuEye } from 'react-icons/lu';
 import axios from 'axios';
 import baseUrl from '../../baseUrl';
-import ChatBot from '../ChatBot/ChatBot';
 
 const MyCourses = () => {
     const [papers, setPapers] = useState([]);
@@ -63,6 +62,8 @@ const MyCourses = () => {
                     'Content-Type': 'application/json'
                 }
             });
+            console.log(response.data,'response');
+            
 
             if (!response.ok) {
                 throw new Error('Failed to fetch papers');

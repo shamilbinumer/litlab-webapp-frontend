@@ -33,6 +33,36 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     return isAccessible || index < 1;
   };
 
+  const getVideoCompletionStatus = (module, videoTitle) => {
+    return userDetails?.mockTestResult?.some(
+      result =>
+        result.module === module.module &&
+        result.category === "Assessment Test" &&
+        result.paperTitle === videoTitle &&
+        result.isSubmitted === true
+    );
+  };
+
+  const getVideoCompletionScore = (module, videoTitle) => {
+    const completedTest = userDetails?.mockTestResult?.find(
+      result =>
+        result.module === module.module &&
+        result.category === "Assessment Test" &&
+        result.paperTitle === videoTitle &&
+        result.isSubmitted === true
+    );
+    return completedTest?.marks || 0;
+  };
+
+  const isModuleFullyCompleted = (module) => {
+    return userDetails?.mockTestResult?.some(
+      result =>
+        result.module === module.module &&
+        result.category === "Assessment Test" &&
+        result.isSubmitted === true
+    );
+  };
+
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -73,7 +103,9 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         if (!authToken) {
           throw new Error('No authentication token found');
         }
-
+        console.log('selected video : ', selectedVideo.title);
+        console.log('paper: ', paperId);
+        
         const response = await fetch(`${baseUrl}/api/fetch-video-assessment/${paperId}/${selectedVideo.title}`, {
           headers: {
             'Authorization': `Bearer ${authToken}`,
@@ -86,6 +118,7 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
         }
 
         const data = await response.json();
+        console.log(data);
 
         // Access the questions array from the first object in the data array
         const questions = data.data[0]?.questions || [];
@@ -130,18 +163,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
       return;
     }
 
-    const isModuleSubmitted = userDetails?.mockTestResult?.some(
-      result =>
-        result.module === module.module &&
-        result.category === "Assessment Test" &&
-        result.isSubmitted === true
-    );
-
-    if (isModuleSubmitted) {
-      alert("You have already submitted this module's assessment!");
-      return;
-    }
-
     setSelectedModule(module);
     setSelectedVideo(null);
     setCurrentQuestionIndex(0);
@@ -166,7 +187,7 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           'Content-Type': 'application/json'
         }
       });
-
+      
       if (!response.ok) {
         throw new Error('Failed to fetch videos');
       }
@@ -366,14 +387,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
     );
   }
 
-  if (error) {
-    return (
-      <div className="quiz-container">
-        <div className="quiz-content">Error: {error}</div>
-      </div>
-    );
-  }
-
   if (!selectedModule) {
     // Handle case when no modules are available
     if (modules.length === 0) {
@@ -389,14 +402,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
             borderRadius: "8px",
             padding: "2rem"
           }}>
-            {/* <img 
-              src="/Images/empty-folder.png" 
-              alt="No modules available" 
-              style={{
-                width: "80px",
-                marginBottom: "1rem"
-              }}
-            /> */}
             <h3 style={{
               fontFamily: "Montserrat",
               fontSize: "20px",
@@ -435,36 +440,23 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
       <div className="modules-container">
         <div className="modules-grid">
           {modules.map((module, index) => {
-            const isCompleted = userDetails?.mockTestResult?.some(
-              result =>
-                result.module === module.module &&
-                result.category === "Assessment Test" &&
-                result.isSubmitted === true
-            );
-
-            const completedScore = userDetails?.mockTestResult?.find(
-              result =>
-                result.module === module.module &&
-                result.category === "Assessment Test" &&
-                result.isSubmitted === true
-            )?.marks || 0;
-
+            const moduleCompleted = isModuleFullyCompleted(module);
             const moduleAccessible = isModuleAccessible(index);
 
             return (
               <div
                 key={module.id}
-                className={`module-card ${isCompleted ? 'completed' : ''} ${!moduleAccessible ? 'locked' : ''}`}
+                className={`module-card ${!moduleAccessible ? 'locked' : ''}`}
                 style={{
-                  opacity: isCompleted || !moduleAccessible ? 0.8 : 1,
+                  opacity:!moduleAccessible ? 0.8 : 1,
                   position: 'relative'
                 }}
               >
-                {isCompleted && (
+                {/* {moduleCompleted && (
                   <div className="completion-badge" style={{ position: 'absolute', right: '1rem', top: '10px', backgroundColor: 'green', color: "white", padding: "5px 10px", borderRadius: '8px', fontFamily: 'Montserrat', fontSize: '13px' }}>
-                    Completed (Score: {completedScore})
+                    Module Completed
                   </div>
-                )}
+                )} */}
                 <div>
                   <h3>Module {module.module} : {module.title}</h3>
                   {module.description && <p>{module.description}</p>}
@@ -472,13 +464,13 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
                     {moduleAccessible ? (
                       <button
                         onClick={() => handleModuleSelect(module, index)}
-                        style={{
-                          backgroundColor: isCompleted ? '#e0e0e0' : '',
-                          cursor: isCompleted ? 'not-allowed' : 'pointer'
-                        }}
-                        disabled={isCompleted}
+                        // style={{
+                        //   backgroundColor: moduleCompleted ? '#e0e0e0' : '',
+                        //   cursor: moduleCompleted ? 'not-allowed' : 'pointer'
+                        // }}
+                        // disabled={moduleCompleted}
                       >
-                        {isCompleted ? 'Already Completed' : 'View Videos'}
+                        View Videos
                         <MdOutlineRemoveRedEye style={{ fontSize: '14px', marginLeft: '5px' }} />
                       </button>
                     ) : (
@@ -593,17 +585,63 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
             </div>
           ) : (
             <div className="videos-grid">
-              {videos?.map((video, index) => (
-                <div key={video.id || index} className="video-card" style={{ display: 'flex', marginBottom: '1rem', gap: '1rem', alignItems: "center" }} onClick={() => handleVideoSelect(video)}>
-                  <div className="video-thumbnail" style={{ width: "30%", height: '100px', overflow: "hidden", borderRadius: '9px' }}>
-                    <img src={video.thumbnail || "/Images/video-placeholder.png"} alt={video.title} style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
+              {videos?.map((video, index) => {
+                const isVideoCompleted = getVideoCompletionStatus(selectedModule, video.title);
+                const videoCompletionScore = getVideoCompletionScore(selectedModule, video.title);
+
+                return (
+                  <div 
+                    key={video.id || index} 
+                    className={`video-card ${isVideoCompleted ? 'completed' : ''}`} 
+                    style={{ 
+                      display: 'flex', 
+                      marginBottom: '1rem', 
+                      gap: '1rem', 
+                      alignItems: "center",
+                      opacity: isVideoCompleted ? 0.8 : 1,
+                      position: 'relative'
+                    }} 
+                    onClick={() => !isVideoCompleted && handleVideoSelect(video)}
+                  >
+                    {isVideoCompleted && (
+                      <div 
+                        className="video-completion-badge" 
+                        style={{ 
+                          position: 'absolute', 
+                          right: '1rem', 
+                          top: '10px', 
+                          backgroundColor: 'green', 
+                          color: "white", 
+                          padding: "5px 10px", 
+                          borderRadius: '8px', 
+                          fontFamily: 'Montserrat', 
+                          fontSize: '13px' 
+                        }}
+                      >
+                        Completed (Score: {videoCompletionScore})
+                      </div>
+                    )}
+                    <div className="video-info" style={{ width: '100%', backgroundColor: isVideoCompleted ? '#e0e0e0' : '#6BCCE5', padding: '10px', borderRadius: '10px' }}>
+                      <h4 style={{ fontFamily: 'Montserrat', fontSize: '15px', fontWeight: '700' }}>{video.title}</h4>
+                      <button 
+                        style={{ 
+                          backgroundColor: isVideoCompleted ? '#a0a0a0' : '#FBD63C', 
+                          border: 'none', 
+                          fontFamily: "Montserrat", 
+                          fontWeight: '600', 
+                          fontSize: '14px', 
+                          padding: '5px 20px', 
+                          borderRadius: '8px',
+                          cursor: isVideoCompleted ? 'not-allowed' : 'pointer'
+                        }}
+                        disabled={isVideoCompleted}
+                      >
+                        {isVideoCompleted ? 'Already Completed' : 'Start Test'}
+                      </button>
+                    </div>
                   </div>
-                  <div className="video-info" style={{ width: '70%' }}>
-                    <h4 style={{ fontFamily: 'Montserrat', fontSize: '20px', fontWeight: '700' }}>{video.title}</h4>
-                    <button style={{ backgroundColor: '#FBD63C', border: 'none', fontFamily: "Montserrat", fontWeight: '600', fontSize: '14px', padding: '5px 20px', borderRadius: '8px' }}>Start Assessment</button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -636,14 +674,6 @@ const AssessmentTest = ({ paperId, userDetails, isAccessible, onPurchaseClick })
           padding: "2rem",
           margin: "1rem 0"
         }}>
-          {/* <img 
-            src="/Images/empty-questions.png" 
-            alt="No questions available" 
-            style={{
-              width: "80px",
-              marginBottom: "1rem"
-            }}
-          /> */}
           <h3 style={{
             fontFamily: "Montserrat",
             fontSize: "20px",
